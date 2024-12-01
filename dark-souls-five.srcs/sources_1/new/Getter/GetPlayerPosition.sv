@@ -10,7 +10,12 @@ reg [20:0] downCounter;
 reg [20:0] leftCounter;
 reg [20:0] rightCounter;
 initial begin
-    next_playerPosition<=playerPosition;
+    next_playerPosition[0]<=7'd40;
+    next_playerPosition[1]<=7'd15;
+    upCounter<=0;
+    downCounter<=0;
+    leftCounter<=0;
+    rightCounter<=0;
 end
 always @(posedge clk) begin
     if(state==2) begin

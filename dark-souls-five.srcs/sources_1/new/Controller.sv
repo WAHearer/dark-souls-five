@@ -67,6 +67,15 @@ Game game(//计算下一时刻状态，内部需要：根据按键输入更新�
     .next_enemyBullet(next_enemyBullet)
 );
 
+initial begin
+    state<=0;
+    textId<=0;
+    level<=0;
+    playerHp<=21'd100;
+    playerPosition[0]<=7'd40;
+    playerPosition[1]<=7'd15;
+end
+
 always @(posedge clk) begin//更新状态
     state<=next_state;
     textId<=next_textId;
