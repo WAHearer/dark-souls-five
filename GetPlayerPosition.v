@@ -31,7 +31,7 @@ always @(posedge clk) begin
             else begin
                 downCounter<=0;
                 if(playerPosition[1]>0)
-                    playerPosition[1]<=playerPosition[1]-1;
+                    next_playerPosition[1]<=playerPosition[1]-1;
             end
         end
         else
@@ -42,7 +42,7 @@ always @(posedge clk) begin
             else begin
                 rightCounter<=0;
                 if(playerPosition[0]<7'd79)
-                    playerPosition[0]<=playerPosition[0]+1;
+                    next_playerPosition[0]<=playerPosition[0]+1;
             end
         end
         else
@@ -53,7 +53,7 @@ always @(posedge clk) begin
             else begin
                 leftCounter<=0;
                 if(playerPosition[0]>0)
-                    playerPosition[0]<=playerPosition[0]-1;
+                    next_playerPosition[0]<=playerPosition[0]-1;
             end
         end
         else
