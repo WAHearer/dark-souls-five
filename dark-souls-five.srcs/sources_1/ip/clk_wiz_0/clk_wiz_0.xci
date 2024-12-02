@@ -4,7 +4,7 @@
     "xci_name": "clk_wiz_0",
     "component_reference": "xilinx.com:ip:clk_wiz:6.0",
     "ip_revision": "12",
-    "gen_directory": "../../../../dark-souls-five.gen/sources_1/ip/clk_wiz_0",
+    "gen_directory": "../../../../dark-souls-five.gen/sources_1/ip/clk_wiz_0_1",
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "clk_wiz_0", "resolve_type": "user", "usage": "all" } ],
@@ -134,7 +134,7 @@
         "SUMMARY_STRINGS": [ { "value": "empty", "resolve_type": "user", "usage": "all" } ],
         "USE_LOCKED": [ { "value": "true", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "CALC_DONE": [ { "value": "empty", "resolve_type": "user", "usage": "all" } ],
-        "USE_RESET": [ { "value": "true", "resolve_type": "user", "format": "bool", "usage": "all" } ],
+        "USE_RESET": [ { "value": "true", "value_src": "user", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "USE_POWER_DOWN": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "USE_STATUS": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "USE_FREEZE": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
@@ -599,7 +599,7 @@
         "IPCONTEXT": [ { "value": "IP_Flow" } ],
         "IPREVISION": [ { "value": "12" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../dark-souls-five.gen/sources_1/ip/clk_wiz_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../dark-souls-five.gen/sources_1/ip/clk_wiz_0_1" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "." } ],
         "SWVERSION": [ { "value": "2023.1" } ],
