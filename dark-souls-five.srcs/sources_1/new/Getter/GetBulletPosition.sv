@@ -1,4 +1,4 @@
-module GetPlayerPosition (
+module GetBulletPosition (
     input clk,
     input [3:0] state,
     input [20:0] playerHp,
