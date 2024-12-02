@@ -52,7 +52,10 @@ always @(posedge clk) begin
                 if(playerBullet[i][j]!=0) begin
                     if(enemyPosition[0]==i&&enemyPosition[1]==j) begin
                         next_playerBullet[i][j]<=0;
-                        next_enemyHp<=enemyHp-playerBullet[i][j][21:12];
+                        if(enemyHp<=playerBullet[i][j][21:12])
+                            next_enemyHp<=0;
+                        else
+                            next_enemyHp<=enemyHp-playerBullet[i][j][21:12];
                     end
                     else begin
                         case(playerBullet[i][j][14:11])
@@ -206,7 +209,10 @@ always @(posedge clk) begin
                 if(enemyBullet[i][j]!=0) begin
                     if(playerPosition[0]==i&&playerPosition[1]==j) begin
                         next_enemyBullet[i][j]<=0;
-                        next_playerHp<=playerHp-enemyBullet[i][j][21:12];
+                        if(playerHp<=enemyBullet[i][j][21:12])
+                            next_playerHp<=0;
+                        else
+                            next_playerHp<=playerHp-enemyBullet[i][j][21:12];
                     end
                     else begin
                         case(enemyBullet[i][j][14:11])

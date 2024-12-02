@@ -73,10 +73,6 @@ initial begin
     state<=0;
     textId<=0;
     level<=0;
-    playerHp<=21'd100;
-    enemyHp<=21'd1000;
-    playerPosition[0]<=7'd40;
-    playerPosition[1]<=7'd15;
     for(i=0;i<80;i++) begin
         for(j=0;j<60;j++) begin
             playerBullet[i][j]<=0;
@@ -104,4 +100,3 @@ always @(posedge clk) begin//更新状态
 end
 
 endmodule
-
