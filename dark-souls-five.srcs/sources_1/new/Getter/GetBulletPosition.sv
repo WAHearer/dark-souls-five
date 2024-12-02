@@ -5,13 +5,13 @@ module GetBulletPosition (
     input [20:0] enemyHp,
     input [6:0] playerPosition[0:1],
     input [6:0] enemyPosition[0:1],
-    input [27:0] playerBullet[0:79][0:59],
-    input [27:0] enemyBullet[0:79][0:59],
+    input [16:0] playerBullet[0:79][0:59],
+    input [16:0] enemyBullet[0:79][0:59],
 
     output reg [20:0] next_playerHp,
     output reg [20:0] next_enemyHp,
-    output reg [27:0] next_playerBullet[0:79][0:59],
-    output reg [27:0] next_enemyBullet[0:79][0:59]
+    output reg [16:0] next_playerBullet[0:79][0:59],
+    output reg [16:0] next_enemyBullet[0:79][0:59]
 );
 localparam base1=25'd10000000;
 localparam base2=25'd14142136;//10^7sqrt(2)
@@ -55,9 +55,9 @@ always @(posedge clk) begin
                         next_enemyHp<=enemyHp-playerBullet[i][j][21:12];
                     end
                     else begin
-                        case(playerBullet[i][j][25:22])
+                        case(playerBullet[i][j][14:11])
                             4'd0: begin
-                                if(counter1==(base1>>playerBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>playerBullet[i][j][16:15])) begin
                                     if(j>0)
                                         next_playerBullet[i][j-1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -66,7 +66,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd1: begin
-                                if(counter1==(base1>>playerBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>playerBullet[i][j][16:15])) begin
                                     if(i>0)
                                         next_playerBullet[i-1][j]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -75,7 +75,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd2: begin
-                                if(counter1==(base1>>playerBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>playerBullet[i][j][16:15])) begin
                                     if(i<79)
                                         next_playerBullet[i+1][j]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -84,7 +84,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd3: begin
-                                if(counter1==(base1>>playerBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>playerBullet[i][j][16:15])) begin
                                     if(j<59)
                                         next_playerBullet[i][j+1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -93,7 +93,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd4: begin
-                                if(counter2==(base2>>playerBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>playerBullet[i][j][16:15])) begin
                                     if(i>0&&j>0)
                                         next_playerBullet[i-1][j-1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -102,7 +102,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd5: begin
-                                if(counter2==(base2>>playerBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>playerBullet[i][j][16:15])) begin
                                     if(i<79&&j>0)
                                         next_playerBullet[i+1][j-1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -111,7 +111,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd6: begin
-                                if(counter2==(base2>>playerBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>playerBullet[i][j][16:15])) begin
                                     if(i>0&&j<59)
                                         next_playerBullet[i-1][j+1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -120,7 +120,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd7: begin
-                                if(counter2==(base2>>playerBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>playerBullet[i][j][16:15])) begin
                                     if(i<79&&j<59)
                                         next_playerBullet[i+1][j+1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -129,7 +129,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd8: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i>1&&j>0)
                                         next_playerBullet[i-2][j-1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -138,7 +138,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd9: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i>0&&j>1)
                                         next_playerBullet[i-1][j-2]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -147,7 +147,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd10: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i<79&&j>1)
                                         next_playerBullet[i+1][j-2]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -156,7 +156,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd11: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i<78&&j>0)
                                         next_playerBullet[i+2][j-1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -165,7 +165,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd12: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i<78&&j<59)
                                         next_playerBullet[i+2][j+1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -174,7 +174,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd13: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i<79&&j<58)
                                         next_playerBullet[i+1][j+2]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -183,7 +183,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd14: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i>0&&j<58)
                                         next_playerBullet[i-1][j+2]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -192,7 +192,7 @@ always @(posedge clk) begin
                                     next_playerBullet[i][j]<=playerBullet[i][j];
                             end
                             4'd15: begin
-                                if(counter3==(base3>>playerBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>playerBullet[i][j][16:15])) begin
                                     if(i>1&&j<59)
                                         next_playerBullet[i-2][j+1]<=playerBullet[i][j];
                                     next_playerBullet[i][j]<=0;
@@ -209,9 +209,9 @@ always @(posedge clk) begin
                         next_playerHp<=playerHp-enemyBullet[i][j][21:12];
                     end
                     else begin
-                        case(enemyBullet[i][j][25:22])
+                        case(enemyBullet[i][j][14:11])
                             4'd0: begin
-                                if(counter1==(base1>>enemyBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>enemyBullet[i][j][16:15])) begin
                                     if(j>0)
                                         next_enemyBullet[i][j-1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -220,7 +220,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd1: begin
-                                if(counter1==(base1>>enemyBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>enemyBullet[i][j][16:15])) begin
                                     if(i>0)
                                         next_enemyBullet[i-1][j]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -229,7 +229,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd2: begin
-                                if(counter1==(base1>>enemyBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>enemyBullet[i][j][16:15])) begin
                                     if(i<79)
                                         next_enemyBullet[i+1][j]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -238,7 +238,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd3: begin
-                                if(counter1==(base1>>enemyBullet[i][j][27:26])) begin
+                                if(counter1==(base1>>enemyBullet[i][j][16:15])) begin
                                     if(j<59)
                                         next_enemyBullet[i][j+1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -247,7 +247,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd4: begin
-                                if(counter2==(base2>>enemyBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>enemyBullet[i][j][16:15])) begin
                                     if(i>0&&j>0)
                                         next_enemyBullet[i-1][j-1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -256,7 +256,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd5: begin
-                                if(counter2==(base2>>enemyBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>enemyBullet[i][j][16:15])) begin
                                     if(i<79&&j>0)
                                         next_enemyBullet[i+1][j-1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -265,7 +265,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd6: begin
-                                if(counter2==(base2>>enemyBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>enemyBullet[i][j][16:15])) begin
                                     if(i>0&&j<59)
                                         next_enemyBullet[i-1][j+1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -274,7 +274,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd7: begin
-                                if(counter2==(base2>>enemyBullet[i][j][27:26])) begin
+                                if(counter2==(base2>>enemyBullet[i][j][16:15])) begin
                                     if(i<79&&j<59)
                                         next_enemyBullet[i+1][j+1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -283,7 +283,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd8: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i>1&&j>0)
                                         next_enemyBullet[i-2][j-1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -292,7 +292,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd9: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i>0&&j>1)
                                         next_enemyBullet[i-1][j-2]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -301,7 +301,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd10: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i<79&&j>1)
                                         next_enemyBullet[i+1][j-2]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -310,7 +310,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd11: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i<78&&j>0)
                                         next_enemyBullet[i+2][j-1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -319,7 +319,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd12: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i<78&&j<59)
                                         next_enemyBullet[i+2][j+1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -328,7 +328,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd13: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i<79&&j<58)
                                         next_enemyBullet[i+1][j+2]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -337,7 +337,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd14: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i>0&&j<58)
                                         next_enemyBullet[i-1][j+2]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
@@ -346,7 +346,7 @@ always @(posedge clk) begin
                                     next_enemyBullet[i][j]<=enemyBullet[i][j];
                             end
                             4'd15: begin
-                                if(counter3==(base3>>enemyBullet[i][j][27:26])) begin
+                                if(counter3==(base3>>enemyBullet[i][j][16:15])) begin
                                     if(i>1&&j<59)
                                         next_enemyBullet[i-2][j+1]<=enemyBullet[i][j];
                                     next_enemyBullet[i][j]<=0;
