@@ -11,9 +11,11 @@ integer i,j;
 always @(posedge clk) begin
     if(counter<26'd50000000) begin
         counter<=counter+1;
-        for(i=0;i<79;i++) begin
-            for(j=0;j<59;j++) begin
-                next_playerBullet[i][j]<=0;
+        if(counter==0) begin
+            for(i=0;i<79;i++) begin
+                for(j=0;j<59;j++) begin
+                    next_playerBullet[i][j]<=0;
+                end
             end
         end
     end

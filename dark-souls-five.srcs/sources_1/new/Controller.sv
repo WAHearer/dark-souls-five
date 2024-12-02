@@ -23,7 +23,7 @@ reg [16:0] next_enemyBullet[0:79][0:59];
 
 integer i,j;
 
-Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
+/*Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
     .state(state),
     .textId(textId),
     .level(level),
@@ -39,7 +39,7 @@ Music music(//播放音乐？可以依据：当前游戏状态、关卡数、bos
     .state(state),
     .level(level),
     .enemyHp(enemyHp)
-);
+);*/
 
 Game game(//计算下一时刻状态，内部需要：根据按键输入更新状态，计算子弹碰撞，计算血量
     .clk(clk),

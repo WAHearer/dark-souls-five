@@ -105,5 +105,9 @@ always @(posedge clk) begin
                 leftCounter<=0;
         end
     end
+    else if(state!=1) begin
+        next_playerPosition[0]<=playerPosition[0];
+        next_playerPosition[1]<=playerPosition[1];
+    end
 end
 endmodule

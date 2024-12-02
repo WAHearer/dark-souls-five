@@ -68,7 +68,7 @@ GeneratePlayerBullet generatePlayerBullet(
     .next_playerBullet(next_playerBullet_generated)
 );
 
-GetEnemyPosition getEnemyPosition(
+/*GetEnemyPosition getEnemyPosition(
     .state(state),
     .playerPosition(playerPosition),
     .playerBullet(playerBullet),//躲避玩家子弹？
@@ -77,7 +77,7 @@ GetEnemyPosition getEnemyPosition(
     .next_enemyPosition(next_enemyPosition_inGame)
 );
 
-GeneratePlayerBullet generateEnemyBullet(
+GenerateEnemyBullet generateEnemyBullet(
     .clk(clk),
     .state(state),
     .level(level),
@@ -86,7 +86,7 @@ GeneratePlayerBullet generateEnemyBullet(
     .enemyHp(enemyHp),
 
     .next_enemyBullet(next_enemyBullet_generated)
-);
+);*/
 
 GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰撞信息（从而生命值的变化情况）以及弹幕位置信息
     .clk(clk),
@@ -105,7 +105,7 @@ GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰
 );
 
 always @(posedge clk) begin
-    if(state==2) begin
+    if(state==2||state==1) begin
         next_playerHp<=next_playerHp_inGame;
         next_enemyHp<=next_enemyHp_inGame;
         next_playerPosition<=next_playerPosition_inGame;
