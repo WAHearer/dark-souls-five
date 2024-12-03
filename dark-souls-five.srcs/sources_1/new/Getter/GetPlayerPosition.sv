@@ -12,8 +12,6 @@ reg [20:0] rightCounter;
 reg [28:0] rollCounter;
 reg rollAvailable;
 initial begin
-    next_playerPosition[0]<=7'd40;
-    next_playerPosition[1]<=7'd15;
     upCounter<=0;
     downCounter<=0;
     leftCounter<=0;

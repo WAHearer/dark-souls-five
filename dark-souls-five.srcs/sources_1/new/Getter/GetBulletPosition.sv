@@ -44,9 +44,7 @@ always @(posedge clk) begin
         next_enemyHp<=enemyHp;
     end
 end
-wire move1=(counter1==(base1>>3)||counter1==(base1>>2)||counter1==(base1>>1)||counter1==base1);
-wire move2=(counter2==(base2>>3)||counter2==(base2>>2)||counter2==(base2>>2)||counter2==base2);
-always @(posedge move1 or posedge move2) begin
+always @(posedge clk) begin
     for(i=0;i<300;i++) begin
         if(playerBullet[i][6:0]==enemyPosition[0]&&playerBullet[i][13:7]==enemyPosition[1]) begin
             if(enemyHp<=playerBullet[i][20:14])

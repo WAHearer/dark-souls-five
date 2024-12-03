@@ -17,20 +17,20 @@ module Game (
     output reg [20:0] next_enemyHp,
     output reg [6:0] next_playerPosition[0:1],
     output reg [6:0] next_enemyPosition[0:1],
-    output [25:0] next_playerBullet[0:299],
-    output [25:0] next_enemyBullet[0:299]
+    output reg [25:0] next_playerBullet[0:299],
+    output reg [25:0] next_enemyBullet[0:299]
 );
 
-reg [20:0] next_playerHp_inGame;
-reg [20:0] next_enemyHp_inGame;
-reg [6:0] next_playerPosition_inGame[0:1];
-reg [6:0] next_enemyPosition_inGame[0:1];
+wire [20:0] next_playerHp_inGame;
+wire [20:0] next_enemyHp_inGame;
+wire [6:0] next_playerPosition_inGame[0:1];
+wire [6:0] next_enemyPosition_inGame[0:1];
 wire [25:0] next_playerBullet_moved[0:299];
 wire [25:0] next_playerBullet_generated[0:299];
 wire [25:0] next_enemyBullet_moved[0:299];
 wire [25:0] next_enemyBullet_generated[0:299];
 
-genvar i;
+integer i;
 
 GetState getState(
     .enter(enter),
@@ -104,30 +104,37 @@ GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰
     .next_enemyBullet(next_enemyBullet_moved)
 );
 
-always @(posedge clk) begin
-    if(state==2||state==1) begin
-        next_playerHp<=next_playerHp_inGame;
-        next_enemyHp<=next_enemyHp_inGame;
-        next_playerPosition<=next_playerPosition_inGame;
-        next_enemyPosition<=next_enemyPosition_inGame;
+always @(*) begin
+    for(i=0;i<299;i=i+1) begin
+        if(next_playerBullet_generated[i]!=0)
+            next_playerBullet[i]=next_playerBullet_generated[i];
+        else
+            next_playerBullet[i]=next_playerBullet_moved[i];
+        if(next_enemyBullet_generated[i]!=0)
+            next_enemyBullet[i]=next_enemyBullet_generated[i];
+        else
+            next_enemyBullet[i]=next_enemyBullet_moved[i];
+    end
+    if(state==1||state==2) begin
+        next_playerHp=next_playerHp_inGame;
+        next_enemyHp=next_enemyHp_inGame;
+        next_playerPosition[0]=next_playerPosition_inGame[0];
+        next_playerPosition[1]=next_playerPosition_inGame[1];
+        next_enemyPosition[0]=next_enemyPosition_inGame[0];
+        next_enemyPosition[1]=next_enemyPosition_inGame[1];
     end
     else begin
-        next_playerHp<=21'd100;
-        next_playerPosition[0]<=7'd40;
-        next_playerPosition[1]<=7'd15;
-        next_enemyPosition[0]<=7'd40;
-        next_enemyPosition[1]<=7'd50;
+        next_playerHp=21'd100;
         case(level)
-            1:begin
-                next_enemyHp<=21'd500;
-            end
+            1:next_enemyHp=21'd500;
+            default:next_enemyHp=21'd1000;
         endcase
+        next_playerPosition[0]=7'd40;
+        next_playerPosition[1]=7'd15;
+        next_enemyPosition[0]=7'd40;
+        next_enemyPosition[1]=7'd50;
     end
 end
 
-for(i=0;i<299;i=i+1) begin
-    assign next_playerBullet[i]=(next_playerBullet_generated[i]!=0)?next_playerBullet_generated[i]:next_playerBullet_moved[i];
-    assign next_enemyBullet[i]=(next_enemyBullet_generated[i]!=0)?next_enemyBullet_generated[i]:next_enemyBullet_moved[i];
-end
 
 endmodule
