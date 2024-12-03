@@ -59,7 +59,9 @@ Game game(//计算下一时刻状态，内部需要：根据按键输入更新�
     .enemyPosition(enemyPosition),
     .playerBullet(playerBullet),
     .enemyBullet(enemyBullet),
+    
     .next_state(next_state),
+    .next_textId(next_textId),
     .next_level(next_level),
     .next_playerHp(next_playerHp),
     .next_enemyHp(next_enemyHp),
