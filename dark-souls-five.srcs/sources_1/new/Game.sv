@@ -7,8 +7,8 @@ module Game (
     input [20:0] enemyHp,
     input [6:0] playerPosition[0:1],
     input [6:0] enemyPosition[0:1],
-    input [16:0] playerBullet[0:79][0:59],
-    input [16:0] enemyBullet[0:79][0:59],
+    input [25:0] playerBullet[0:299],
+    input [25:0] enemyBullet[0:299],
     
     output [3:0] next_state,
     output [9:0] next_textId,
@@ -17,20 +17,20 @@ module Game (
     output reg [20:0] next_enemyHp,
     output reg [6:0] next_playerPosition[0:1],
     output reg [6:0] next_enemyPosition[0:1],
-    output reg [16:0] next_playerBullet[0:79][0:59],
-    output reg [16:0] next_enemyBullet[0:79][0:59]
+    output [25:0] next_playerBullet[0:299],
+    output [25:0] next_enemyBullet[0:299]
 );
 
 reg [20:0] next_playerHp_inGame;
 reg [20:0] next_enemyHp_inGame;
 reg [6:0] next_playerPosition_inGame[0:1];
 reg [6:0] next_enemyPosition_inGame[0:1];
-reg [16:0] next_playerBullet_moved[0:79][0:59];
-reg [16:0] next_playerBullet_generated[0:79][0:59];
-reg [16:0] next_enemyBullet_moved[0:79][0:59];
-reg [16:0] next_enemyBullet_generated[0:79][0:59];
+wire [25:0] next_playerBullet_moved[0:299];
+wire [25:0] next_playerBullet_generated[0:299];
+wire [25:0] next_enemyBullet_moved[0:299];
+wire [25:0] next_enemyBullet_generated[0:299];
 
-integer i,j;
+genvar i;
 
 GetState getState(
     .enter(enter),
@@ -110,18 +110,6 @@ always @(posedge clk) begin
         next_enemyHp<=next_enemyHp_inGame;
         next_playerPosition<=next_playerPosition_inGame;
         next_enemyPosition<=next_enemyPosition_inGame;
-        for(i=0;i<80;i++) begin
-            for(j=0;j<60;j++) begin
-                if(next_playerBullet_generated[i][j]!=0)
-                    next_playerBullet[i][j]<=next_playerBullet_generated[i][j];
-                else
-                    next_playerBullet[i][j]<=next_playerBullet_moved[i][j];
-                if(next_enemyBullet_generated[i][j]!=0)
-                    next_enemyBullet[i][j]<=next_enemyBullet_generated[i][j];
-                else
-                    next_enemyBullet[i][j]<=next_enemyBullet_moved[i][j];
-            end
-        end
     end
     else begin
         next_playerHp<=21'd100;
@@ -135,6 +123,11 @@ always @(posedge clk) begin
             end
         endcase
     end
+end
+
+for(i=0;i<299;i=i+1) begin
+    assign next_playerBullet[i]=(next_playerBullet_generated[i]!=0)?next_playerBullet_generated[i]:next_playerBullet_moved[i];
+    assign next_enemyBullet[i]=(next_enemyBullet_generated[i]!=0)?next_enemyBullet_generated[i]:next_enemyBullet_moved[i];
 end
 
 endmodule

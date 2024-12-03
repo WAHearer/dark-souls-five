@@ -30,67 +30,13 @@ module Screen #(
 reg pclk;
 reg vram[199:0][149:0][11:0];
 
-// 时钟分频
 clk_wiz_0 clk_wiz_0 (
     .clk_in1(clk),
     .clk_out1(pclk)
 );
 
-// 计数器用于生成同步信号
-reg [11:0] hcount = 0; 
-reg [11:0] vcount = 0;
-
-// 有效显示区域标志
-wire disp_enable;
-// 实际显示坐标
-reg [7:0] x;
-reg [7:0] y;
-
-// 水平计数器
 always @(posedge pclk) begin
-    if(hcount == HSW + BP + HEN + HFP - 1)
-        hcount <= 0;
-    else
-        hcount <= hcount + 1;
-end
-
-// 垂直计数器
-always @(posedge pclk) begin
-    if(hcount == HSW + BP + HEN + HFP - 1) begin
-        if(vcount == VSW + VBP + VEN + VFP - 1)
-            vcount <= 0;
-        else
-            vcount <= vcount + 1;
-    end
-end
-
-// 同步信号生成
-always @(posedge pclk) begin
-    vga_hs <= (hcount >= HSW);
-    vga_vs <= (vcount >= VSW);
-end
-
-// 判断是否在有效显示区域
-assign disp_enable = (hcount >= HSW + BP) && 
-                    (hcount < HSW + BP + HEN) && 
-                    (vcount >= VSW + VBP) && 
-                    (vcount < VSW + VBP + VEN);
-
-// 计算实际显示坐标(缩放)
-always @(posedge pclk) begin
-    if(disp_enable) begin
-        x <= (hcount - HSW - BP) * 200 / HEN;
-        y <= (vcount - VSW - VBP) * 150 / VEN;
-    end
-end
-
-// 输出像素数据
-always @(posedge pclk) begin
-    if(disp_enable) begin
-        {vga_r, vga_g, vga_b} <= {vram[x][y][11], vram[x][y][10], vram[x][y][9], vram[x][y][8], vram[x][y][7], vram[x][y][6], vram[x][y][5], vram[x][y][4], vram[x][y][3], vram[x][y][2], vram[x][y][1], vram[x][y][0]};
-    end else begin
-        {vga_r, vga_g, vga_b} <= 12'h000;
-    end
+    
 end
     
 endmodule

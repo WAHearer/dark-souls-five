@@ -8,8 +8,8 @@ reg [20:0] playerHp;
 reg [20:0] enemyHp;
 reg [6:0] playerPosition[0:1];//0为x坐标，1为y坐标
 reg [6:0] enemyPosition[0:1];//同上
-reg [16:0] playerBullet[0:79][0:59];//2:0为色彩，10:3为伤害，14:11为方向，16:15为速度
-reg [16:0] enemyBullet[0:79][0:59];//同上
+reg [25:0] playerBullet[0:299];//6:0为x坐标，13:7位y坐标，20:14为伤害，23:21为方向，25:24为速度
+reg [25:0] enemyBullet[0:299];//同上
 
 reg [3:0] next_state;
 reg [9:0] next_textId;
@@ -18,10 +18,10 @@ reg [20:0] next_playerHp;
 reg [20:0] next_enemyHp;
 reg [6:0] next_playerPosition[0:1];
 reg [6:0] next_enemyPosition[0:1];
-reg [16:0] next_playerBullet[0:79][0:59];
-reg [16:0] next_enemyBullet[0:79][0:59];
+reg [25:0] next_playerBullet[0:299];
+reg [25:0] next_enemyBullet[0:299];
 
-integer i,j;
+integer i;
 
 /*Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
     .state(state),
@@ -73,12 +73,6 @@ initial begin
     state<=0;
     textId<=0;
     level<=0;
-    for(i=0;i<80;i++) begin
-        for(j=0;j<60;j++) begin
-            playerBullet[i][j]<=0;
-            enemyBullet[i][j]<=0;
-        end
-    end
 end
 
 always @(posedge clk) begin//更新状态
@@ -91,11 +85,9 @@ always @(posedge clk) begin//更新状态
     playerPosition[1]<=next_playerPosition[1];
     enemyPosition[0]<=next_enemyPosition[0];
     enemyPosition[1]<=next_enemyPosition[1];
-    for(i=0;i<80;i++) begin
-        for(j=0;j<60;j++) begin
-            playerBullet[i][j]<=next_playerBullet[i][j];
-            enemyBullet[i][j]<=next_enemyBullet[i][j];
-        end
+    for(i=0;i<300;i++) begin
+        playerBullet[i]<=next_playerBullet[i];
+        enemyBullet[i]<=next_enemyBullet[i];
     end
 end
 
