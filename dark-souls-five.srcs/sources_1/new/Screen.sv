@@ -82,8 +82,8 @@ end
 
 // 时钟分频
 clk_wiz_0 clk_wiz_0 (
-    .clk_in1(clk),
-    .clk_out1(pclk)
+    .clk_in100M(clk),
+    .clk_out50M(pclk)
 );
 
 // 计数器用于生成同步信号
