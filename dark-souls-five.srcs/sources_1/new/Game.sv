@@ -5,30 +5,30 @@ module Game (
     input [5:0] level,
     input [20:0] playerHp,
     input [20:0] enemyHp,
-    input [6:0] playerPosition[0:1],
-    input [6:0] enemyPosition[0:1],
-    input [25:0] playerBullet[0:299],
-    input [25:0] enemyBullet[0:299],
+    input [7:0] playerPosition[0:1],
+    input [7:0] enemyPosition[0:1],
+    input [27:0] playerBullet[0:599],
+    input [27:0] enemyBullet[0:599],
     
     output [3:0] next_state,
     output [9:0] next_textId,
     output [5:0] next_level,
     output reg [20:0] next_playerHp,
     output reg [20:0] next_enemyHp,
-    output reg [6:0] next_playerPosition[0:1],
-    output reg [6:0] next_enemyPosition[0:1],
-    output reg [25:0] next_playerBullet[0:299],
-    output reg [25:0] next_enemyBullet[0:299]
+    output reg [7:0] next_playerPosition[0:1],
+    output reg [7:0] next_enemyPosition[0:1],
+    output reg [27:0] next_playerBullet[0:599],
+    output reg [27:0] next_enemyBullet[0:599]
 );
 
 wire [20:0] next_playerHp_inGame;
 wire [20:0] next_enemyHp_inGame;
-wire [6:0] next_playerPosition_inGame[0:1];
-wire [6:0] next_enemyPosition_inGame[0:1];
-wire [25:0] next_playerBullet_moved[0:299];
-wire [25:0] next_playerBullet_generated[0:299];
-wire [25:0] next_enemyBullet_moved[0:299];
-wire [25:0] next_enemyBullet_generated[0:299];
+wire [7:0] next_playerPosition_inGame[0:1];
+wire [7:0] next_enemyPosition_inGame[0:1];
+wire [27:0] next_playerBullet_moved[0:599];
+wire [27:0] next_playerBullet_generated[0:599];
+wire [27:0] next_enemyBullet_moved[0:599];
+wire [27:0] next_enemyBullet_generated[0:599];
 
 integer i;
 
@@ -68,10 +68,10 @@ GeneratePlayerBullet generatePlayerBullet(
     .next_playerBullet(next_playerBullet_generated)
 );
 
-/*GetEnemyPosition getEnemyPosition(
+GetEnemyPosition getEnemyPosition(
+    .clk(clk),
     .state(state),
-    .playerPosition(playerPosition),
-    .playerBullet(playerBullet),//躲避玩家子弹？
+    .level(level),
     .enemyPosition(enemyPosition),
     
     .next_enemyPosition(next_enemyPosition_inGame)
@@ -82,11 +82,11 @@ GenerateEnemyBullet generateEnemyBullet(
     .state(state),
     .level(level),
     .playerPosition(playerPosition),
-    .EnemyPosition(EnemyPosition),
+    .enemyPosition(enemyPosition),
     .enemyHp(enemyHp),
 
     .next_enemyBullet(next_enemyBullet_generated)
-);*/
+);
 
 GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰撞信息（从而生命值的变化情况）以及弹幕位置信息
     .clk(clk),
@@ -105,16 +105,6 @@ GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰
 );
 
 always @(*) begin
-    for(i=0;i<299;i=i+1) begin
-        if(next_playerBullet_generated[i]!=0)
-            next_playerBullet[i]=next_playerBullet_generated[i];
-        else
-            next_playerBullet[i]=next_playerBullet_moved[i];
-        if(next_enemyBullet_generated[i]!=0)
-            next_enemyBullet[i]=next_enemyBullet_generated[i];
-        else
-            next_enemyBullet[i]=next_enemyBullet_moved[i];
-    end
     if(state==1||state==2) begin
         next_playerHp=next_playerHp_inGame;
         next_enemyHp=next_enemyHp_inGame;
@@ -122,19 +112,34 @@ always @(*) begin
         next_playerPosition[1]=next_playerPosition_inGame[1];
         next_enemyPosition[0]=next_enemyPosition_inGame[0];
         next_enemyPosition[1]=next_enemyPosition_inGame[1];
+        for(i=0;i<600;i++) begin
+            if(next_playerBullet_generated[i]!=0)
+                next_playerBullet[i]=next_playerBullet_generated[i];
+            else
+                next_playerBullet[i]=next_playerBullet_moved[i];
+            if(next_enemyBullet_generated[i]!=0)
+                next_enemyBullet[i]=next_enemyBullet_generated[i];
+            else
+                next_enemyBullet[i]=next_enemyBullet_moved[i];
+        end
     end
     else begin
         next_playerHp=21'd100;
         case(level)
             1:next_enemyHp=21'd500;
-            default:next_enemyHp=21'd1000;
+            2:next_enemyHp=21'd750;
+            3:next_enemyHp=21'd1000;
+            4:next_enemyHp=21'd1500;
+            5:next_enemyHp=21'd5000;
         endcase
-        next_playerPosition[0]=7'd40;
-        next_playerPosition[1]=7'd15;
-        next_enemyPosition[0]=7'd40;
-        next_enemyPosition[1]=7'd50;
+        next_playerPosition[0]=8'd200;
+        next_playerPosition[1]=8'd30;
+        next_enemyPosition[0]=8'd200;
+        next_enemyPosition[1]=7'd120;
+        for(i=0;i<600;i++) begin
+            next_playerBullet[i]=0;
+            next_enemyBullet[i]=0;
+        end
     end
 end
-
-
 endmodule

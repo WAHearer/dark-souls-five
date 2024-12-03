@@ -34,23 +34,37 @@ always @(posedge enter or posedge pause) begin
             if(enter)
                 next_state<=6;
         end
+        4:begin
+            if(pause)
+                next_state<=0;
+        end
+        5:begin
+            if(enter)
+                next_state<=2;
+            if(pause)
+                next_state<=0;
+        end
         6:begin
             if(enter) begin
                 case(textId)
-                    0:next_textId<=1;
+                    0:begin
+                        next_textId<=1;
+                        next_level<=1;
+                    end
                     1:next_textId<=2;
                     2:begin
                         next_textId<=3;
                         next_state<=2;
-                        next_level<=1;
                     end
-                    3:next_textId<=4;
+                    3:begin
+                        next_textId<=4;
+                        next_level<=2;
+                    end
                     4:next_textId<=5;
                     5:next_textId<=6;
                     6:begin
                         next_textId<=7;
                         next_state<=2;
-                        next_level<=2;
                     end
                 endcase
             end
