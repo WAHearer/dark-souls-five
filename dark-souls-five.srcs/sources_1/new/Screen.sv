@@ -112,8 +112,10 @@ always @(posedge pclk) begin
                 // 显示玩家子弹 (青色)
                 for(int i = 0; i < 70; i++) begin
                     if(playerBullet[i] != 0 &&
-                       game_x == playerBullet[i][7:0] && 
-                       game_y == playerBullet[i][15:8]) begin
+                       game_x <= (playerBullet[i][7:0] + 1) && 
+                       game_y <= (playerBullet[i][15:8] + 1) &&
+                       game_x >= (playerBullet[i][7:0] - 1) && 
+                       game_y >= (playerBullet[i][15:8] - 1)) begin
                         {vga_r,vga_g,vga_b} <= 12'h0FF;
                     end
                 end
@@ -121,8 +123,10 @@ always @(posedge pclk) begin
                 // 显示敌人子弹 (黄色)
                 for(int i = 0; i < 70; i++) begin
                     if(enemyBullet[i] != 0 &&
-                       game_x == enemyBullet[i][7:0] && 
-                       game_y == enemyBullet[i][15:8]) begin
+                       game_x <= (enemyBullet[i][7:0] + 1) && 
+                       game_y <= (enemyBullet[i][15:8] + 1) &&
+                       game_x >= (enemyBullet[i][7:0] - 1) && 
+                       game_y >= (enemyBullet[i][15:8] - 1)) begin
                         {vga_r,vga_g,vga_b} <= 12'hFF0;
                     end
                 end
