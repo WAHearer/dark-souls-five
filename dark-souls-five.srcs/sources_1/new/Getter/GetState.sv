@@ -27,8 +27,12 @@ always @(posedge enter or posedge pause) begin
                 next_state<=1;
             else if(playerHp==0)
                 next_state<=5;
-            else if(enemyHp==0)
-                next_state<=3;
+            else if(enemyHp==0) begin
+                if(level==6)
+                    next_state<=4;
+                else
+                    next_state<=3;
+            end
         end
         3:begin
             if(enter)
@@ -64,6 +68,15 @@ always @(posedge enter or posedge pause) begin
                     5:next_textId<=6;
                     6:begin
                         next_textId<=7;
+                        next_state<=2;
+                    end
+                    7:begin
+                        next_textId<=8;
+                        next_level<=3;
+                    end
+                    8:next_textId<=9;
+                    9:begin
+                        next_textId<=10;
                         next_state<=2;
                     end
                 endcase
