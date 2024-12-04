@@ -223,8 +223,8 @@ always @(*) begin
         next_playerHp=playerHp;
         next_enemyHp=enemyHp;
         for(i=0;i<70;i++) begin
-            next_playerBullet[i]=playerBullet[i];
-            next_enemyBullet[i]=enemyBullet[i];
+            next_playerBullet[i]=0;
+            next_enemyBullet[i]=0;
         end
     end
 end
