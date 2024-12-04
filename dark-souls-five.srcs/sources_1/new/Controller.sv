@@ -23,7 +23,7 @@ reg [27:0] next_enemyBullet[0:599];
 
 integer i;
 
-/*Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
+Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
     .state(state),
     .textId(textId),
     .level(level),
@@ -34,7 +34,7 @@ integer i;
     .playerBullet(playerBullet),
     .enemyBullet(enemyBullet)
 );
-
+/*
 Music music(//播放音乐？可以依据：当前游戏状态、关卡数、boss血量
     .state(state),
     .level(level),
