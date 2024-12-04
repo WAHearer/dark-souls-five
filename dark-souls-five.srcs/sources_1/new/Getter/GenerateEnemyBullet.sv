@@ -8,7 +8,7 @@ module GenerateEnemyBullet (
 
     output reg [27:0] next_enemyBullet[0:599]
 );
-integer i,counter1,counter2,counter3,randBase,randSpeed,startPos;
+integer i,counter1,counter2,counter3,base,speed,startPos,cnt;
 always @(posedge clk) begin
     if(state==2) begin
         if(level==1||level==2) begin
@@ -67,21 +67,66 @@ always @(posedge clk) begin
             end
         end
         if(level==3) begin
-            if(counter1<randBase)
+            if(counter1<base)
                 counter1<=counter1+1;
             else begin
                 counter1<=0;
                 startPos<=(startPos+200)%600;
                 for(i=0;i<200;i++) begin
-                    if(randSpeed==0)
+                    if(speed==0)
                         next_enemyBullet[(startPos+i+200)%600]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
                     else
                         next_enemyBullet[(startPos+i+200)%600]<={12'b100000110010,enemyPosition[1],i}-(1<<8);
                 end
             end
             if(counter1==0) begin
-                randBase<=32'd80000000+{$random()}%(32'd120000000-32'd80000000+1);
-                randSpeed<={$random()}%2;
+                case(cnt)
+                    0:begin
+                        base<=32'd92465192;
+                        speed<=1;
+                    end
+                    1:begin
+                        base<=32'd109058183;
+                        speed<=1;
+                    end
+                    2:begin
+                        base<=32'd85155152;
+                        speed<=0;
+                    end
+                    3:begin
+                        base<=32'd117041211;
+                        speed<=1;
+                    end
+                    4:begin
+                        base<=32'd111008611;
+                        speed<=0;
+                    end
+                    5:begin
+                        base<=32'd109146229;
+                        speed<=0;
+                    end
+                    6:begin
+                        base<=32'd99498331;
+                        speed<=0;
+                    end
+                    7:begin
+                        base<=32'd118826640;
+                        speed<=1;
+                    end
+                    8:begin
+                        base<=32'd34587456;
+                        speed<=1;
+                    end
+                    9:begin
+                        base<=32'd42875369;
+                        speed<=1;
+                    end
+                    10:begin
+                        base<=32'd35784129;
+                        speed<=1;
+                    end
+                endcase
+                cnt<=(cnt+1)%11;
                 for(i=0;i<200;i++)
                     next_enemyBullet[(startPos+i)%600]<=0;
             end
@@ -92,8 +137,9 @@ always @(posedge clk) begin
         counter2<=0;
         counter3<=0;
         startPos<=0;
-        randBase<=32'd80000000+{$random()}%(32'd120000000-32'd80000000+1);
-        randSpeed<={$random()}%2;
+        base<=32'd100000000;
+        speed<=0;
+        cnt<=0;
         for(i=0;i<600;i++)
             next_enemyBullet[i]<=0;
     end

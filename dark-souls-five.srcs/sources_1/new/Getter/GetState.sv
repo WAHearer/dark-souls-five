@@ -10,83 +10,78 @@ module GetState (
     output reg [9:0] next_textId,
     output reg [5:0] next_level
 );
-wire levelOver=(state==2)&&(playerHp==0||enemyHp==0);
-always @(posedge enter or posedge pause or posedge levelOver) begin
-    if(levelOver) begin
-        if(playerHp==0)
-            next_state<=5;
-        else begin
-            if(level==6)
-                next_state<=4;
-            else
-                next_state<=3;
+always @(posedge enter or posedge pause) begin
+    case(state)
+        0:begin
+            if(enter) begin
+                next_state<=6;
+                next_textId<=0;
+            end
         end
-    end
-    else begin
-        case(state)
-            0:begin
-                if(enter) begin
-                    next_state<=6;
-                    next_textId<=0;
-                end
+        1:begin
+            if(enter)
+                next_state<=2;
+        end
+        2:begin
+            if(playerHp==0)
+                next_state<=5;
+            else if(enemyHp==0)begin
+                if(level==6)
+                    next_state<=4;
+                else
+                    next_state<=3;
             end
-            1:begin
-                if(enter)
-                    next_state<=2;
+            else if(pause)
+                next_state<=1;
+        end
+        3:begin
+            if(enter)
+                next_state<=6;
+        end
+        4:begin
+            if(pause)
+                next_state<=0;
+        end
+        5:begin
+            if(enter)
+                next_state<=2;
+            if(pause)
+                next_state<=0;
+        end
+        6:begin
+            if(enter) begin
+                case(textId)
+                    0:begin
+                        next_textId<=1;
+                        next_level<=1;
+                    end
+                    1:next_textId<=2;
+                    2:begin
+                        next_textId<=3;
+                        next_state<=2;
+                    end
+                    3:begin
+                        next_textId<=4;
+                        next_level<=2;
+                    end
+                    4:next_textId<=5;
+                    5:next_textId<=6;
+                    6:begin
+                        next_textId<=7;
+                        next_state<=2;
+                    end
+                    7:begin
+                        next_textId<=8;
+                        next_level<=3;
+                    end
+                    8:next_textId<=9;
+                    9:begin
+                        next_textId<=10;
+                        next_state<=2;
+                    end
+                endcase
             end
-            2:begin
-                if(pause)
-                    next_state<=1;
-            end
-            3:begin
-                if(enter)
-                    next_state<=6;
-            end
-            4:begin
-                if(pause)
-                    next_state<=0;
-            end
-            5:begin
-                if(enter)
-                    next_state<=2;
-                if(pause)
-                    next_state<=0;
-            end
-            6:begin
-                if(enter) begin
-                    case(textId)
-                        0:begin
-                            next_textId<=1;
-                            next_level<=1;
-                        end
-                        1:next_textId<=2;
-                        2:begin
-                            next_textId<=3;
-                            next_state<=2;
-                        end
-                        3:begin
-                            next_textId<=4;
-                            next_level<=2;
-                        end
-                        4:next_textId<=5;
-                        5:next_textId<=6;
-                        6:begin
-                            next_textId<=7;
-                            next_state<=2;
-                        end
-                        7:begin
-                            next_textId<=8;
-                            next_level<=3;
-                        end
-                        8:next_textId<=9;
-                        9:begin
-                            next_textId<=10;
-                            next_state<=2;
-                        end
-                    endcase
-                end
-            end
-        endcase
-    end
+        end
+    endcase
 end
 endmodule
