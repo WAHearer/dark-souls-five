@@ -70,8 +70,12 @@ always @(posedge clk) begin
         counter<=0;
         if(state!=1) begin
             startPos<=0;
-            for(i=clkCounter*6;i<(clkCounter+1)*6;i++)
-                next_playerBullet[i]<=0;
+            next_playerBullet[clkCounter*6]<=0;
+            next_playerBullet[clkCounter*6+1]<=0;
+            next_playerBullet[clkCounter*6+2]<=0;
+            next_playerBullet[clkCounter*6+3]<=0;
+            next_playerBullet[clkCounter*6+4]<=0;
+            next_playerBullet[clkCounter*6+5]<=0;
         end
     end
 end

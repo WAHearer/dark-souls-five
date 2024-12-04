@@ -32,186 +32,186 @@ always @(posedge clk) begin
             else
                 counter2<=0;
         end
-        for(i=clkCounter*6;i<(clkCounter+1)*6;i++) begin
-            if(playerBullet[i][7:0]==enemyPosition[0]&&playerBullet[i][15:8]==enemyPosition[1]) begin
-                if(enemyHp<=playerBullet[i][22:16])
+        for(i=0;i<6;i++) begin
+            if(playerBullet[clkCounter*6+i][7:0]==enemyPosition[0]&&playerBullet[clkCounter*6+i][15:8]==enemyPosition[1]) begin
+                if(enemyHp<=playerBullet[clkCounter*6+i][22:16])
                     next_enemyHp<=0;
                 else
-                    next_enemyHp<=enemyHp-playerBullet[i][22:16];
-                next_playerBullet[i]<=0;
+                    next_enemyHp<=enemyHp-playerBullet[clkCounter*6+i][22:16];
+                next_playerBullet[clkCounter*6+i]<=0;
             end
             else begin
-                case(playerBullet[i][25:23])
+                case(playerBullet[clkCounter*6+i][25:23])
                     4'd0: begin
-                        if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][15:8]>0)
-                                next_playerBullet[i]<=playerBullet[i]-(1<<8);
+                        if(counter1==(base1>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][15:8]>0)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]-(1<<8);
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                     4'd1: begin
-                        if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]>0)
-                                next_playerBullet[i]<=playerBullet[i]-1;
+                        if(counter1==(base1>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][7:0]>0)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]-1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                     4'd2: begin
-                        if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]<8'd199)
-                                next_playerBullet[i]<=playerBullet[i]+1;
+                        if(counter1==(base1>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][7:0]<8'd199)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]+1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                     4'd3: begin
-                        if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][15:8]<8'd149)
-                                next_playerBullet[i]<=playerBullet[i]+(1<<8);
+                        if(counter1==(base1>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][15:8]<8'd149)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]+(1<<8);
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                     4'd4: begin
-                        if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]>0&&playerBullet[i][15:8]>0)
-                                next_playerBullet[i]<=playerBullet[i]-(1<<8)-1;
+                        if(counter2==(base2>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][7:0]>0&&playerBullet[clkCounter*6+i][15:8]>0)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]-(1<<8)-1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                     4'd5: begin
-                        if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]<8'd199&&playerBullet[i][15:8]>0)
-                                next_playerBullet[i]<=playerBullet[i]-(1<<8)+1;
+                        if(counter2==(base2>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][7:0]<8'd199&&playerBullet[clkCounter*6+i][15:8]>0)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]-(1<<8)+1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                     4'd6: begin
-                        if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]>0&&playerBullet[i][15:8]<8'd149)
-                                next_playerBullet[i]<=playerBullet[i]+(1<<8)-1;
+                        if(counter2==(base2>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][7:0]>0&&playerBullet[clkCounter*6+i][15:8]<8'd149)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]+(1<<8)-1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                     4'd7: begin
-                        if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]<8'd199&&playerBullet[i][15:8]<8'd149)
-                                next_playerBullet[i]<=playerBullet[i]+(1<<8)+1;
+                        if(counter2==(base2>>playerBullet[clkCounter*6+i][27:26])) begin
+                            if(playerBullet[clkCounter*6+i][7:0]<8'd199&&playerBullet[clkCounter*6+i][15:8]<8'd149)
+                                next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i]+(1<<8)+1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_playerBullet[i]<=playerBullet[i];
+                            next_playerBullet[clkCounter*6+i]<=playerBullet[clkCounter*6+i];
                     end
                 endcase
             end
-            if(enemyBullet[i][7:0]==playerPosition[0]&&enemyBullet[i][15:8]==playerPosition[1]) begin
-                if(playerHp<=enemyBullet[i][22:16])
+            if(enemyBullet[clkCounter*6+i][7:0]==playerPosition[0]&&enemyBullet[clkCounter*6+i][15:8]==playerPosition[1]) begin
+                if(playerHp<=enemyBullet[clkCounter*6+i][22:16])
                     next_playerHp<=0;
                 else
-                    next_playerHp<=playerHp-enemyBullet[i][22:16];
-                next_enemyBullet[i]<=0;
+                    next_playerHp<=playerHp-enemyBullet[clkCounter*6+i][22:16];
+                next_enemyBullet[clkCounter*6+i]<=0;
             end
             else begin
-                case(enemyBullet[i][25:23])
+                case(enemyBullet[clkCounter*6+i][25:23])
                     4'd0: begin
-                        if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][15:8]>0)
-                                next_enemyBullet[i]<=enemyBullet[i]-(1<<8);
+                        if(counter1==(base1>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][15:8]>0)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]-(1<<8);
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                     4'd1: begin
-                        if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]>0)
-                                next_enemyBullet[i]<=enemyBullet[i]-1;
+                        if(counter1==(base1>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][7:0]>0)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]-1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                     4'd2: begin
-                        if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]<8'd199)
-                                next_enemyBullet[i]<=enemyBullet[i]+1;
+                        if(counter1==(base1>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][7:0]<8'd199)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]+1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                     4'd3: begin
-                        if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][15:8]<8'd149)
-                                next_enemyBullet[i]<=enemyBullet[i]+(1<<8);
+                        if(counter1==(base1>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][15:8]<8'd149)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]+(1<<8);
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                     4'd4: begin
-                        if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]>0&&enemyBullet[i][15:8]>0)
-                                next_enemyBullet[i]<=enemyBullet[i]-(1<<8)-1;
+                        if(counter2==(base2>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][7:0]>0&&enemyBullet[clkCounter*6+i][15:8]>0)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]-(1<<8)-1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                     4'd5: begin
-                        if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]<8'd199&&enemyBullet[i][15:8]>0)
-                                next_enemyBullet[i]<=enemyBullet[i]-(1<<8)+1;
+                        if(counter2==(base2>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][7:0]<8'd199&&enemyBullet[clkCounter*6+i][15:8]>0)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]-(1<<8)+1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                     4'd6: begin
-                        if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]>0&&enemyBullet[i][15:8]<8'd149)
-                                next_enemyBullet[i]<=enemyBullet[i]+(1<<8)-1;
+                        if(counter2==(base2>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][7:0]>0&&enemyBullet[clkCounter*6+i][15:8]<8'd149)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]+(1<<8)-1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                     4'd7: begin
-                        if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]<8'd199&&enemyBullet[i][15:8]<8'd149)
-                                next_enemyBullet[i]<=enemyBullet[i]+(1<<8)+1;
+                        if(counter2==(base2>>enemyBullet[clkCounter*6+i][27:26])) begin
+                            if(enemyBullet[clkCounter*6+i][7:0]<8'd199&&enemyBullet[clkCounter*6+i][15:8]<8'd149)
+                                next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i]+(1<<8)+1;
                             else
-                                next_enemyBullet[i]<=0;
+                                next_enemyBullet[clkCounter*6+i]<=0;
                         end
                         else
-                            next_enemyBullet[i]<=enemyBullet[i];
+                            next_enemyBullet[clkCounter*6+i]<=enemyBullet[clkCounter*6+i];
                     end
                 endcase
             end
@@ -222,10 +222,18 @@ always @(posedge clk) begin
         counter2<=0;
         next_playerHp<=playerHp;
         next_enemyHp<=enemyHp;
-        for(i=clkCounter*6;i<(clkCounter+1)*6;i++) begin
-            next_playerBullet[i]<=playerBullet[i];
-            next_enemyBullet[i]<=enemyBullet[i];
-        end
+        next_playerBullet[clkCounter*6]<=0;
+        next_playerBullet[clkCounter*6+1]<=0;
+        next_playerBullet[clkCounter*6+2]<=0;
+        next_playerBullet[clkCounter*6+3]<=0;
+        next_playerBullet[clkCounter*6+4]<=0;
+        next_playerBullet[clkCounter*6+5]<=0;
+        next_enemyBullet[clkCounter*6]<=0;
+        next_enemyBullet[clkCounter*6+1]<=0;
+        next_enemyBullet[clkCounter*6+2]<=0;
+        next_enemyBullet[clkCounter*6+3]<=0;
+        next_enemyBullet[clkCounter*6+4]<=0;
+        next_enemyBullet[clkCounter*6+5]<=0;
     end
 end
 endmodule
