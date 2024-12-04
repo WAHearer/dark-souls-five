@@ -16,50 +16,50 @@ always @(posedge clk) begin
             counter<=0;
         if(counter==0) begin
             if(level==1||level==2) begin
-                startPos<=(startPos+3)%600;
-                next_playerBullet[(startPos+3)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
+                startPos<=(startPos+3)<600?(startPos+3):(startPos+3)-600;
+                next_playerBullet[(startPos+3)<600?(startPos+3):(startPos+3)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
                 if(playerPosition[0]>0)
-                    next_playerBullet[(startPos+4)%600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-1+(1<<8);
+                    next_playerBullet[(startPos+4)<600?(startPos+4):(startPos+4)-600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-1+(1<<8);
                 if(playerPosition[0]<8'd199)
-                    next_playerBullet[(startPos+5)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+1+(1<<8);
+                    next_playerBullet[(startPos+5)<600?(startPos+5):(startPos+5)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+1+(1<<8);
             end
             else if(level==3||level==4) begin
-                startPos<=(startPos+5)%600;
-                next_playerBullet[(startPos+3)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
+                startPos<=(startPos+5)<600?(startPos+5):(startPos+5)-600;
+                next_playerBullet[(startPos+3)<600?(startPos+3):(startPos+3)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
                 if(playerPosition[0]>0)
-                    next_playerBullet[(startPos+4)%600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-1+(1<<8);
+                    next_playerBullet[(startPos+4)<600?(startPos+4):(startPos+4)-600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-1+(1<<8);
                 if(playerPosition[0]<8'd199)
-                    next_playerBullet[(startPos+5)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+1+(1<<8);
+                    next_playerBullet[(startPos+5)<600?(startPos+5):(startPos+5)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+1+(1<<8);
                 if(playerPosition[0]>1)
-                    next_playerBullet[(startPos+6)%600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-2+(1<<8);
+                    next_playerBullet[(startPos+6)<600?(startPos+6):(startPos+6)-600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-2+(1<<8);
                 if(playerPosition[0]<8'd198)
-                    next_playerBullet[(startPos+7)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+2+(1<<8);
+                    next_playerBullet[(startPos+7)<600?(startPos+7):(startPos+7)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+2+(1<<8);
             end
             else begin
-                startPos<=(startPos+7)%600;
-                next_playerBullet[(startPos+3)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
+                startPos<=(startPos+7)<600?(startPos+7):(startPos+7)-600;
+                next_playerBullet[(startPos+3)<600?(startPos+3):(startPos+3)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
                 if(playerPosition[0]>0)
-                    next_playerBullet[(startPos+4)%600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-1+(1<<8);
+                    next_playerBullet[(startPos+4)<600?(startPos+4):(startPos+4)-600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-1+(1<<8);
                 if(playerPosition[0]<8'd199)
-                    next_playerBullet[(startPos+5)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+1+(1<<8);
+                    next_playerBullet[(startPos+5)<600?(startPos+5):(startPos+5)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+1+(1<<8);
                 if(playerPosition[0]>1)
-                    next_playerBullet[(startPos+6)%600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-2+(1<<8);
+                    next_playerBullet[(startPos+6)<600?(startPos+6):(startPos+6)-600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-2+(1<<8);
                 if(playerPosition[0]<8'd198)
-                    next_playerBullet[(startPos+7)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+2+(1<<8);
+                    next_playerBullet[(startPos+7)<600?(startPos+7):(startPos+7)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+2+(1<<8);
                 if(playerPosition[0]>2)
-                    next_playerBullet[(startPos+8)%600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
+                    next_playerBullet[(startPos+8)<600?(startPos+8):(startPos+8)-600]<={12'b100000001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
                 if(playerPosition[0]<8'd197)
-                    next_playerBullet[(startPos+9)%600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
+                    next_playerBullet[(startPos+9)<600?(startPos+9):(startPos+9)-600]<={12'b100000010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
             end
         end
         if(counter==1) begin
             next_playerBullet[startPos]<=0;
-            next_playerBullet[(startPos+1)%600]<=0;
-            next_playerBullet[(startPos+2)%600]<=0;
-            next_playerBullet[(startPos+3)%600]<=0;
-            next_playerBullet[(startPos+4)%600]<=0;
-            next_playerBullet[(startPos+5)%600]<=0;
-            next_playerBullet[(startPos+6)%600]<=0;
+            next_playerBullet[(startPos+1)<600?(startPos+1):(startPos+1)-600]<=0;
+            next_playerBullet[(startPos+2)<600?(startPos+2):(startPos+2)-600]<=0;
+            next_playerBullet[(startPos+3)<600?(startPos+3):(startPos+3)-600]<=0;
+            next_playerBullet[(startPos+4)<600?(startPos+4):(startPos+4)-600]<=0;
+            next_playerBullet[(startPos+5)<600?(startPos+5):(startPos+5)-600]<=0;
+            next_playerBullet[(startPos+6)<600?(startPos+6):(startPos+6)-600]<=0;
         end
     end
     else begin
