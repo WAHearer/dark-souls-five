@@ -72,11 +72,29 @@ always @(posedge clk) begin
             else begin
                 counter1<=0;
                 startPos<=(startPos+200)%600;
-                for(i=0;i<200;i++) begin
-                    if(speed==0)
-                        next_enemyBullet[(startPos+i+200)%600]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
-                    else
-                        next_enemyBullet[(startPos+i+200)%600]<={12'b100000110010,enemyPosition[1],i}-(1<<8);
+                if(cnt==0||cnt==3||cnt==6||cnt==9) begin
+                    for(i=0;i<200;i++) begin
+                        if(speed==0)
+                            next_enemyBullet[i]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
+                        else
+                            next_enemyBullet[i]<={12'b100000110010,enemyPosition[1],i}-(1<<8);
+                    end
+                end
+                else if(cnt==1||cnt==4||cnt==7||cnt==10) begin
+                    for(i=200;i<400;i++) begin
+                        if(speed==0)
+                            next_enemyBullet[i]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
+                        else
+                            next_enemyBullet[i]<={12'b100000110010,enemyPosition[1],i}-(1<<8);
+                    end
+                end
+                else begin
+                    for(i=400;i<600;i++) begin
+                        if(speed==0)
+                            next_enemyBullet[i]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
+                        else
+                            next_enemyBullet[i]<={12'b100000110010,enemyPosition[1],i}-(1<<8);
+                    end
                 end
             end
             if(counter1==0) begin
@@ -122,13 +140,31 @@ always @(posedge clk) begin
                         speed<=1;
                     end
                     10:begin
-                        base<=32'd35784129;
+                        base<=32'd97423442;
                         speed<=1;
                     end
+                    11:begin
+                        base<=32'd100000000;
+                        speed<=0;
+                    end
                 endcase
+                if(cnt==0||cnt==3||cnt==6||cnt==9) begin
+                    for(i=0;i<200;i++) begin
+                        next_enemyBullet[i]<=0;
+                    end
+                end
+                else if(cnt==1||cnt==4||cnt==7||cnt==10) begin
+                    for(i=200;i<400;i++) begin
+                        next_enemyBullet[i]<=0;
+                    end
+                end
+                else begin
+                    for(i=400;i<600;i++) begin
+                        next_enemyBullet[i]<=0;
+                    end
+                end
                 cnt<=(cnt+1)%11;
-                for(i=0;i<200;i++)
-                    next_enemyBullet[(startPos+i)%600]<=0;
+                
             end
         end
     end
