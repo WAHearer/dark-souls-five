@@ -39,15 +39,14 @@ reg  vram_we;
 reg  [11:0] vram_din;
 wire [11:0] vram_dout;
 blk_mem_gen_0 vram (
+    .ena(1'b1),
     .clka(clk),
     .wea(vram_we),
     .addra({render_y[7:0], render_x[7:0]}),
     .dina(vram_din),
-    .douta(),
+    .enb(1'b1),
     .clkb(pclk),
-    .web(1'b0),
     .addrb({y[9:0]>>2, x[9:0]>>2}),
-    .dinb(12'h000),
     .doutb(vram_dout)
 );
 
