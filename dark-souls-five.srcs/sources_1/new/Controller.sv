@@ -39,7 +39,12 @@ Screen screen(//screen模块生成画布信息，然后调用显示模块输出�
     .playerPosition(playerPosition),
     .enemyPosition(enemyPosition),
     .playerBullet(playerBullet),
-    .enemyBullet(enemyBullet)
+    .enemyBullet(enemyBullet),
+    .vga_r(vga_r),
+    .vga_g(vga_g),
+    .vga_b(vga_b),
+    .vga_hs(vga_hs),
+    .vga_vs(vga_vs)
 );
 /*
 Music music(//播放音乐？可以依据：当前游戏状态、关卡数、boss血量
