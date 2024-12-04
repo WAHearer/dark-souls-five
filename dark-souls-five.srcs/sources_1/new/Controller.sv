@@ -10,8 +10,8 @@ reg [20:0] playerHp;
 reg [20:0] enemyHp;
 reg [7:0] playerPosition[0:1];//0为x坐标，1为y坐标
 reg [7:0] enemyPosition[0:1];//同上
-reg [27:0] playerBullet[0:599];//7:0为x坐标，15:8为y坐标，22:16为伤害，25:23为方向，27:26为速度
-reg [27:0] enemyBullet[0:599];//同上
+reg [27:0] playerBullet[0:69];//7:0为x坐标，15:8为y坐标，22:16为伤害，25:23为方向，27:26为速度
+reg [27:0] enemyBullet[0:69];//同上
 
 reg [3:0] next_state;
 reg [9:0] next_textId;
@@ -20,8 +20,8 @@ reg [20:0] next_playerHp;
 reg [20:0] next_enemyHp;
 reg [7:0] next_playerPosition[0:1];
 reg [7:0] next_enemyPosition[0:1];
-reg [27:0] next_playerBullet[0:599];
-reg [27:0] next_enemyBullet[0:599];
+reg [27:0] next_playerBullet[0:69];
+reg [27:0] next_enemyBullet[0:69];
 
 integer i;
 
@@ -95,7 +95,7 @@ always @(posedge clk) begin//更新状态
     playerPosition[1]<=next_playerPosition[1];
     enemyPosition[0]<=next_enemyPosition[0];
     enemyPosition[1]<=next_enemyPosition[1];
-    for(i=0;i<600;i++) begin
+    for(i=0;i<70;i++) begin
         playerBullet[i]<=next_playerBullet[i];
         enemyBullet[i]<=next_enemyBullet[i];
     end
