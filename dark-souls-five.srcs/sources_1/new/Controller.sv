@@ -21,9 +21,16 @@ reg [7:0] next_enemyPosition[0:1];
 reg [27:0] next_playerBullet[0:599];
 reg [27:0] next_enemyBullet[0:599];
 
+wire [3:0] vga_r;
+wire [3:0] vga_g;
+wire [3:0] vga_b;
+wire vga_hs;
+wire vga_vs;
+
 integer i;
 
 Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
+    .clk(clk),
     .state(state),
     .textId(textId),
     .level(level),
