@@ -80,36 +80,66 @@ end
 // 显示逻辑
 always @(posedge pclk) begin
     if(disp_enable) begin
-        // 默认黑色背景
-        {vga_r,vga_g,vga_b} <= 12'h000;
-        
-        // 显示玩家 (蓝色)
-        if(game_x >= playerPosition[0] && game_x < playerPosition[0] + 10 &&
-           game_y >= playerPosition[1] && game_y < playerPosition[1] + 10) begin
-            {vga_r,vga_g,vga_b} <= 12'h00F;
-        end
-        
-        // 显示敌人 (红色)
-        if(game_x >= enemyPosition[0] && game_x < enemyPosition[0] + 10 &&
-           game_y >= enemyPosition[1] && game_y < enemyPosition[1] + 10) begin
-            {vga_r,vga_g,vga_b} <= 12'hF00;
-        end
-        
-        // 显示子弹
-        for(int i = 0; i < 600; i++) begin
-            // 玩家子弹 (青色)
-            if(playerBullet[i] != 0 &&
-               game_x == playerBullet[i][7:0] && 
-               game_y == playerBullet[i][15:8]) begin
-                {vga_r,vga_g,vga_b} <= 12'h0FF;
+        case(state)
+            4'd0: begin  // 全红
+                vga_r <= 4'hF;
+                vga_g <= 4'h0;
+                vga_b <= 4'h0;
             end
-            // 敌人子弹 (黄色)
-            if(enemyBullet[i] != 0 &&
-               game_x == enemyBullet[i][7:0] && 
-               game_y == enemyBullet[i][15:8]) begin
-                {vga_r,vga_g,vga_b} <= 12'hFF0;
+            
+            4'd1: begin  // 全蓝
+                vga_r <= 4'h0;
+                vga_g <= 4'h0;
+                vga_b <= 4'hF;
             end
-        end
+            
+            4'd2: begin  // 正常游戏显示
+                // 默认黑色背景
+                {vga_r,vga_g,vga_b} <= 12'h000;
+                
+                // 显示玩家 (蓝色)
+                if(game_x >= playerPosition[0] && game_x < playerPosition[0] + 10 &&
+                   game_y >= playerPosition[1] && game_y < playerPosition[1] + 10) begin
+                    {vga_r,vga_g,vga_b} <= 12'h00F;
+                end
+                
+                // 显示敌人 (红色)
+                if(game_x >= enemyPosition[0] && game_x < enemyPosition[0] + 10 &&
+                   game_y >= enemyPosition[1] && game_y < enemyPosition[1] + 10) begin
+                    {vga_r,vga_g,vga_b} <= 12'hF00;
+                end
+                
+                // 显示玩家子弹 (青色)
+                for(int i = 0; i < 600; i++) begin
+                    if(playerBullet[i] != 0 &&
+                       game_x == playerBullet[i][7:0] && 
+                       game_y == playerBullet[i][15:8]) begin
+                        {vga_r,vga_g,vga_b} <= 12'h0FF;
+                    end
+                end
+                
+                // 显示敌人子弹 (黄色)
+                for(int i = 0; i < 600; i++) begin
+                    if(enemyBullet[i] != 0 &&
+                       game_x == enemyBullet[i][7:0] && 
+                       game_y == enemyBullet[i][15:8]) begin
+                        {vga_r,vga_g,vga_b} <= 12'hFF0;
+                    end
+                end
+            end
+            
+            4'd6: begin  // 全绿
+                vga_r <= 4'h0;
+                vga_g <= 4'hF;
+                vga_b <= 4'h0;
+            end
+            
+            default: begin  // 其他情况全白
+                vga_r <= 4'hF;
+                vga_g <= 4'hF;
+                vga_b <= 4'hF;
+            end
+        endcase
     end else begin
         {vga_r,vga_g,vga_b} <= 12'h000;
     end
