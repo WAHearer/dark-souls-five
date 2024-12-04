@@ -2,7 +2,10 @@ module Top(
     input logic clkk,
     input logic rstn,
     input logic PS2_CLK,
-    input logic PS2_DATA
+    input logic PS2_DATA,
+
+    output logic [11:0] rgb,
+    output logic hs,vs
 );
 wire key_valid;
 wire [127:0] key_status;
@@ -22,6 +25,12 @@ Controller controller(
     .down(key_status[7'h1B]),
     .left(key_status[7'h1C]),
     .right(key_status[7'h23]),
-    .space(key_status[7'h29])
+    .space(key_status[7'h29]),
+
+    .vga_r(rgb[11:8]),
+    .vga_g(rgb[7:4]),
+    .vga_b(rgb[3:0]),
+    .vga_hs(hs),
+    .vga_vs(vs)
 );
 endmodule
