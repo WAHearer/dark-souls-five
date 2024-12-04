@@ -10,7 +10,8 @@ module GetState (
     output reg [9:0] next_textId,
     output reg [5:0] next_level
 );
-always @(posedge enter or posedge pause) begin
+wire levelOver=(state==2)&&(playerHp==0||enemyHp==0);
+always @(posedge enter or posedge pause or posedge levelOver) begin
     case(state)
         0:begin
             if(enter) begin
@@ -23,16 +24,18 @@ always @(posedge enter or posedge pause) begin
                 next_state<=2;
         end
         2:begin
-            if(pause)
-                next_state<=1;
-            else if(playerHp==0)
-                next_state<=5;
-            else if(enemyHp==0) begin
-                if(level==6)
-                    next_state<=4;
-                else
-                    next_state<=3;
+            if(levelOver) begin
+                if(playerHp==0)
+                    next_state<=5;
+                else begin
+                    if(level==6)
+                        next_state<=4;
+                    else
+                        next_state<=3;
+                end
             end
+            else if(pause)
+                next_state<=1;
         end
         3:begin
             if(enter)
