@@ -1,5 +1,5 @@
 module Controller (
-    input enter,pause,up,down,left,right,space,clk
+    input clk,enter,pause,up,down,left,right,space
 );
 reg [3:0] state;//0开始游戏前，1暂停，2游戏中，3完成一关但未开启下一关，4通关，5失败，6显示文本
 reg [9:0] textId;
