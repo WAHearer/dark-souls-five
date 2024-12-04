@@ -6,9 +6,13 @@ module GeneratePlayerBullet (
 
     output reg [27:0] next_playerBullet[0:599]
 );
-integer counter,startPos;
+integer counter,startPos,clkCounter;
 integer i;
 always @(posedge clk) begin
+    if(clkCounter<32'd99)
+        clkCounter<=clkCounter+1;
+    else
+        clkCounter<=0;
     if(state==2) begin
         if(counter<32'd50000000)
             counter<=counter+1;
@@ -66,7 +70,7 @@ always @(posedge clk) begin
         counter<=0;
         if(state!=1) begin
             startPos<=0;
-            for(i=0;i<600;i++)
+            for(i=clkCounter*6;i<(clkCounter+1)*6;i++)
                 next_playerBullet[i]<=0;
         end
     end

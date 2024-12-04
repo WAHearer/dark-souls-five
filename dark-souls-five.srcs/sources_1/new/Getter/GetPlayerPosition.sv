@@ -10,7 +10,7 @@ reg rollAvailable;
 always @(posedge clk) begin
     if(state==2) begin
         if(!rollAvailable) begin
-            if(rollCounter<32'd500000000)
+            if(rollCounter<32'd50000000)
                 rollCounter<=rollCounter+1;
             else begin
                 rollCounter<=0;

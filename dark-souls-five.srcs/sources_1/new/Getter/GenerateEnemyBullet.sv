@@ -8,8 +8,12 @@ module GenerateEnemyBullet (
 
     output reg [27:0] next_enemyBullet[0:599]
 );
-integer i,counter1,counter2,counter3,base,speed,startPos,cnt;
+integer i,counter1,counter2,counter3,base,speed,startPos,cnt,clkCounter;
 always @(posedge clk) begin
+    if(clkCounter<32'd99)
+        clkCounter<=clkCounter+1;
+    else
+        clkCounter<=0;
     if(state==2) begin
         if(level==1||level==2) begin
             if(counter1<32'd30000000)
@@ -67,13 +71,21 @@ always @(posedge clk) begin
             end
         end
         if(level==3) begin
-            if(counter1<base)
-                counter1<=counter1+1;
-            else begin
-                counter1<=0;
+            if(clkCounter==32'd99) begin
+                if(counter1<base)
+                    counter1<=counter1+1;
+                else begin
+                    counter1<=0;
+                    if(cnt<11)
+                        cnt<=cnt+1;
+                    else
+                        cnt<=0;
+                end
+            end
+            if(counter1==base) begin
                 startPos<=(startPos+200)<600?(startPos+200):(startPos+200)-600;
                 if(cnt==0||cnt==3||cnt==6||cnt==9) begin
-                    for(i=0;i<200;i++) begin
+                    for(i=clkCounter*2;i<(clkCounter+1)*2;i++) begin
                         if(speed==0)
                             next_enemyBullet[i]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
                         else
@@ -81,7 +93,7 @@ always @(posedge clk) begin
                     end
                 end
                 else if(cnt==1||cnt==4||cnt==7||cnt==10) begin
-                    for(i=200;i<400;i++) begin
+                    for(i=200+clkCounter*2;i<200+(clkCounter+1)*2;i++) begin
                         if(speed==0)
                             next_enemyBullet[i]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
                         else
@@ -89,7 +101,7 @@ always @(posedge clk) begin
                     end
                 end
                 else begin
-                    for(i=400;i<600;i++) begin
+                    for(i=400+clkCounter*2;i<400+(clkCounter+1)*2;i++) begin
                         if(speed==0)
                             next_enemyBullet[i]<={12'b010000110010,enemyPosition[1],i}-(1<<8);
                         else
@@ -100,71 +112,69 @@ always @(posedge clk) begin
             if(counter1==0) begin
                 case(cnt)
                     0:begin
-                        base<=32'd92465192;
+                        base<=32'd924651;
                         speed<=1;
                     end
                     1:begin
-                        base<=32'd109058183;
+                        base<=32'd1090581;
                         speed<=1;
                     end
                     2:begin
-                        base<=32'd85155152;
+                        base<=32'd851551;
                         speed<=0;
                     end
                     3:begin
-                        base<=32'd117041211;
+                        base<=32'd1170412;
                         speed<=1;
                     end
                     4:begin
-                        base<=32'd111008611;
+                        base<=32'd1110086;
                         speed<=0;
                     end
                     5:begin
-                        base<=32'd109146229;
+                        base<=32'd1091462;
                         speed<=0;
                     end
                     6:begin
-                        base<=32'd99498331;
+                        base<=32'd994983;
                         speed<=0;
                     end
                     7:begin
-                        base<=32'd118826640;
+                        base<=32'd1188266;
                         speed<=1;
                     end
                     8:begin
-                        base<=32'd34587456;
+                        base<=32'd345874;
                         speed<=1;
                     end
                     9:begin
-                        base<=32'd42875369;
+                        base<=32'd428753;
                         speed<=1;
                     end
                     10:begin
-                        base<=32'd97423442;
+                        base<=32'd974234;
                         speed<=1;
                     end
                     11:begin
-                        base<=32'd100000000;
+                        base<=32'd1000000;
                         speed<=0;
                     end
                 endcase
-                if(cnt==0||cnt==3||cnt==6||cnt==9) begin
-                    for(i=0;i<200;i++) begin
+                if(cnt==1||cnt==4||cnt==7||cnt==10) begin
+                    for(i=clkCounter*2;i<(clkCounter+1)*2;i++) begin
                         next_enemyBullet[i]<=0;
                     end
                 end
-                else if(cnt==1||cnt==4||cnt==7||cnt==10) begin
-                    for(i=200;i<400;i++) begin
+                else if(cnt==2||cnt==5||cnt==8||cnt==11) begin
+                    for(i=200+clkCounter*2;i<200+(clkCounter+1)*2;i++) begin
                         next_enemyBullet[i]<=0;
                     end
                 end
                 else begin
-                    for(i=400;i<600;i++) begin
+                    for(i=400+clkCounter*2;i<400+(clkCounter+1)*2;i++) begin
                         next_enemyBullet[i]<=0;
                     end
                 end
-                cnt<=(cnt+1)%11;
-                
             end
         end
     end
@@ -173,10 +183,10 @@ always @(posedge clk) begin
         counter2<=0;
         counter3<=0;
         startPos<=0;
-        base<=32'd100000000;
+        base<=32'd1000000;
         speed<=0;
         cnt<=0;
-        for(i=0;i<600;i++)
+        for(i=clkCounter*6;i<(clkCounter+1)*6;i++)
             next_enemyBullet[i]<=0;
     end
 end
