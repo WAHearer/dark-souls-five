@@ -8,6 +8,10 @@ module GeneratePlayerBullet (
 );
 integer counter,startPos;
 integer i;
+initial begin
+    for(i=0;i<70;i++)
+        next_playerBullet[i]<=0;
+end
 always @(posedge clk) begin
     if(state==2) begin
         if(counter<32'd20000000)

@@ -10,6 +10,9 @@ module GetState (
     output reg [9:0] next_textId,
     output reg [5:0] next_level
 );
+initial begin
+    next_state<=0;
+end
 always @(posedge enter or posedge pause) begin
     case(state)
         0:begin

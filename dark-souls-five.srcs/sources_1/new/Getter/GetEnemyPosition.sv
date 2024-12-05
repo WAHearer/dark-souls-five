@@ -8,6 +8,10 @@ module GetEnemyPosition (
 );
 integer counter1,counter2;
 reg flag;
+initial begin
+    next_enemyPosition[0]=8'd100;
+    next_enemyPosition[1]=7'd120;
+end
 always @(posedge clk) begin
     if(state==2) begin
         if(level==1||level==2||level==3) begin

@@ -7,6 +7,10 @@ module GetPlayerPosition (
 );
 integer upCounter,downCounter,leftCounter,rightCounter,rollCounter;
 reg rollAvailable;
+initial begin
+    next_playerPosition[0]=8'd100;
+    next_playerPosition[1]=8'd30;
+end
 always @(posedge clk) begin
     if(state==2) begin
         if(!rollAvailable) begin

@@ -16,6 +16,12 @@ module GetBulletPosition (
 localparam base1=32'd2000000;
 localparam base2=32'd2828427;//2*10^6sqrt(2)
 integer i,counter1,counter2;
+initial begin
+    for(i=0;i<70;i++) begin
+        next_playerBullet[i]<=0;
+        next_enemyBullet[i]<=0;
+    end
+end
 always @(posedge clk) begin
     if(state==2) begin
         if(counter1<base1)

@@ -9,6 +9,10 @@ module GenerateEnemyBullet (
     output reg [27:0] next_enemyBullet[0:69]
 );
 integer i,counter1,counter2,counter3,startPos;
+initial begin
+    for(i=0;i<70;i++)
+        next_enemyBullet[i]<=0;
+end
 always @(posedge clk) begin
     if(state==2) begin
         if(level==1||level==2) begin
