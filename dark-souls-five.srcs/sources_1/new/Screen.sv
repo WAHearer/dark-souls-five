@@ -26,11 +26,6 @@ module Screen #(
     output reg vga_hs,           // 行同步
     output reg vga_vs            // 场同步
 );
-// 像素时钟生成
- reg pclk;
- always @(posedge clk) begin
-     pclk <= ~pclk;
- end
  
 // VRAM接口
 reg  vram_we;
@@ -43,7 +38,7 @@ blk_mem_gen_0 vram (
     .addra({render_y[7:0], render_x[7:0]}),
     .dina(vram_din),
     .enb(1'b1),
-    .clkb(pclk),
+    .clkb(clk),
     .addrb({y[9:0]>>2, x[9:0]>>2}),
     .doutb(vram_dout)
 );
@@ -174,7 +169,7 @@ always @(posedge clk) begin
 
 // 水平和垂直计数器
 reg [11:0] hcount, vcount;
- always @(posedge pclk) begin
+ always @(posedge clk) begin
      if(hcount == HSW + BP + HEN + HFP - 1) begin
         hcount <= 0;
          if(vcount == VSW + VBP + VEN + VFP - 1)
@@ -187,7 +182,7 @@ reg [11:0] hcount, vcount;
  end
  
 // 同步信号生成
- always @(posedge pclk) begin
+ always @(posedge clk) begin
     vga_hs <= (hcount >= HSW);
     vga_vs <= (vcount >= VSW);
  end
@@ -201,7 +196,7 @@ wire [9:0] x = (hcount - (HSW + BP));
 wire [9:0] y = (vcount - (VSW + VBP));
 
 // VGA输出逻辑
-always @(posedge pclk) begin
+always @(posedge clk) begin
     if(!disp_enable) begin
         vga_r <= 4'h0;
         vga_g <= 4'h0;
