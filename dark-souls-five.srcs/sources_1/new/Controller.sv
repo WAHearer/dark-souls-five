@@ -24,9 +24,16 @@ reg [27:0] next_playerBullet[0:69];
 reg [27:0] next_enemyBullet[0:69];
 
 integer i;
+reg clk_50, clk_200;
+clk_wiz_0 clk_wiz_0(
+    .clk_in1(clk),
+    .clk_out1(clk_50),
+    .ckl_out2(clk_200)
+);
 
 Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
-    .clk(clk),
+    .clk_50(clk_50),
+    .clk_200(clk_200),
     .state(state),
     .textId(textId),
     .level(level),
@@ -50,7 +57,7 @@ Music music(//播放音乐？可以依据：当前游戏状态、关卡数、bos
 );*/
 
 Game game(//计算下一时刻状态，内部需要：根据按键输入更新状态，计算子弹碰撞，计算血量
-    .clk(clk),
+    .clk(clk_50),
     .enter(enter),
     .pause(pause),
     .up(up),
@@ -85,7 +92,7 @@ initial begin
     level<=0;
 end
 
-always @(posedge clk) begin//更新状态
+always @(posedge clk_50) begin//更新状态
     state<=next_state;
     textId<=next_textId;
     level<=next_level;

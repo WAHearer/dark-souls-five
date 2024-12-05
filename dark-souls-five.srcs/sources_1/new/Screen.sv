@@ -9,7 +9,7 @@ module Screen #(
     parameter VEN = 600,
     parameter VFP = 37
 ) (
-    input clk,                    // 系统时钟
+    input clk_50,clk_200,         // 系统时钟
     input [3:0] state,           // 游戏状态
     input [9:0] textId,          // 文本ID
     input [5:0] level,           // 关卡
@@ -33,12 +33,12 @@ reg  [11:0] vram_din;
 wire [11:0] vram_dout;
 blk_mem_gen_0 vram (
     .ena(1'b1),
-    .clka(clk),
+    .clka(clk_50),
     .wea(vram_we),
     .addra({render_y[7:0], render_x[7:0]}),
     .dina(vram_din),
     .enb(1'b1),
-    .clkb(clk),
+    .clkb(clk_200),
     .addrb({y[9:0]>>2, x[9:0]>>2}),
     .doutb(vram_dout)
 );
@@ -62,7 +62,7 @@ localparam COLOR_ENEMY_BULLET = 12'hF0F;
 render_state_t render_state;
 reg [9:0] render_x, render_y;
 
-always @(posedge clk) begin
+always @(posedge clk_50) begin
     case (render_state)
         IDLE: begin
             render_x <= 0;
@@ -169,7 +169,7 @@ always @(posedge clk) begin
 
 // 水平和垂直计数器
 reg [11:0] hcount, vcount;
- always @(posedge clk) begin
+ always @(posedge clk_50) begin
      if(hcount == HSW + BP + HEN + HFP - 1) begin
         hcount <= 0;
          if(vcount == VSW + VBP + VEN + VFP - 1)
@@ -182,7 +182,7 @@ reg [11:0] hcount, vcount;
  end
  
 // 同步信号生成
- always @(posedge clk) begin
+ always @(posedge clk_50) begin
     vga_hs <= (hcount >= HSW);
     vga_vs <= (vcount >= VSW);
  end
@@ -196,7 +196,7 @@ wire [9:0] x = (hcount - (HSW + BP));
 wire [9:0] y = (vcount - (VSW + VBP));
 
 // VGA输出逻辑
-always @(posedge clk) begin
+always @(posedge clk_50) begin
     if(!disp_enable) begin
         vga_r <= 4'h0;
         vga_g <= 4'h0;
