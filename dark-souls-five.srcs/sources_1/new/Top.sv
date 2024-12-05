@@ -23,20 +23,22 @@ clk_wiz_0 clk_wiz_0(
 KeyBoard keyBoard(
     .clk(clk_120),
     .rst_n(rstn),
-    .ps2_clk(PS2_CLK),
-    .ps2_data(PS2_DATA),
+    .UART_TXD_IN(UART_TXD_IN),
+    .UART_RXD_OUT(UART_RXD_OUT),
+    .UART_CTS(UART_CTS),
+    .UART_RTS(UART_RTS),
     .key_valid(key_valid),
     .key_status(key_status)
 );
 Controller controller(
     .clk(clkk),
-    .enter(key_status[7'h5A]),
-    .pause(key_status[7'h76]),
-    .up(key_status[7'h1D]),
-    .down(key_status[7'h1B]),
-    .left(key_status[7'h1C]),
-    .right(key_status[7'h23]),
-    .space(key_status[7'h29]),
+    .enter(key_status[8'h28]),
+    .pause(key_status[8'h29]),
+    .up(key_status[8'h1A]),
+    .down(key_status[8'h16]),
+    .left(key_status[8'h04]),
+    .right(key_status[8'h07]),
+    .space(key_status[8'h2C]),
 
     .vga_r(rgb[11:8]),
     .vga_g(rgb[7:4]),
