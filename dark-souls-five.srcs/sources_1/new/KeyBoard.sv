@@ -1,86 +1,190 @@
 module KeyBoard(
-    input  logic        clk,         // 系统时钟
-    input  logic        rst_n,       // 异步复位，低电平有效
-    input  logic        ps2_clk,     // PS/2时钟信号
-    input  logic        ps2_data,    // PS/2数据信号
-    output logic [7:0]  key_data,    // 按键扫描码
-    output logic        key_valid,    // 数据有效信号
-    output logic [127:0] key_status   // 所有按键状态(1:按下, 0:释放)
+    input  logic        clk,         
+    input  logic        rst_n,       
+    input  logic        UART_TXD_IN,
+    input  logic        UART_RXD_OUT,
+    input  logic        UART_CTS,
+    input  logic        UART_RTS,
+    output logic [7:0]  key_data,    
+    output logic        key_valid,    
+    output logic [127:0] key_status  
 );
 
-    // PS/2时钟同步寄存器
-    logic [2:0] ps2_clk_sync;
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n)
-            ps2_clk_sync <= 3'b111;
-        else
-            ps2_clk_sync <= {ps2_clk_sync[1:0], ps2_clk};
-    end
-
-    // PS/2时钟下降沿检测
-    wire ps2_clk_neg = ps2_clk_sync[2] & ~ps2_clk_sync[1];
-
-    // 数据接收状态机
-    typedef enum logic [1:0] {
-        IDLE,
-        RECEIVE,
-        CHECK,
-        DONE
-    } state_t;
+    // UART 接收参数设置 (USB 全速模式 12Mbps)
+    localparam BAUD_RATE = 12000000;
+    localparam CLOCK_FREQ = 120000000;
     
-    state_t state;
-    logic [3:0] bit_cnt;
-    logic [10:0] data_buff;
-    logic is_break_code;
+    // UART 接收相关信号
+    logic [7:0] rx_data;
+    logic rx_valid;
+    
+    // HID 报文缓存
+    logic [7:0] hid_buffer[8];
+    logic [2:0] byte_count;
+    
+    // UART 接收器实例化
+    uart_rx #(
+        .CLOCK_FREQ(CLOCK_FREQ),
+        .BAUD_RATE(BAUD_RATE)
+    ) uart_rx_inst (
+        .clk(clk),
+        .rst_n(rst_n),
+        .rx(UART_RXD_OUT),
+        .rx_data(rx_data),
+        .rx_valid(rx_valid)
+    );
 
+    // HID 报文处理状态机
+    enum logic [1:0] {IDLE, RECEIVE, PROCESS} state;
+    
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE;
-            bit_cnt <= 4'd0;
-            data_buff <= 11'd0;
+            byte_count <= '0;
             key_valid <= 1'b0;
-            key_data <= 8'd0;
-            is_break_code <= 1'b0;
-            key_status <= 512'd0;
+            key_status <= '0;
+            key_data <= '0;
         end else begin
-            key_valid <= 1'b0;
-            
             case (state)
                 IDLE: begin
-                    if (ps2_clk_neg && !ps2_data) begin  // 检测起始位
+                    if (rx_valid) begin
                         state <= RECEIVE;
-                        bit_cnt <= 4'd0;
-                        data_buff <= {ps2_data, 10'd0};
+                        hid_buffer[0] <= rx_data;
+                        byte_count <= 3'd1;
                     end
                 end
-
+                
                 RECEIVE: begin
-                    if (ps2_clk_neg) begin
-                        data_buff <= {ps2_data, data_buff[10:1]};
-                        bit_cnt <= bit_cnt + 4'd1;
-                        if (bit_cnt == 4'd9)
-                            state <= CHECK;
-                    end
-                end
-
-                CHECK: begin
-                    if (data_buff[8:1] == 8'hF0)  // break code前导码
-                        is_break_code <= 1'b1;
-                    else begin
-                        key_valid <= 1'b1;
-                        key_data <= data_buff[8:1];
-                        
-                        // 更新按键状态
-                        if (is_break_code) begin
-                            key_status[data_buff[8:1]] <= 1'b0;
-                            is_break_code <= 1'b0;
+                    if (rx_valid) begin
+                        hid_buffer[byte_count] <= rx_data;
+                        if (byte_count == 3'd7) begin
+                            state <= PROCESS;
+                            byte_count <= '0;
                         end else begin
-                            key_status[data_buff[8:1]] <= 1'b1;
+                            byte_count <= byte_count + 1'b1;
                         end
                     end
+                end
+                
+                PROCESS: begin
+                    // 处理按键状态
+                    key_valid <= 1'b1;
+                    key_data <= hid_buffer[2]; // 通常第3个字节包含按键扫描码
+                    
+                    // 更新键盘状态表
+                    // 修饰键状态 (Ctrl, Shift, Alt 等)
+                    key_status[7:0] <= hid_buffer[0];
+                    
+                    // 常规按键状态
+                    for (int i = 2; i < 8; i++) begin
+                        if (hid_buffer[i] != 8'h00) begin
+                            key_status[hid_buffer[i]] <= 1'b1;
+                        end
+                    end
+                    
                     state <= IDLE;
                 end
+            endcase
+        end
+    end
 
+endmodule
+
+module uart_rx #(
+    parameter CLOCK_FREQ = 120000000,
+    parameter BAUD_RATE = 12000000
+)(
+    input  logic clk,
+    input  logic rst_n,
+    input  logic rx,
+    output logic [7:0] rx_data,
+    output logic rx_valid
+);
+    // 计算每个波特周期的时钟数
+    localparam CLKS_PER_BIT = CLOCK_FREQ/BAUD_RATE;
+    
+    // 状态定义
+    typedef enum logic [2:0] {
+        IDLE,       // 空闲等待起始位
+        START_BIT,  // 检测起始位
+        DATA_BITS,  // 接收数据位
+        STOP_BIT,   // 检测停止位
+        CLEANUP     // 完成清理
+    } state_t;
+    
+    // 寄存器定义
+    state_t state;
+    logic [$clog2(CLKS_PER_BIT)-1:0] clk_counter;
+    logic [2:0] bit_counter;
+    logic [7:0] rx_data_reg;
+    
+    // 同步器防止亚稳态
+    logic rx_sync1, rx_sync2;
+    always_ff @(posedge clk) begin
+        {rx_sync2, rx_sync1} <= {rx_sync1, rx};
+    end
+    
+    // 主状态机
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            state <= IDLE;
+            clk_counter <= '0;
+            bit_counter <= '0;
+            rx_data_reg <= '0;
+            rx_valid <= 1'b0;
+            rx_data <= '0;
+        end else begin
+            case (state)
+                IDLE: begin
+                    rx_valid <= 1'b0;
+                    if (rx_sync2 == 1'b0) begin  // 检测起始位
+                        state <= START_BIT;
+                        clk_counter <= '0;
+                    end
+                end
+                
+                START_BIT: begin
+                    if (clk_counter == CLKS_PER_BIT/2) begin
+                        if (rx_sync2 == 1'b0) begin  // 确认起始位
+                            clk_counter <= '0;
+                            state <= DATA_BITS;
+                        end else
+                            state <= IDLE;
+                    end else
+                        clk_counter <= clk_counter + 1'b1;
+                end
+                
+                DATA_BITS: begin
+                    if (clk_counter == CLKS_PER_BIT-1) begin
+                        clk_counter <= '0;
+                        rx_data_reg[bit_counter] <= rx_sync2;
+                        
+                        if (bit_counter == 3'd7) begin
+                            bit_counter <= '0;
+                            state <= STOP_BIT;
+                        end else
+                            bit_counter <= bit_counter + 1'b1;
+                    end else
+                        clk_counter <= clk_counter + 1'b1;
+                end
+                
+                STOP_BIT: begin
+                    if (clk_counter == CLKS_PER_BIT-1) begin
+                        if (rx_sync2 == 1'b1) begin  // 验证停止位
+                            rx_valid <= 1'b1;
+                            rx_data <= rx_data_reg;
+                        end
+                        state <= CLEANUP;
+                        clk_counter <= '0;
+                    end else
+                        clk_counter <= clk_counter + 1'b1;
+                end
+                
+                CLEANUP: begin
+                    rx_valid <= 1'b0;
+                    state <= IDLE;
+                end
+                
                 default: state <= IDLE;
             endcase
         end

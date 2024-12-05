@@ -1,5 +1,5 @@
 module Controller (
-    input clk,enter,pause,up,down,left,right,space,
+    input clk,clk_50,clk_200,clk_120,enter,pause,up,down,left,right,space,
     output [3:0] vga_r,vga_g,vga_b,
     output vga_hs,vga_vs
 );
@@ -24,12 +24,6 @@ reg [27:0] next_playerBullet[0:69];
 reg [27:0] next_enemyBullet[0:69];
 
 integer i;
-reg clk_50, clk_200;
-clk_wiz_0 clk_wiz_0(
-    .clk_in1(clk),
-    .clk_out1(clk_50),
-    .ckl_out2(clk_200)
-);
 
 Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
     .clk_50(clk_50),
