@@ -32,6 +32,8 @@ KeyBoard keyBoard(
 );
 Controller controller(
     .clk(clkk),
+    .clk_50(clk_50),
+    .clk_200(clk_200),
     .enter(key_status[8'h28]),
     .pause(key_status[8'h29]),
     .up(key_status[8'h1A]),
