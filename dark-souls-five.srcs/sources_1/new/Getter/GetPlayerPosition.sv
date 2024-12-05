@@ -10,7 +10,7 @@ reg rollAvailable;
 always @(posedge clk) begin
     if(state==2) begin
         if(!rollAvailable) begin
-            if(rollCounter<32'd50000000)
+            if(rollCounter<32'd25000000)
                 rollCounter<=rollCounter+1;
             else begin
                 rollCounter<=0;
@@ -46,7 +46,7 @@ always @(posedge clk) begin
         end
         if(!space) begin
             if(up) begin
-                if(upCounter<32'd666667)
+                if(upCounter<32'd333333)
                     upCounter<=upCounter+1;
                 else begin
                     upCounter<=0;
@@ -57,7 +57,7 @@ always @(posedge clk) begin
             else
                 upCounter<=0;
             if(down) begin
-                if(downCounter<32'd666667)
+                if(downCounter<32'd333333)
                     downCounter<=downCounter+1;
                 else begin
                     downCounter<=0;
@@ -68,7 +68,7 @@ always @(posedge clk) begin
             else
                 downCounter<=0;
             if(right) begin
-                if(rightCounter<32'd666667)
+                if(rightCounter<32'd333333)
                     rightCounter<=rightCounter+1;
                 else begin
                     rightCounter<=0;
@@ -79,7 +79,7 @@ always @(posedge clk) begin
             else
                 rightCounter<=0;
             if(left) begin
-                if(leftCounter<32'd666667)
+                if(leftCounter<32'd333333)
                     leftCounter<=leftCounter+1;
                 else begin
                     leftCounter<=0;

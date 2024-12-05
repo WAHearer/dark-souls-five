@@ -13,8 +13,8 @@ module GetBulletPosition (
     output reg [27:0] next_playerBullet[0:69],
     output reg [27:0] next_enemyBullet[0:69]
 );
-localparam base1=32'd4000000;
-localparam base2=32'd5656854;//4*10^6sqrt(2)
+localparam base1=32'd2000000;
+localparam base2=32'd2828427;//2*10^6sqrt(2)
 integer i,counter1,counter2;
 always @(posedge clk) begin
     if(state==2) begin

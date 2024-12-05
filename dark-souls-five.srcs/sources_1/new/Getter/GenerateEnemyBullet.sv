@@ -12,7 +12,7 @@ integer i,counter1,counter2,counter3,startPos;
 always @(posedge clk) begin
     if(state==2) begin
         if(level==1||level==2) begin
-            if(counter1<32'd30000000)
+            if(counter1<32'd15000011)
                 counter1<=counter1+1;
             else begin
                 counter1<=0;
@@ -29,7 +29,7 @@ always @(posedge clk) begin
                 for(i=0;i<7;i++)
                     next_enemyBullet[(startPos+i)<70?(startPos+i):(startPos+i)-70]<=0;
             end
-            if(counter2<32'd50000003)
+            if(counter2<32'd25000003)
                 counter2<=counter2+1;
             else begin
                 counter2<=0;
@@ -47,7 +47,7 @@ always @(posedge clk) begin
             end
         end
         if(level==2) begin
-            if(counter3<32'd40000007)
+            if(counter3<32'd20000007)
                 counter3<=counter3+1;
             else begin
                 counter3<=0;
@@ -67,7 +67,7 @@ always @(posedge clk) begin
             end
         end
         if(level==3) begin
-            if(counter1<32'd800000000)
+            if(counter1<32'd400000000)
                 counter1<=counter1+1;
             else begin
                 counter1<=0;
@@ -80,7 +80,7 @@ always @(posedge clk) begin
                 for(i=0;i<66;i++)
                     next_enemyBullet[(startPos+i)<70?(startPos+i):(startPos+i)-70]<=0;
             end
-            if(counter2<32'd30000003)
+            if(counter2<32'd15000003)
                 counter2<=counter2+1;
             else begin
                 counter2<=0;
@@ -98,7 +98,7 @@ always @(posedge clk) begin
                 for(i=0;i<8;i++)
                     next_enemyBullet[(startPos+i)<70?(startPos+i):(startPos+i)-70]<=0;
             end
-            if(counter3<32'd60000007)
+            if(counter3<32'd30000007)
                 counter3<=counter3+1;
             else begin
                 counter3<=0;

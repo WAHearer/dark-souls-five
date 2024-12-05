@@ -10,7 +10,7 @@ integer counter,startPos;
 integer i;
 always @(posedge clk) begin
     if(state==2) begin
-        if(counter<32'd50000000)
+        if(counter<32'd20000000)
             counter<=counter+1;
         else
             counter<=0;

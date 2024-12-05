@@ -11,13 +11,13 @@ reg flag;
 always @(posedge clk) begin
     if(state==2) begin
         if(level==1||level==2||level==3) begin
-            if(counter1<32'd300000000)
+            if(counter1<32'd150000000)
                 counter1<=counter1+1;
             else begin
                 counter1<=0;
                 flag<=~flag;
             end
-            if(counter2<32'd4000000)
+            if(counter2<32'd2000000)
                 counter2<=counter2+1;
             else begin
                 counter2<=0;
