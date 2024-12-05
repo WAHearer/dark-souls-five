@@ -9,7 +9,7 @@ module Screen #(
     parameter VEN = 600,
     parameter VFP = 37
 ) (
-    input clk_50,clk_200,         // 系统时钟
+    input clk,clk_50,         // 系统时钟
     input [3:0] state,           // 游戏状态
     input [9:0] textId,          // 文本ID
     input [5:0] level,           // 关卡
@@ -32,13 +32,11 @@ reg  vram_we;
 reg  [11:0] vram_din;
 wire [11:0] vram_dout;
 blk_mem_gen_0 vram (
-    .ena(1'b1),
-    .clka(clk_50),
+    .clka(clk),
     .wea(vram_we),
     .addra({render_y[7:0], render_x[7:0]}),
     .dina(vram_din),
-    .enb(1'b1),
-    .clkb(clk_200),
+    .clkb(clk),
     .addrb({y[9:0]>>2, x[9:0]>>2}),
     .doutb(vram_dout)
 );
@@ -183,8 +181,8 @@ reg [11:0] hcount, vcount;
  
 // 同步信号生成
  always @(posedge clk_50) begin
-    vga_hs <= (hcount >= HSW);
-    vga_vs <= (vcount >= VSW);
+    vga_hs <= (hcount < HSW);
+    vga_vs <= (vcount < VSW);
  end
  
 // 显示使能信号

@@ -10,9 +10,9 @@ module KeyBoard(
     output logic [127:0] key_status  
 );
 
-    // UART 接收参数设置 (USB 全速模式 12Mbps)
-    localparam BAUD_RATE = 12000000;
-    localparam CLOCK_FREQ = 120000000;
+    // UART 接收参数设置
+    localparam BAUD_RATE = 1500000;
+    localparam CLOCK_FREQ = 100000000;
     
     // UART 接收相关信号
     logic [7:0] rx_data;
@@ -91,8 +91,8 @@ module KeyBoard(
 endmodule
 
 module uart_rx #(
-    parameter CLOCK_FREQ = 120000000,
-    parameter BAUD_RATE = 12000000
+    parameter CLOCK_FREQ = 1500000,
+    parameter BAUD_RATE = 100000000
 )(
     input  logic clk,
     input  logic rst_n,

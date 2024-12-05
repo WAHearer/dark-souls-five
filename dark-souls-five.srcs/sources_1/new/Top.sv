@@ -12,16 +12,14 @@ module Top(
 wire key_valid;
 wire [127:0] key_status;
 
-reg clk_50, clk_200, clk_120;
+reg clk_50;
 clk_wiz_0 clk_wiz_0(
     .clk_in1(clkk),
-    .clk_out1(clk_50),
-    .clk_out2(clk_200),
-    .clk_out3(clk_120)
+    .clk_out1(clk_50)
 );
 
 KeyBoard keyBoard(
-    .clk(clk_120),
+    .clk(clkk),
     .rst_n(rstn),
     .UART_TXD_IN(UART_TXD_IN),
     .UART_RXD_OUT(UART_RXD_OUT),
@@ -33,7 +31,6 @@ KeyBoard keyBoard(
 Controller controller(
     .clk(clkk),
     .clk_50(clk_50),
-    .clk_200(clk_200),
     .enter(key_status[8'h28]),
     .pause(key_status[8'h29]),
     .up(key_status[8'h1A]),
