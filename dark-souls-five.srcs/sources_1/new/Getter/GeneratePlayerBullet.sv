@@ -9,6 +9,8 @@ module GeneratePlayerBullet (
 integer counter,startPos;
 integer i;
 initial begin
+    counter<=0;
+    startPos<=0;
     for(i=0;i<70;i++)
         next_playerBullet[i]<=0;
 end
@@ -21,39 +23,27 @@ always @(posedge clk) begin
         if(counter==0) begin
             if(level==1||level==2) begin
                 startPos<=(startPos+3)<70?(startPos+3):(startPos+3)-70;
-                next_playerBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
-                if(playerPosition[0]>2)
-                    next_playerBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b100000001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
-                if(playerPosition[0]<8'd197)
-                    next_playerBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
+                next_playerBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+(1<<8);
+                next_playerBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b100110001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
+                next_playerBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
             end
             else if(level==3||level==4) begin
                 startPos<=(startPos+5)<70?(startPos+5):(startPos+5)-70;
-                next_playerBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
-                if(playerPosition[0]>2)
-                    next_playerBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b100000001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
-                if(playerPosition[0]<8'd197)
-                    next_playerBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
-                if(playerPosition[0]>5)
-                    next_playerBullet[(startPos+6)<70?(startPos+6):(startPos+6)-70]<={12'b100000001010,playerPosition[1],playerPosition[0]}-6+(1<<8);
-                if(playerPosition[0]<8'd194)
-                    next_playerBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+6+(1<<8);
+                next_playerBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+(1<<8);
+                next_playerBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b100110001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
+                next_playerBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
+                next_playerBullet[(startPos+6)<70?(startPos+6):(startPos+6)-70]<={12'b100110001010,playerPosition[1],playerPosition[0]}-6+(1<<8);
+                next_playerBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+6+(1<<8);
             end
             else begin
                 startPos<=(startPos+7)<70?(startPos+7):(startPos+7)-70;
-                next_playerBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+(1<<8);
-                if(playerPosition[0]>2)
-                    next_playerBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b100000001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
-                if(playerPosition[0]<8'd197)
-                    next_playerBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
-                if(playerPosition[0]>5)
-                    next_playerBullet[(startPos+6)<70?(startPos+6):(startPos+6)-70]<={12'b100000001010,playerPosition[1],playerPosition[0]}-6+(1<<8);
-                if(playerPosition[0]<8'd194)
-                    next_playerBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+6+(1<<8);
-                if(playerPosition[0]>8)
-                    next_playerBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b100000001010,playerPosition[1],playerPosition[0]}-9+(1<<8);
-                if(playerPosition[0]<8'd191)
-                    next_playerBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b100000010100,playerPosition[1],playerPosition[0]}+9+(1<<8);
+                next_playerBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+(1<<8);
+                next_playerBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b100110001010,playerPosition[1],playerPosition[0]}-3+(1<<8);
+                next_playerBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+3+(1<<8);
+                next_playerBullet[(startPos+6)<70?(startPos+6):(startPos+6)-70]<={12'b100110001010,playerPosition[1],playerPosition[0]}-6+(1<<8);
+                next_playerBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+6+(1<<8);
+                next_playerBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b100110001010,playerPosition[1],playerPosition[0]}-9+(1<<8);
+                next_playerBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b100110010100,playerPosition[1],playerPosition[0]}+9+(1<<8);
             end
         end
         if(counter==1) begin

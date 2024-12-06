@@ -133,9 +133,9 @@ always @(*) begin
             5:next_enemyHp=21'd5000;
             default:next_enemyHp=21'd10000;
         endcase
-        next_playerPosition[0]=8'd200;
+        next_playerPosition[0]=8'd100;
         next_playerPosition[1]=8'd30;
-        next_enemyPosition[0]=8'd200;
+        next_enemyPosition[0]=8'd100;
         next_enemyPosition[1]=7'd120;
         for(i=0;i<70;i++) begin
             next_playerBullet[i]=0;

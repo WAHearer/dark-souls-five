@@ -10,6 +10,10 @@ module GenerateEnemyBullet (
 );
 integer i,counter1,counter2,counter3,startPos;
 initial begin
+    counter1<=0;
+    counter2<=0;
+    counter3<=0;
+    startPos<=0;
     for(i=0;i<70;i++)
         next_enemyBullet[i]<=0;
 end
