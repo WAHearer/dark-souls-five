@@ -135,8 +135,8 @@ always @(*) begin
         endcase
         next_playerPosition[0]=8'd100;
         next_playerPosition[1]=8'd30;
-        next_enemyPosition[0]=8'd100;
-        next_enemyPosition[1]=7'd120;
+        next_enemyPosition[0]=8'd150;
+        next_enemyPosition[1]=8'd120;
         for(i=0;i<70;i++) begin
             next_playerBullet[i]=0;
             next_enemyBullet[i]=0;

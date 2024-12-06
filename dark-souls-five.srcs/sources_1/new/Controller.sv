@@ -88,8 +88,8 @@ initial begin
     enemyHp<=32'd500;
     playerPosition[0]<=8'd100;
     playerPosition[1]<=8'd30;
-    enemyPosition[0]<=8'd100;
-    enemyPosition[1]<=7'd120;
+    enemyPosition[0]<=8'd150;
+    enemyPosition[1]<=8'd120;
     for(i=0;i<70;i++) begin
         playerBullet[i]<=0;
         enemyBullet[i]<=0;
