@@ -32,7 +32,7 @@ reg  vram_we;
 reg  [11:0] vram_din;
 wire [11:0] vram_dout;
 blk_mem_gen_0 vram (
-    .clka(clk),
+    .clka(clk_50),
     .wea(vram_we),
     .addra({render_y, render_x}),
     .dina(vram_din),
@@ -60,7 +60,7 @@ localparam COLOR_ENEMY_BULLET = 12'hF0F;
 render_state_t render_state;
 reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
-always @(posedge clk) begin
+always @(posedge clk_50) begin
     case (render_state)
         IDLE: begin
             render_state <= RENDER_ENEMY;
