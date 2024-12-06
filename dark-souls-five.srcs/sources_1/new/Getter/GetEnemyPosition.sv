@@ -11,13 +11,14 @@ reg flag;
 initial begin
     counter1<=0;
     counter2<=0;
-    next_enemyPosition[0]=8'd100;
-    next_enemyPosition[1]=7'd120;
+    flag<=0;
+    next_enemyPosition[0]=8'd150;
+    next_enemyPosition[1]=8'd120;
 end
 always @(posedge clk) begin
     if(state==2) begin
         if(level==1||level==2||level==3) begin
-            if(counter1<32'd150000000)
+            if(counter1<32'd200000000)
                 counter1<=counter1+1;
             else begin
                 counter1<=0;
@@ -38,8 +39,8 @@ always @(posedge clk) begin
         counter1<=0;
         counter2<=0;
         flag<=0;
-        next_enemyPosition[0]<=enemyPosition[0];
-        next_enemyPosition[1]<=enemyPosition[1];
+        next_enemyPosition[0]=8'd150;
+        next_enemyPosition[1]=8'd120;
     end
 end
 endmodule
