@@ -72,11 +72,14 @@ localparam COLOR_ENEMY_BULLET = 12'hF0F;
 
 render_state_t render_state;
 reg [7:0] render_x, render_y;
+reg [7:0] renderedge_x, renderedge_y;
 reg [7:0] bulletCounter;
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
             render_state <= RENDER_BACKGROUND;
+            renderedge_x <= 199;
+            renderedge_y <= 149;
             render_x <= 0;
             render_y <= 0;
             if (buffer_select) begin
@@ -89,14 +92,16 @@ always @(posedge clk) begin
         end
 
         RENDER_BACKGROUND: begin
-            if (render_x == 199) begin
-                render_x <= (render_y == 149) ? enemyPosition[0] - 7'h7 : 0;
-                render_y <= (render_y == 149) ? enemyPosition[1] - 7'h7 : render_y + 1;
-                render_state <= (render_y == 149) ? RENDER_ENEMY : RENDER_BACKGROUND;
+            if (render_x == renderedge_x) begin
+                render_x <= (render_y == renderedge_y) ? enemyPosition[0] - 7'h7 : 0;
+                render_y <= (render_y == renderedge_y) ? enemyPosition[1] - 7'h7 : render_y + 1;
+                render_state <= (render_y == renderedge_y) ? RENDER_ENEMY : RENDER_BACKGROUND;
+                renderedge_x <= (render_y == renderedge_y) ? enemyPosition[1] + 7'h7 : renderedge_x;
+                renderedge_y <= (render_y == renderedge_y) ? enemyPosition[1] + 7'h7 : renderedge_y;
                 if (buffer_select) begin
-                    vram_din_a <= (render_y == 149) ? COLOR_ENEMY : COLOR_BG;
+                    vram_din_a <= (render_y == renderedge_y) ? COLOR_ENEMY : COLOR_BG;
                 end else begin
-                    vram_din_b <= (render_y == 149) ? COLOR_ENEMY : COLOR_BG;
+                    vram_din_b <= (render_y == renderedge_y) ? COLOR_ENEMY : COLOR_BG;
                 end
             end else begin
                 render_x <= render_x + 1;
@@ -104,14 +109,16 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY: begin
-            if (render_x == enemyPosition[0] + 7'h7) begin
-                render_x <= (render_y == enemyPosition[1] + 7'h7) ? playerPosition[0] - 7'h7 : enemyPosition[0] - 7'h7;
-                render_y <= (render_y == enemyPosition[1] + 7'h7) ? playerPosition[1] - 7'h7 : render_y + 1;
-                render_state <= (render_y == enemyPosition[1] + 7'h7) ? RENDER_PLAYER : RENDER_ENEMY;
+            if (render_x == renderedge_x) begin
+                render_x <= (render_y == renderedge_y) ? playerPosition[0] - 7'h7 : enemyPosition[0] - 7'h7;
+                render_y <= (render_y == renderedge_y) ? playerPosition[1] - 7'h7 : render_y + 1;
+                render_state <= (render_y == renderedge_y) ? RENDER_PLAYER : RENDER_ENEMY;
+                renderedge_x <= (render_y == renderedge_y) ? playerPosition[0] + 7'h7 : renderedge_x;
+                renderedge_y <= (render_y == renderedge_y) ? playerPosition[1] + 7'h7 : renderedge_y;
                 if (buffer_select) begin
-                    vram_din_a <= (render_y == playerPosition[1] + 7'h7) ? COLOR_PLAYER : COLOR_ENEMY;
+                    vram_din_a <= (render_y == renderedge_y) ? COLOR_PLAYER : COLOR_ENEMY;
                 end else begin
-                    vram_din_b <= (render_y == playerPosition[1] + 7'h7) ? COLOR_PLAYER : COLOR_ENEMY;
+                    vram_din_b <= (render_y == renderedge_y) ? COLOR_PLAYER : COLOR_ENEMY;
                 end
                 end else begin
                     render_y <= render_y + 1;
@@ -119,14 +126,14 @@ always @(posedge clk) begin
         end
 
         RENDER_PLAYER: begin
-            if (render_x == playerPosition[0] + 7'h7) begin
-                render_x <= (render_y == playerPosition[1] + 7'h7) ? playerBullet[0][7:0] : playerPosition[0] - 7'h7;
-                render_y <= (render_y == playerPosition[1] + 7'h7) ? playerBullet[0][15:8] : render_y + 1;
-                render_state <= (render_y == playerPosition[1] + 7'h7) ? RENDER_PLAYER_BULLET : RENDER_PLAYER;
+            if (render_x == renderedge_x) begin
+                render_x <= (render_y == renderedge_y) ? playerBullet[0][7:0] : playerPosition[0] - 7'h7;
+                render_y <= (render_y == renderedge_y) ? playerBullet[0][15:8] : render_y + 1;
+                render_state <= (render_y == renderedge_y) ? RENDER_PLAYER_BULLET : RENDER_PLAYER;
                 if (buffer_select) begin
-                    vram_din_a <= (render_y == playerPosition[1] + 7'h7) ? COLOR_PLAYER_BULLET : COLOR_PLAYER;
+                    vram_din_a <= (render_y == renderedge_y) ? COLOR_PLAYER_BULLET : COLOR_PLAYER;
                 end else begin
-                    vram_din_b <= (render_y == playerPosition[1] + 7'h7) ? COLOR_PLAYER_BULLET : COLOR_PLAYER;
+                    vram_din_b <= (render_y == renderedge_y) ? COLOR_PLAYER_BULLET : COLOR_PLAYER;
                 end
             end
         end
