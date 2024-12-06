@@ -56,7 +56,7 @@ blk_mem_gen_0 vram_B (
 // 渲染逻辑
 typedef enum {
     IDLE,
-    RENDER_BACKFROUND,
+    RENDER_BACKGROUND,
     RENDER_ENEMY,
     RENDER_PLAYER,
     RENDER_PLAYER_BULLET,
@@ -64,7 +64,7 @@ typedef enum {
     DONE
 } render_state_t;
 
-localparam COLOR_BG = 12'h000;
+localparam COLOR_BG = 12'hFFF;
 localparam COLOR_PLAYER = 12'h0F0;
 localparam COLOR_ENEMY = 12'hF00;
 localparam COLOR_PLAYER_BULLET = 12'h0FF;
@@ -76,7 +76,7 @@ reg [7:0] bulletCounter;
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
-            render_state <= RENDER_BACKFROUND;
+            render_state <= RENDER_BACKGROUND;
             render_x <= 0;
             render_y <= 0;
             if (buffer_select) begin
@@ -88,10 +88,11 @@ always @(posedge clk) begin
             end
         end
 
-        RENDER_BACKFROUND: begin
+        RENDER_BACKGROUND: begin
             if (render_x == 199) begin
                 render_x <= (render_y == 149) ? enemyPosition[0] - 7'h7 : 0;
                 render_y <= (render_y == 149) ? enemyPosition[1] - 7'h7 : render_y + 1;
+                render_state <= (render_y == 149) ? RENDER_ENEMY : RENDER_BACKGROUND;
                 if (buffer_select) begin
                     vram_din_a <= (render_y == 149) ? COLOR_ENEMY : COLOR_BG;
                 end else begin
@@ -106,6 +107,7 @@ always @(posedge clk) begin
             if (render_x == enemyPosition[0] + 7'h7) begin
                 render_x <= (render_y == enemyPosition[1] + 7'h7) ? playerPosition[0] - 7'h7 : enemyPosition[0] - 7'h7;
                 render_y <= (render_y == enemyPosition[1] + 7'h7) ? playerPosition[1] - 7'h7 : render_y + 1;
+                render_state <= (render_y == enemyPosition[1] + 7'h7) ? RENDER_PLAYER : RENDER_ENEMY;
                 if (buffer_select) begin
                     vram_din_a <= (render_y == playerPosition[1] + 7'h7) ? COLOR_PLAYER : COLOR_ENEMY;
                 end else begin
@@ -120,6 +122,7 @@ always @(posedge clk) begin
             if (render_x == playerPosition[0] + 7'h7) begin
                 render_x <= (render_y == playerPosition[1] + 7'h7) ? playerBullet[0][7:0] : playerPosition[0] - 7'h7;
                 render_y <= (render_y == playerPosition[1] + 7'h7) ? playerBullet[0][15:8] : render_y + 1;
+                render_state <= (render_y == playerPosition[1] + 7'h7) ? RENDER_PLAYER_BULLET : RENDER_PLAYER;
                 if (buffer_select) begin
                     vram_din_a <= (render_y == playerPosition[1] + 7'h7) ? COLOR_PLAYER_BULLET : COLOR_PLAYER;
                 end else begin
@@ -166,7 +169,7 @@ always @(posedge clk) begin
             render_state <= buffer_swap_ready ? DONE : IDLE;
         end
     endcase
- end
+end
 
 // 水平和垂直计数器
 reg [11:0] hcount, vcount;
@@ -177,17 +180,18 @@ end
 always @(posedge clk_50) begin
     if(hcount == HSW + BP + HEN + HFP - 1) begin
         hcount <= 0;
-        if(vcount == VSW + VBP + VEN + VFP - 1) begin
+        if(vcount == VSW + VBP + VEN + VFP - 1)
             vcount <= 0;
-            if (buffer_swap_ready) begin
-                buffer_select <= ~buffer_select;
-                buffer_swap_ready <= 0;
-            end
-        end else
-             vcount <= vcount + 1;
-    end
-    else
+        else
+            vcount <= vcount + 1;
+    end else
         hcount <= hcount + 1;
+end
+always @(posedge vga_vs) begin
+    if (buffer_swap_ready) begin
+        buffer_select = ~buffer_select;
+        buffer_swap_ready <= 0;
+    end
 end
  
 // 同步信号生成
