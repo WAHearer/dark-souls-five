@@ -34,6 +34,7 @@ wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
 reg [7:0] render_x, render_y;
 reg [7:0] renderedge_x, renderedge_y;
 reg [11:0] hcount, vcount;
+reg prev_vs;
 wire [7:0] x, y;
 reg vram_we_a, vram_we_b;
 blk_mem_gen_0 vram_A (
@@ -194,19 +195,24 @@ always @(posedge clk_50) begin
     end else
         hcount <= hcount + 1;
 end
-always @(posedge vga_vs) begin
-    if (buffer_swap_ready) begin
+
+always @(posedge clk_50) begin
+    prev_vs <= vga_vs;
+end
+
+always @(posedge clk_50) begin
+    if (vga_vs && !prev_vs) begin
         buffer_select <= ~buffer_select;
         buffer_swap_ready <= 0;
-    end
+    end 
 end
- 
+
 // 同步信号生成
 always @(posedge clk_50) begin
     vga_hs <= (hcount < HSW);
     vga_vs <= (vcount < VSW);
 end
- 
+
 // 显示使能信号
 wire disp_enable = (hcount >= HSW + BP) && (hcount < HSW + BP + HEN) &&
                    (vcount >= VSW + VBP) && (vcount < VSW + VBP + VEN);
