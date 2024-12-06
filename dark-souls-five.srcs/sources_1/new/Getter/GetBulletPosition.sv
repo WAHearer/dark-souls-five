@@ -17,6 +17,8 @@ localparam base1=32'd2000000;
 localparam base2=32'd2828427;//2*10^6sqrt(2)
 integer i,counter1,counter2;
 initial begin
+    counter1<=0;
+    counter2<=0;
     for(i=0;i<70;i++) begin
         next_playerBullet[i]<=0;
         next_enemyBullet[i]<=0;
@@ -52,80 +54,56 @@ always @(*) begin
                 case(playerBullet[i][25:23])
                     4'd0: begin
                         if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][15:8]>0)
-                                next_playerBullet[i]=playerBullet[i]-(1<<8);
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]-(1<<8);
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
                     end
                     4'd1: begin
                         if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]>0)
-                                next_playerBullet[i]=playerBullet[i]-1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]-1;
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
                     end
                     4'd2: begin
                         if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]<8'd199)
-                                next_playerBullet[i]=playerBullet[i]+1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]+1;
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
                     end
                     4'd3: begin
                         if(counter1==(base1>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][15:8]<8'd149)
-                                next_playerBullet[i]=playerBullet[i]+(1<<8);
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]+(1<<8);
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
                     end
                     4'd4: begin
                         if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]>0&&playerBullet[i][15:8]>0)
-                                next_playerBullet[i]=playerBullet[i]-(1<<8)-1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]-(1<<8)-1;
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
                     end
                     4'd5: begin
                         if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]<8'd199&&playerBullet[i][15:8]>0)
-                                next_playerBullet[i]=playerBullet[i]-(1<<8)+1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]-(1<<8)+1;
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
                     end
                     4'd6: begin
                         if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]>0&&playerBullet[i][15:8]<8'd149)
-                                next_playerBullet[i]=playerBullet[i]+(1<<8)-1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]+(1<<8)-1;
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
                     end
                     4'd7: begin
                         if(counter2==(base2>>playerBullet[i][27:26])) begin
-                            if(playerBullet[i][7:0]<8'd199&&playerBullet[i][15:8]<8'd149)
-                                next_playerBullet[i]=playerBullet[i]+(1<<8)+1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_playerBullet[i]=playerBullet[i]+(1<<8)+1;
                         end
                         else
                             next_playerBullet[i]=playerBullet[i];
@@ -143,80 +121,56 @@ always @(*) begin
                 case(enemyBullet[i][25:23])
                     4'd0: begin
                         if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][15:8]>0)
-                                next_enemyBullet[i]=enemyBullet[i]-(1<<8);
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]-(1<<8);
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];
                     end
                     4'd1: begin
                         if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]>0)
-                                next_enemyBullet[i]=enemyBullet[i]-1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]-1;
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];
                     end
                     4'd2: begin
                         if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]<8'd199)
-                                next_enemyBullet[i]=enemyBullet[i]+1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]+1;
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];
                     end
                     4'd3: begin
                         if(counter1==(base1>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][15:8]<8'd149)
-                                next_enemyBullet[i]=enemyBullet[i]+(1<<8);
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]+(1<<8);
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];
                     end
                     4'd4: begin
                         if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]>0&&enemyBullet[i][15:8]>0)
-                                next_enemyBullet[i]=enemyBullet[i]-(1<<8)-1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]-(1<<8)-1;
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];
                     end
                     4'd5: begin
                         if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]<8'd199&&enemyBullet[i][15:8]>0)
-                                next_enemyBullet[i]=enemyBullet[i]-(1<<8)+1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]-(1<<8)+1;
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];
                     end
                     4'd6: begin
                         if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]>0&&enemyBullet[i][15:8]<8'd149)
-                                next_enemyBullet[i]=enemyBullet[i]+(1<<8)-1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]+(1<<8)-1;
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];
                     end
                     4'd7: begin
                         if(counter2==(base2>>enemyBullet[i][27:26])) begin
-                            if(enemyBullet[i][7:0]<8'd199&&enemyBullet[i][15:8]<8'd149)
-                                next_enemyBullet[i]=enemyBullet[i]+(1<<8)+1;
-                            else
-                                next_enemyBullet[i]=0;
+                            next_enemyBullet[i]=enemyBullet[i]+(1<<8)+1;
                         end
                         else
                             next_enemyBullet[i]=enemyBullet[i];

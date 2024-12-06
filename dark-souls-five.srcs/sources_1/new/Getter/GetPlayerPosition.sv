@@ -8,6 +8,11 @@ module GetPlayerPosition (
 integer upCounter,downCounter,leftCounter,rightCounter,rollCounter;
 reg rollAvailable;
 initial begin
+    upCounter<=0;
+    downCounter<=0;
+    leftCounter<=0;
+    rightCounter<=0;
+    rollCounter<=0;
     next_playerPosition[0]=8'd100;
     next_playerPosition[1]=8'd30;
 end

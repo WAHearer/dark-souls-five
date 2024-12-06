@@ -11,7 +11,9 @@ module GetState (
     output reg [5:0] next_level
 );
 initial begin
-    next_state<=0;
+    next_state<=2;
+    next_level<=1;
+    next_textId<=0;
 end
 always @(posedge enter or posedge pause) begin
     case(state)

@@ -9,6 +9,8 @@ module GetEnemyPosition (
 integer counter1,counter2;
 reg flag;
 initial begin
+    counter1<=0;
+    counter2<=0;
     next_enemyPosition[0]=8'd100;
     next_enemyPosition[1]=7'd120;
 end
