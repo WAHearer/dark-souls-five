@@ -28,13 +28,10 @@ module Screen #(
 );
 reg buffer_select;
 reg buffer_swap_ready;
+// VRAM接口
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
-reg [7:0] render_x, render_y;
-reg [11:0] hcount, vcount;
-reg prev_vs;
-wire [7:0] x, y;
 reg vram_we_a, vram_we_b;
 blk_mem_gen_0 vram_A (
     .clka(clk),
@@ -59,7 +56,6 @@ blk_mem_gen_0 vram_B (
 // 渲染逻辑
 typedef enum {
     IDLE,
-    RENDER_BACKGROUND,
     RENDER_ENEMY,
     RENDER_PLAYER,
     RENDER_PLAYER_BULLET,
@@ -74,13 +70,14 @@ localparam COLOR_PLAYER_BULLET = 12'h0FF;
 localparam COLOR_ENEMY_BULLET = 12'hF0F;
 
 render_state_t render_state;
+reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
             render_state <= RENDER_ENEMY;
-            render_x <= enemyPosition[0] + 7'h7;
-            render_y <= enemyPosition[1] + 7'h7;
+            render_x <= enemyPosition[0] - 7'h7;
+            render_y <= enemyPosition[1] - 7'h7;
             if (buffer_select) begin
                 vram_we_a <= 1;
                 vram_din_a <= COLOR_ENEMY;
@@ -90,71 +87,61 @@ always @(posedge clk) begin
             end
         end
 
-        // RENDER_BACKGROUND: begin
-        //     if (render_x == renderedge_x) begin
-        //         render_x <= (render_y == renderedge_y) ? enemyPosition[0] - 7'h7 : 0;
-        //         render_y <= (render_y == renderedge_y) ? enemyPosition[1] - 7'h7 : render_y + 1;
-        //         render_state <= (render_y == renderedge_y) ? RENDER_ENEMY : RENDER_BACKGROUND;
-        //         renderedge_x <= (render_y == renderedge_y) ? enemyPosition[1] + 7'h7 : renderedge_x;
-        //         renderedge_y <= (render_y == renderedge_y) ? enemyPosition[1] + 7'h7 : renderedge_y;
-        //         if (buffer_select) begin
-        //             vram_din_a <= (render_y == renderedge_y) ? COLOR_ENEMY : COLOR_BG;
-        //         end else begin
-        //             vram_din_b <= (render_y == renderedge_y) ? COLOR_ENEMY : COLOR_BG;
-        //         end
-        //     end else begin
-        //         render_x <= render_x + 1;
-        //     end
-        // end
-
         RENDER_ENEMY: begin
             if (render_x == enemyPosition[0] + 7'h7) begin
+                render_x <= enemyPosition[0] - 7'h7;
                 if (render_y == enemyPosition[1] + 7'h7) begin
+                    render_state <= RENDER_PLAYER;
                     render_x <= playerPosition[0] - 7'h7;
                     render_y <= playerPosition[1] - 7'h7;
-                    render_state <= RENDER_PLAYER;
                     if (buffer_select) begin
+                        vram_we_a <= 1;
                         vram_din_a <= COLOR_PLAYER;
                     end else begin
+                        vram_we_b <= 1;
                         vram_din_b <= COLOR_PLAYER;
                     end
                 end else begin
-                    render_x <= enemyPosition[0] - 7'h7;
                     render_y <= render_y + 1;
                 end
             end else begin
-                    render_y <= render_y + 1;
-                end
+                render_x <= render_x + 1;
+            end
         end
 
         RENDER_PLAYER: begin
             if (render_x == playerPosition[0] + 7'h7) begin
+                render_x <= playerPosition[0] - 7'h7;
                 if (render_y == playerPosition[1] + 7'h7) begin
-                    render_x <= playerBullet[0][7:0];
-                    render_y <= playerBullet[1][15:8];
                     render_state <= RENDER_PLAYER_BULLET;
+                    render_x <= playerBullet[0][7:0];
+                    render_y <= playerBullet[0][15:8];
                     if (buffer_select) begin
+                        vram_we_a <= 1;
                         vram_din_a <= COLOR_PLAYER_BULLET;
                     end else begin
+                        vram_we_b <= 1;
                         vram_din_b <= COLOR_PLAYER_BULLET;
                     end
+                    bulletCounter <= 0;
                 end else begin
-                    render_x <= playerPosition[0] - 7'h7;
                     render_y <= render_y + 1;
                 end
             end else begin
-                    render_y <= render_y + 1;
-                end
+                render_x <= render_x + 1;
+            end
         end
 
         RENDER_PLAYER_BULLET: begin
             if (bulletCounter == 69) begin
                 render_state <= RENDER_ENEMY_BULLET;
                 render_x <= enemyBullet[0][7:0];
-                render_y <= enemyBullet[1][15:8];
+                render_y <= enemyBullet[0][15:8];
                 if (buffer_select) begin
+                    vram_we_a <= 1;
                     vram_din_a <= COLOR_ENEMY_BULLET;
                 end else begin
+                    vram_we_b <= 1;
                     vram_din_b <= COLOR_ENEMY_BULLET;
                 end
                 bulletCounter <= 0;
@@ -168,7 +155,6 @@ always @(posedge clk) begin
         RENDER_ENEMY_BULLET: begin
             if (bulletCounter == 69) begin
                 render_state <= DONE;
-                bulletCounter <= 0;
             end else begin
                 bulletCounter <= bulletCounter + 1;
                 render_x <= enemyBullet[bulletCounter + 1][7:0];
@@ -186,9 +172,10 @@ always @(posedge clk) begin
             render_state <= buffer_swap_ready ? DONE : IDLE;
         end
     endcase
-end
+ end
 
 // 水平和垂直计数器
+reg [11:0] hcount, vcount;
 initial begin
     hcount = 0;
     vcount = 0;
@@ -196,35 +183,31 @@ end
 always @(posedge clk_50) begin
     if(hcount == HSW + BP + HEN + HFP - 1) begin
         hcount <= 0;
-        if(vcount == VSW + VBP + VEN + VFP - 1)
+        if(vcount == VSW + VBP + VEN + VFP - 1) begin
             vcount <= 0;
-        else
-            vcount <= vcount + 1;
-    end else
+            if (buffer_swap_ready) begin
+                buffer_select <= ~buffer_select;
+                buffer_swap_ready <= 0;
+            end
+        end else
+             vcount <= vcount + 1;
+    end
+    else
         hcount <= hcount + 1;
 end
-
-always @(posedge clk_50) begin
-    prev_vs <= vga_vs;
-end
-
-always @(posedge clk_50) begin
-    if (vga_vs && !prev_vs) begin
-        buffer_select <= ~buffer_select;
-        buffer_swap_ready <= 0;
-    end 
-end
-
+ 
 // 同步信号生成
 always @(posedge clk_50) begin
     vga_hs <= (hcount < HSW);
     vga_vs <= (vcount < VSW);
 end
-
+ 
 // 显示使能信号
 wire disp_enable = (hcount >= HSW + BP) && (hcount < HSW + BP + HEN) &&
                    (vcount >= VSW + VBP) && (vcount < VSW + VBP + VEN);
 
+// 显示坐标计算
+wire [7:0] x, y;
 assign x = (hcount - (HSW + BP)) >> 2;
 assign y = (vcount - (VSW + VBP)) >> 2;
 
