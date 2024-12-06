@@ -189,7 +189,7 @@ always @(posedge clk_50) begin
 end
 always @(posedge vga_vs) begin
     if (buffer_swap_ready) begin
-        buffer_select = ~buffer_select;
+        buffer_select <= ~buffer_select;
         buffer_swap_ready <= 0;
     end
 end

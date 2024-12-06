@@ -1,10 +1,8 @@
 module Top(
     input logic clkk,
     input logic rstn,
-    input logic UART_TXD_IN,
-    input logic UART_RXD_OUT,
-    input logic UART_CTS,
-    input logic UART_RTS,
+    input logic PS2_CLK,
+    input logic PS2_DATA,
 
     output logic [11:0] rgb,
     output logic hs,vs
@@ -20,11 +18,8 @@ clk_wiz_0 clk_wiz_0(
 
 KeyBoard keyBoard(
     .clk(clkk),
-    .rst_n(rstn),
-    .UART_TXD_IN(UART_TXD_IN),
-    .UART_RXD_OUT(UART_RXD_OUT),
-    .UART_CTS(UART_CTS),
-    .UART_RTS(UART_RTS),
+    .ps2_clk(PS2_CLK),
+    .ps2_data(PS2_DATA),
     .key_valid(key_valid),
     .key_status(key_status)
 );
