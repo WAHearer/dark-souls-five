@@ -114,8 +114,8 @@ always @(posedge clk) begin
                 render_x <= playerPosition[0] - 7'h7;
                 if (render_y == playerPosition[1] + 7'h7) begin
                     render_state <= RENDER_PLAYER_BULLET;
-                    render_x <= playerBullet[0];
-                    render_y <= playerBullet[1];
+                    render_x <= playerBullet[0][7:0];
+                    render_y <= playerBullet[0][15:8];
                     if (buffer_select) begin
                         vram_we_a <= 1;
                         vram_din_a <= COLOR_PLAYER_BULLET;
@@ -135,8 +135,8 @@ always @(posedge clk) begin
         RENDER_PLAYER_BULLET: begin
             if (bulletCounter == 69) begin
                 render_state <= RENDER_ENEMY_BULLET;
-                render_x <= enemyBullet[0];
-                render_y <= enemyBullet[1];
+                render_x <= enemyBullet[0][7:0];
+                render_y <= enemyBullet[0][15:8];
                 if (buffer_select) begin
                     vram_we_a <= 1;
                     vram_din_a <= COLOR_ENEMY_BULLET;
@@ -147,8 +147,8 @@ always @(posedge clk) begin
                 bulletCounter <= 0;
             end else begin
                 bulletCounter <= bulletCounter + 1;
-                render_x <= playerBullet[bulletCounter + 1] - 7'h1;
-                render_y <= playerBullet[bulletCounter + 1] - 7'h1;
+                render_x <= playerBullet[bulletCounter + 1][7:0];
+                render_y <= playerBullet[bulletCounter + 1][15:8];
             end
         end
 
@@ -157,8 +157,8 @@ always @(posedge clk) begin
                 render_state <= DONE;
             end else begin
                 bulletCounter <= bulletCounter + 1;
-                render_x <= enemyBullet[bulletCounter + 1] - 7'h1;
-                render_y <= enemyBullet[bulletCounter + 1] - 7'h1;
+                render_x <= enemyBullet[bulletCounter + 1][7:0];
+                render_y <= enemyBullet[bulletCounter + 1][15:8];
             end
         end
 
