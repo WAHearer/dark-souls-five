@@ -36,7 +36,7 @@ reg vram_we_a, vram_we_b;
 blk_mem_gen_0 vram_A (
     .clka(clk),
     .wea(vram_we_a),
-    .addra({8'hff - render_y, 8'hff - render_x}),
+    .addra({149 - render_y, render_x}),
     .dina(vram_din_a),
     .clkb(clk),
     .addrb({y, x}),
@@ -46,7 +46,7 @@ blk_mem_gen_0 vram_A (
 blk_mem_gen_0 vram_B (
     .clka(clk),
     .wea(vram_we_b),
-    .addra({8'hff - render_y, 8'hff - render_x}),
+    .addra({149 - render_y, render_x}),
     .dina(vram_din_b),
     .clkb(clk),
     .addrb({y, x}),
