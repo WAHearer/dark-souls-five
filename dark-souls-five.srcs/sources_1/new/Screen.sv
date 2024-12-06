@@ -28,6 +28,10 @@ module Screen #(
 );
 reg buffer_select;
 reg buffer_swap_ready;
+initial begin
+    buffer_select = 0;
+    buffer_swap_ready = 0;
+end
 // VRAM接口
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
@@ -70,6 +74,11 @@ localparam COLOR_PLAYER_BULLET = 12'h0FF;
 localparam COLOR_ENEMY_BULLET = 12'hF0F;
 
 render_state_t render_state;
+reg [11:0] hcount, vcount;
+initial begin
+    hcount = 0;
+    vcount = 0;
+end
 reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
 always @(posedge clk) begin
@@ -174,12 +183,6 @@ always @(posedge clk) begin
     endcase
  end
 
-// 水平和垂直计数器
-reg [11:0] hcount, vcount;
-initial begin
-    hcount = 0;
-    vcount = 0;
-end
 always @(posedge clk_50) begin
     if(hcount == HSW + BP + HEN + HFP - 1) begin
         hcount <= 0;
