@@ -28,10 +28,13 @@ module Screen #(
 );
 reg buffer_select;
 reg buffer_swap_ready;
-// VRAM接口
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
+reg [7:0] render_x, render_y;
+reg [7:0] renderedge_x, renderedge_y;
+reg [11:0] hcount, vcount;
+wire [7:0] x, y;
 reg vram_we_a, vram_we_b;
 blk_mem_gen_0 vram_A (
     .clka(clk),
@@ -71,8 +74,6 @@ localparam COLOR_PLAYER_BULLET = 12'h0FF;
 localparam COLOR_ENEMY_BULLET = 12'hF0F;
 
 render_state_t render_state;
-reg [7:0] render_x, render_y;
-reg [7:0] renderedge_x, renderedge_y;
 reg [7:0] bulletCounter;
 always @(posedge clk) begin
     case (render_state)
@@ -179,7 +180,6 @@ always @(posedge clk) begin
 end
 
 // 水平和垂直计数器
-reg [11:0] hcount, vcount;
 initial begin
     hcount = 0;
     vcount = 0;
@@ -211,8 +211,6 @@ end
 wire disp_enable = (hcount >= HSW + BP) && (hcount < HSW + BP + HEN) &&
                    (vcount >= VSW + VBP) && (vcount < VSW + VBP + VEN);
 
-// 显示坐标计算
-wire [7:0] x, y;
 assign x = (hcount - (HSW + BP)) >> 2;
 assign y = (vcount - (VSW + VBP)) >> 2;
 
