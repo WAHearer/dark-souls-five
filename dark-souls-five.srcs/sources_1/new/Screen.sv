@@ -34,7 +34,7 @@ wire [11:0] vram_dout;
 blk_mem_gen_0 vram (
     .clka(clk_50),
     .wea(vram_we),
-    .addra({render_y, render_x}),
+    .addra({8'hff - render_y, 8'hff - render_x}),
     .dina(vram_din),
     .clkb(clk),
     .addrb({y, x}),
