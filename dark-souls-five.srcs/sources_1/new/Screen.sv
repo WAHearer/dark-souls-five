@@ -34,7 +34,7 @@ wire [11:0] vram_dout_a, vram_dout_b;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
 reg vram_we_a, vram_we_b;
 blk_mem_gen_0 vram_A (
-    .clka(clk_50),
+    .clka(clk),
     .wea(vram_we_a),
     .addra({8'hff - render_y, 8'hff - render_x}),
     .dina(vram_din_a),
@@ -44,7 +44,7 @@ blk_mem_gen_0 vram_A (
 );
 
 blk_mem_gen_0 vram_B (
-    .clka(clk_50),
+    .clka(clk),
     .wea(vram_we_b),
     .addra({8'hff - render_y, 8'hff - render_x}),
     .dina(vram_din_b),
@@ -72,7 +72,7 @@ localparam COLOR_ENEMY_BULLET = 12'hF0F;
 render_state_t render_state;
 reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
-always @(posedge clk_50) begin
+always @(posedge clk) begin
     case (render_state)
         IDLE: begin
             render_state <= RENDER_ENEMY;
