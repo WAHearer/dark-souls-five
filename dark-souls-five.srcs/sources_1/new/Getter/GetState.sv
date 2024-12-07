@@ -12,7 +12,7 @@ module GetState (
 );
 initial begin
     next_state<=2;
-    next_level<=2;
+    next_level<=3;
     next_textId<=0;
 end
 always @(posedge enter or posedge pause) begin
