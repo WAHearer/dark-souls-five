@@ -8,7 +8,7 @@ module Game (
     input [7:0] playerPosition[0:1],
     input [7:0] enemyPosition[0:1],
     input [27:0] playerBullet[0:39],
-    input [27:0] enemyBullet[0:119],
+    input [27:0] enemyBullet[0:99],
     
     output [3:0] next_state,
     output [9:0] next_textId,
@@ -18,7 +18,7 @@ module Game (
     output reg [7:0] next_playerPosition[0:1],
     output reg [7:0] next_enemyPosition[0:1],
     output reg [27:0] next_playerBullet[0:39],
-    output reg [27:0] next_enemyBullet[0:119]
+    output reg [27:0] next_enemyBullet[0:99]
 );
 
 wire [20:0] next_playerHp_inGame;
@@ -27,8 +27,8 @@ wire [7:0] next_playerPosition_inGame[0:1];
 wire [7:0] next_enemyPosition_inGame[0:1];
 wire [27:0] next_playerBullet_moved[0:39];
 wire [27:0] next_playerBullet_generated[0:39];
-wire [27:0] next_enemyBullet_moved[0:119];
-wire [27:0] next_enemyBullet_generated[0:119];
+wire [27:0] next_enemyBullet_moved[0:99];
+wire [27:0] next_enemyBullet_generated[0:99];
 
 integer i,j;
 
@@ -120,7 +120,7 @@ always @(*) begin
             else
                 next_playerBullet[i]=0;
         end
-        for(j=0;j<120;j++) begin
+        for(j=0;j<100;j++) begin
             if(next_enemyBullet_generated[j]!=0)
                 next_enemyBullet[j]=next_enemyBullet_generated[j];
             else if(next_enemyBullet_moved[j][7:0]<8'd200&&next_enemyBullet_moved[j][15:8]<8'd150)
@@ -145,7 +145,7 @@ always @(*) begin
         next_enemyPosition[1]=8'd120;
         for(i=0;i<40;i++)
             next_playerBullet[i]=0;
-        for(j=0;j<120;j++)
+        for(j=0;j<100;j++)
             next_enemyBullet[j]=0;
     end
 end

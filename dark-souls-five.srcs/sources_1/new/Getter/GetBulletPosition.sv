@@ -6,12 +6,12 @@ module GetBulletPosition (
     input [7:0] playerPosition[0:1],
     input [7:0] enemyPosition[0:1],
     input [27:0] playerBullet[0:39],
-    input [27:0] enemyBullet[0:119],
+    input [27:0] enemyBullet[0:99],
 
     output reg [20:0] next_playerHp,
     output reg [20:0] next_enemyHp,
     output reg [27:0] next_playerBullet[0:39],
-    output reg [27:0] next_enemyBullet[0:119]
+    output reg [27:0] next_enemyBullet[0:99]
 );
 reg [21:0] base1[0:3],base2[0:3];
 integer i,j,counter1[0:3],counter2[0:3];
@@ -34,7 +34,7 @@ initial begin
     counter2[3]<=0;
     for(i=0;i<40;i++)
         next_playerBullet[i]<=0;
-    for(j=0;j<120;j++)
+    for(j=0;j<100;j++)
         next_enemyBullet[j]<=0;
 end
 always @(posedge clk) begin
@@ -86,7 +86,7 @@ end
 always @(*) begin
     if(state==2) begin
         for(i=0;i<40;i++) begin
-            if(playerBullet[i][7:0]==enemyPosition[0]&&playerBullet[i][15:8]==enemyPosition[1]) begin
+            if((playerBullet[i][7:0]<=enemyPosition[0]+10&&playerBullet[i][7:0]+10>=enemyPosition[0])&&(playerBullet[i][15:8]<=enemyPosition[1]+10&&playerBullet[i][15:8]+10>=enemyPosition[1])) begin
                 if(enemyHp<=playerBullet[i][22:16])
                     next_enemyHp=0;
                 else
@@ -154,7 +154,7 @@ always @(*) begin
                 endcase
             end
         end
-        for(j=0;j<120;j++) begin
+        for(j=0;j<100;j++) begin
             if(enemyBullet[j][7:0]==playerPosition[0]&&enemyBullet[j][15:8]==playerPosition[1]) begin
                 if(playerHp<=enemyBullet[j][22:16])
                     next_playerHp=0;
@@ -229,7 +229,7 @@ always @(*) begin
         next_enemyHp=enemyHp;
         for(i=0;i<40;i++)
             next_playerBullet[i]=0;
-        for(j=0;j<120;j++)
+        for(j=0;j<100;j++)
             next_enemyBullet[j]=0;
     end
 end
