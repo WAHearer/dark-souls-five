@@ -17,8 +17,8 @@ module Screen #(
     input [20:0] enemyHp,        // 敌人血量
     input [7:0] playerPosition[0:1], // 玩家位置
     input [7:0] enemyPosition[0:1],  // 敌人位置
-    input [27:0] playerBullet[0:69], // 玩家子弹
-    input [27:0] enemyBullet[0:69],  // 敌人子弹
+    input [27:0] playerBullet[0:39], // 玩家子弹
+    input [27:0] enemyBullet[0:119],  // 敌人子弹
     
     output wire [3:0] vga_r,      // VGA红色分量
     output wire [3:0] vga_g,      // VGA绿色分量
@@ -168,7 +168,7 @@ always @(posedge clk) begin
         end
 
         RENDER_PLAYER_BULLET: begin
-            if (bulletCounter == 69) begin
+            if (bulletCounter == 39) begin
                 render_state <= RENDER_ENEMY_BULLET;
                 render_x <= enemyBullet[0][7:0];
                 render_y <= enemyBullet[0][15:8];
@@ -188,7 +188,7 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY_BULLET: begin
-            if (bulletCounter == 69) begin
+            if (bulletCounter == 119) begin
                 render_state <= DONE;
             end else begin
                 bulletCounter <= bulletCounter + 1;
