@@ -66,6 +66,8 @@ typedef enum {
     RENDER_PLAYER,
     RENDER_PLAYER_BULLET,
     RENDER_ENEMY_BULLET,
+    RENDER_ENEMY_HEALTH,
+    RENDER_PLAYER_HEALTH,
     DONE
 } render_state_t;
 
@@ -189,11 +191,55 @@ always @(posedge clk) begin
 
         RENDER_ENEMY_BULLET: begin
             if (bulletCounter == 99) begin
-                render_state <= DONE;
+                render_state <= RENDER_ENEMY_HEALTH;
+                render_x <= 0;
+                render_y <= 10;
+                if (buffer_select) begin
+                    vram_we_a <= 1;
+                    vram_din_a <= COLOR_ENEMY;
+                end else begin
+                    vram_we_b <= 1;
+                    vram_din_b <= COLOR_ENEMY;
+                end
             end else begin
                 bulletCounter <= bulletCounter + 1;
                 render_x <= enemyBullet[bulletCounter + 1][7:0];
                 render_y <= enemyBullet[bulletCounter + 1][15:8];
+            end
+        end
+
+        RENDER_ENEMY_HEALTH: begin
+            if (render_x == enemyHp) begin
+                render_x <= 0;
+                if (render_y == 15) begin
+                    render_state <= RENDER_PLAYER_HEALTH;
+                    render_x <= 0;
+                    render_y <= 135;
+                    if (buffer_select) begin
+                        vram_we_a <= 1;
+                        vram_din_a <= COLOR_PLAYER;
+                    end else begin
+                        vram_we_b <= 1;
+                        vram_din_b <= COLOR_PLAYER;
+                    end 
+                end else begin
+                        render_y <= render_y + 1;
+                    end
+            end else begin
+                render_x <= render_x + 1;
+            end
+        end
+
+        RENDER_PLAYER_HEALTH: begin
+            if (render_x == playerHp) begin
+                render_x <= 0;
+                if (render_y == 140) begin
+                    render_state <= DONE;
+                end else begin
+                    render_y <= render_y + 1;
+                end
+            end else begin
+                render_x <= render_x + 1;
             end
         end
 
