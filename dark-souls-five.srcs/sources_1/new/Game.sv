@@ -115,14 +115,18 @@ always @(*) begin
         for(i=0;i<40;i++) begin
             if(next_playerBullet_generated[i]!=0)
                 next_playerBullet[i]=next_playerBullet_generated[i];
-            else
+            else if(next_playerBullet_moved[i][7:0]<8'd200&&next_playerBullet_moved[i][15:8]<8'd150)
                 next_playerBullet[i]=next_playerBullet_moved[i];
+            else
+                next_playerBullet[i]=0;
         end
         for(j=0;j<120;j++) begin
             if(next_enemyBullet_generated[j]!=0)
                 next_enemyBullet[j]=next_enemyBullet_generated[j];
-            else
+            else if(next_enemyBullet_moved[j][7:0]<8'd200&&next_enemyBullet_moved[j][15:8]<8'd150)
                 next_enemyBullet[j]=next_enemyBullet_moved[j];
+            else
+                next_enemyBullet[j]=0;
         end
     end
     else begin
