@@ -79,14 +79,13 @@ always @(posedge clk) begin
                 counter1<=counter1+1;
             else begin
                 counter1<=0;
-                startPos<=(startPos+66)<100?(startPos+66):(startPos+66)-100;
                 for(i=0;i<100;i++) begin
-                    next_enemyBullet[(startPos+i+66)<100?(startPos+i+66):(startPos+i+66)-100]<={12'b100000110010,enemyPosition[1],8'd0}-(1<<8)+50+i;
+                    next_enemyBullet[i]<={12'b100000110010,enemyPosition[1],8'd0}+50+i;
                 end
             end
             if(counter1==0) begin
                 for(i=0;i<100;i++)
-                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
+                    next_enemyBullet[i]<=0;
             end
             if(counter2<32'd15000003)
                 counter2<=counter2+1;
