@@ -27,10 +27,11 @@ module Screen #(
     output reg vga_vs            // 场同步
 );
 reg buffer_select;
-reg buffer_swap_ready;
+reg render_ready, vga_ready;
 initial begin
     buffer_select = 0;
-    buffer_swap_ready = 0;
+    render_ready = 0;
+    vga_ready = 0;
 end
 // VRAM接口
 reg  [11:0] vram_din_a, vram_din_b;
@@ -85,6 +86,7 @@ always @(posedge clk) begin
     case (render_state)
         IDLE: begin
             render_state <= RENDER_ENEMY;
+            render_ready <= 0;
             render_x <= enemyPosition[0] - 7'h7;
             render_y <= enemyPosition[1] - 7'h7;
             if (buffer_select) begin
@@ -177,8 +179,8 @@ always @(posedge clk) begin
             end else begin
                 vram_we_b <= 0;
             end
-            buffer_swap_ready <= 1; 
-            render_state <= buffer_swap_ready ? DONE : IDLE;
+            render_ready <= 1;
+            render_state <= (vga_ready) ? IDLE : DONE;
         end
     endcase
  end
@@ -188,9 +190,11 @@ always @(posedge clk_50) begin
         hcount <= 0;
         if(vcount == VSW + VBP + VEN + VFP - 1) begin
             vcount <= 0;
-            if (buffer_swap_ready) begin
+            if (render_ready) begin
                 buffer_select <= ~buffer_select;
-                buffer_swap_ready <= 0;
+                vga_ready <= 1;
+            end else begin
+                vga_ready <= 0;
             end
         end else
              vcount <= vcount + 1;

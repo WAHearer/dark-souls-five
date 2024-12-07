@@ -25,13 +25,13 @@ always @(posedge clk) begin
             else begin
                 counter1<=0;
                 startPos<=(startPos+7)<70?(startPos+7):(startPos+7)-70;
-                next_enemyBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b010000001010,enemyPosition[1],enemyPosition[0]}-(1<<8);
-                next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b010000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8);
-                next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b010000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8);
-                next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b010000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8);
-                next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b010000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8);
-                next_enemyBullet[(startPos+12)<70?(startPos+12):(startPos+12)-70]<={12'b010000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8);
-                next_enemyBullet[(startPos+13)<70?(startPos+13):(startPos+13)-70]<={12'b010000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8);
+                next_enemyBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8);
+                next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8);
+                next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8);
+                next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8);
+                next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8);
+                next_enemyBullet[(startPos+12)<70?(startPos+12):(startPos+12)-70]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8);
+                next_enemyBullet[(startPos+13)<70?(startPos+13):(startPos+13)-70]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8);
             end
             if(counter1==0) begin
                 for(i=0;i<7;i++)
@@ -42,12 +42,12 @@ always @(posedge clk) begin
             else begin
                 counter2<=0;
                 startPos<=(startPos+6)<70?(startPos+6):(startPos+6)-70;
-                next_enemyBullet[(startPos+6)<70?(startPos+6):(startPos+6)-70]<={12'b000000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8);
-                next_enemyBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b000000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8);
-                next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b000000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8);
-                next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b000000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8);
-                next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b000000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8);
-                next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b000000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8);
+                next_enemyBullet[(startPos+6)<70?(startPos+6):(startPos+6)-70]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8);
+                next_enemyBullet[(startPos+7)<70?(startPos+7):(startPos+7)-70]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8);
+                next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8);
+                next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8);
+                next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8);
+                next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8);
             end
             if(counter2==0) begin
                 for(i=0;i<6;i++)
@@ -60,14 +60,14 @@ always @(posedge clk) begin
             else begin
                 counter3<=0;
                 startPos<=(startPos+8)<70?(startPos+8):(startPos+8)-70;
-                next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}-1;
-                next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}-1;
-                next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}+1;
-                next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}+1;
-                next_enemyBullet[(startPos+12)<70?(startPos+12):(startPos+12)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
-                next_enemyBullet[(startPos+13)<70?(startPos+13):(startPos+13)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
-                next_enemyBullet[(startPos+14)<70?(startPos+14):(startPos+14)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
-                next_enemyBullet[(startPos+15)<70?(startPos+15):(startPos+15)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
+                next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-1;
+                next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-1;
+                next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+1;
+                next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+1;
+                next_enemyBullet[(startPos+12)<70?(startPos+12):(startPos+12)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
+                next_enemyBullet[(startPos+13)<70?(startPos+13):(startPos+13)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
+                next_enemyBullet[(startPos+14)<70?(startPos+14):(startPos+14)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
+                next_enemyBullet[(startPos+15)<70?(startPos+15):(startPos+15)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
             end
             if(counter3==0) begin
                 for(i=0;i<8;i++)
@@ -92,17 +92,19 @@ always @(posedge clk) begin
                 counter2<=counter2+1;
             else begin
                 counter2<=0;
-                startPos<=(startPos+8)<70?(startPos+8):(startPos+8)-70;
-                next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}-1;
-                next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}-1;
-                next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}+1;
-                next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}+1;
-                next_enemyBullet[(startPos+12)<70?(startPos+12):(startPos+12)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
-                next_enemyBullet[(startPos+13)<70?(startPos+13):(startPos+13)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
-                next_enemyBullet[(startPos+14)<70?(startPos+14):(startPos+14)-70]<={12'b011000010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
-                next_enemyBullet[(startPos+15)<70?(startPos+15):(startPos+15)-70]<={12'b011010010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
+                if(counter1>32'd60000000) begin
+                    startPos<=(startPos+8)<70?(startPos+8):(startPos+8)-70;
+                    next_enemyBullet[(startPos+8)<70?(startPos+8):(startPos+8)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-1;
+                    next_enemyBullet[(startPos+9)<70?(startPos+9):(startPos+9)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-1;
+                    next_enemyBullet[(startPos+10)<70?(startPos+10):(startPos+10)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+1;
+                    next_enemyBullet[(startPos+11)<70?(startPos+11):(startPos+11)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+1;
+                    next_enemyBullet[(startPos+12)<70?(startPos+12):(startPos+12)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
+                    next_enemyBullet[(startPos+13)<70?(startPos+13):(startPos+13)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-1-(1<<9);
+                    next_enemyBullet[(startPos+14)<70?(startPos+14):(startPos+14)-70]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
+                    next_enemyBullet[(startPos+15)<70?(startPos+15):(startPos+15)-70]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+1-(1<<9);
+                end
             end
-            if(counter2==0) begin
+            if(counter2==0&&counter1>32'd60000000) begin
                 for(i=0;i<8;i++)
                     next_enemyBullet[(startPos+i)<70?(startPos+i):(startPos+i)-70]<=0;
             end
@@ -110,12 +112,14 @@ always @(posedge clk) begin
                 counter3<=counter3+1;
             else begin
                 counter3<=0;
-                startPos<=(startPos+3)<70?(startPos+3):(startPos+3)-70;
-                next_enemyBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8);
-                next_enemyBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-3;
-                next_enemyBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+3;
+                if(counter1>32'd60000000) begin
+                    startPos<=(startPos+3)<70?(startPos+3):(startPos+3)-70;
+                    next_enemyBullet[(startPos+3)<70?(startPos+3):(startPos+3)-70]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8);
+                    next_enemyBullet[(startPos+4)<70?(startPos+4):(startPos+4)-70]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-3;
+                    next_enemyBullet[(startPos+5)<70?(startPos+5):(startPos+5)-70]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+3;
+                end
             end
-            if(counter3==0) begin
+            if(counter3==0&&counter1>32'd60000000) begin
                 for(i=0;i<3;i++)
                     next_enemyBullet[(startPos+i)<70?(startPos+i):(startPos+i)-70]<=0;
             end
