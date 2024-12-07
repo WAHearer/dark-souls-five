@@ -61,6 +61,7 @@ blk_mem_gen_0 vram_B (
 // 渲染逻辑
 typedef enum {
     IDLE,
+    RENDER_BG,
     RENDER_ENEMY,
     RENDER_PLAYER,
     RENDER_PLAYER_BULLET,
@@ -85,16 +86,39 @@ reg [7:0] bulletCounter;
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
-            render_state <= RENDER_ENEMY;
+            render_state <= RENDER_BG;
             render_ready <= 0;
-            render_x <= enemyPosition[0] - 7'h7;
-            render_y <= enemyPosition[1] - 7'h7;
+            render_x <= 0;
+            render_y <= 0;
             if (buffer_select) begin
                 vram_we_a <= 1;
-                vram_din_a <= COLOR_ENEMY;
+                vram_din_a <= COLOR_BG;
             end else begin
                 vram_we_b <= 1;
-                vram_din_b <= COLOR_ENEMY;
+                vram_din_b <= COLOR_BG;
+            end
+
+        end
+
+        RENDER_BG: begin
+            if (render_x == 199) begin
+                render_x <= 0;
+                if (render_y == 149) begin
+                    render_state <= RENDER_ENEMY;
+                    render_x <= enemyPosition[0] - 7'h7;
+                    render_y <= enemyPosition[1] - 7'h7;
+                    if (buffer_select) begin
+                        vram_we_a <= 1;
+                        vram_din_a <= COLOR_ENEMY;
+                    end else begin
+                        vram_we_b <= 1;
+                        vram_din_b <= COLOR_ENEMY;
+                    end
+                end else begin
+                    render_y <= render_y + 1;
+                end
+            end else begin
+                render_x <= render_x + 1;
             end
         end
 
