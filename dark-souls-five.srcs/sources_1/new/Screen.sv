@@ -209,7 +209,7 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY_HEALTH: begin
-            if (render_x == enemyHp) begin
+            if (render_x == enemyHp || render_x == 199) begin
                 render_x <= 0;
                 if (render_y == 15) begin
                     render_state <= RENDER_PLAYER_HEALTH;
