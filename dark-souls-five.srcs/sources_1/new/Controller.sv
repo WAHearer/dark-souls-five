@@ -71,6 +71,7 @@ Game game(//计算下一时刻状态，内部需要：根据按键输入更新�
     .enemyPosition(enemyPosition),
     .playerBullet(playerBullet),
     .enemyBullet(enemyBullet),
+    .wall(wall),
     
     .next_state(next_state),
     .next_textId(next_textId),
