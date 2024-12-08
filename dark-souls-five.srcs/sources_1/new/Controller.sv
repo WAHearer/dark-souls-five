@@ -12,7 +12,7 @@ reg [7:0] playerPosition[0:1];//0为x坐标，1为y坐标
 reg [7:0] enemyPosition[0:1];//同上
 reg [27:0] playerBullet[0:39];//7:0为x坐标，15:8为y坐标，22:16为伤害，25:23为方向，27:26为速度
 reg [27:0] enemyBullet[0:99];//同上
-reg [16:0] wall[4:0];//7:0为y坐标，14:8为伤害，16:15为速度
+reg [16:0] wall[0:4];//7:0为y坐标，14:8为伤害，16:15为速度
 
 reg [3:0] next_state;
 reg [9:0] next_textId;
