@@ -9,133 +9,264 @@ module GenerateEnemyBullet (
     output reg [27:0] next_enemyBullet[0:99],
     output reg [16:0] next_wall[0:4]
 );
-integer i,counter1,counter2,counter3,counter4,startPos;
+integer i,counter1,counter2,counter3,counter4;
 initial begin
     counter1<=0;
     counter2<=0;
     counter3<=0;
     counter4<=0;
-    startPos<=0;
     for(i=0;i<100;i++)
         next_enemyBullet[i]<=0;
 end
 always @(posedge clk) begin
     if(state==2) begin
-        if(level==1||level==2) begin
-            if(counter1<32'd15000011)
-                counter1<=counter1+1;
-            else begin
-                counter1<=0;
-                startPos<=(startPos+7)<100?(startPos+7):(startPos+7)-100;
-                next_enemyBullet[(startPos+7)<100?(startPos+7):(startPos+7)-100]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8);
-                next_enemyBullet[(startPos+8)<100?(startPos+8):(startPos+8)-100]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8);
-                next_enemyBullet[(startPos+9)<100?(startPos+9):(startPos+9)-100]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8);
-                next_enemyBullet[(startPos+10)<100?(startPos+10):(startPos+10)-100]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8);
-                next_enemyBullet[(startPos+11)<100?(startPos+11):(startPos+11)-100]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8);
-                next_enemyBullet[(startPos+12)<100?(startPos+12):(startPos+12)-100]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8);
-                next_enemyBullet[(startPos+13)<100?(startPos+13):(startPos+13)-100]<={12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8);
+        case(level)
+            1:begin
+                if(counter1<32'd60000000)
+                    counter1++;
+                else
+                    counter1<=0;
+                if(counter2<32'd125000000)
+                    counter2++;
+                else
+                    counter2<=0;
             end
-            if(counter1==0) begin
-                for(i=0;i<7;i++)
-                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
+            2:begin
+                if(counter1<32'd60000000)
+                    counter1++;
+                else
+                    counter1<=0;
+                if(counter2<32'd125000000)
+                    counter2++;
+                else
+                    counter2<=0;
+                if(counter3<32'd60000000)
+                    counter3++;
+                else
+                    counter3<=0;
             end
-            if(counter2<32'd25000003)
-                counter2<=counter2+1;
-            else begin
-                counter2<=0;
-                startPos<=(startPos+6)<100?(startPos+6):(startPos+6)-100;
-                next_enemyBullet[(startPos+6)<100?(startPos+6):(startPos+6)-100]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8);
-                next_enemyBullet[(startPos+7)<100?(startPos+7):(startPos+7)-100]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8);
-                next_enemyBullet[(startPos+8)<100?(startPos+8):(startPos+8)-100]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8);
-                next_enemyBullet[(startPos+9)<100?(startPos+9):(startPos+9)-100]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8);
-                next_enemyBullet[(startPos+10)<100?(startPos+10):(startPos+10)-100]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8);
-                next_enemyBullet[(startPos+11)<100?(startPos+11):(startPos+11)-100]<={12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8);
+            3:begin
+                if(counter1<32'd250000000)
+                    counter1++;
+                else
+                    counter1<=0;
+                if(counter2<32'd400000000)
+                    counter2++;
+                else
+                    counter2<=0;
+                if(counter3<32'd60000000)
+                    counter3++;
+                else
+                    counter3<=0;
+                if(counter4<32'd30000000)
+                    counter4++;
+                else
+                    counter4<=0;
             end
-            if(counter2==0) begin
-                for(i=0;i<6;i++)
-                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
-            end
-        end
-        if(level==2) begin
-            if(counter3<32'd20000007)
-                counter3<=counter3+1;
-            else begin
-                counter3<=0;
-                startPos<=(startPos+8)<100?(startPos+8):(startPos+8)-100;
-                next_enemyBullet[(startPos+8)<100?(startPos+8):(startPos+8)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-11;
-                next_enemyBullet[(startPos+9)<100?(startPos+9):(startPos+9)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-13;
-                next_enemyBullet[(startPos+10)<100?(startPos+10):(startPos+10)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+15;
-                next_enemyBullet[(startPos+11)<100?(startPos+11):(startPos+11)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+17;
-                next_enemyBullet[(startPos+12)<100?(startPos+12):(startPos+12)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12);
-                next_enemyBullet[(startPos+13)<100?(startPos+13):(startPos+13)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12);
-                next_enemyBullet[(startPos+14)<100?(startPos+14):(startPos+14)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12);
-                next_enemyBullet[(startPos+15)<100?(startPos+15):(startPos+15)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12);
-            end
-            if(counter3==0) begin
-                for(i=0;i<8;i++)
-                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
-            end
-        end
-        if(level==3) begin
-            if(counter1<32'd250000000)
-                counter1<=counter1+1;
-            else begin
-                counter1<=0;
-                next_wall[0]<={9'b100110010,enemyPosition[1]}-1;
-            end
-            if(counter1==0) begin
-                next_wall[0]<=0;
-            end
-            if(counter2<32'd400000000)
-                counter2<=counter2+1;
-            else begin
-                counter2<=0;
-                next_wall[1]<={9'b011001011,enemyPosition[1]}-1;
-            end
-            if(counter2==0) begin
-                next_wall[1]<=0;
-            end
-            if(counter3<32'd15000003)
-                counter3<=counter3+1;
-            else begin
-                counter3<=0;
-                startPos<=(startPos+8)<100?(startPos+8):(startPos+8)-100;
-                next_enemyBullet[(startPos+8)<100?(startPos+8):(startPos+8)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-11;
-                next_enemyBullet[(startPos+9)<100?(startPos+9):(startPos+9)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-13;
-                next_enemyBullet[(startPos+10)<100?(startPos+10):(startPos+10)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+15;
-                next_enemyBullet[(startPos+11)<100?(startPos+11):(startPos+11)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+17;
-                next_enemyBullet[(startPos+12)<100?(startPos+12):(startPos+12)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12);
-                next_enemyBullet[(startPos+13)<100?(startPos+13):(startPos+13)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12);
-                next_enemyBullet[(startPos+14)<100?(startPos+14):(startPos+14)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12);
-                next_enemyBullet[(startPos+15)<100?(startPos+15):(startPos+15)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12);
-            end
-            if(counter3==0) begin
-                for(i=0;i<8;i++)
-                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
-            end
-            if(counter4<32'd30000007)
-                counter4<=counter4+1;
-            else begin
-                counter4<=0;
-                startPos<=(startPos+3)<100?(startPos+3):(startPos+3)-100;
-                next_enemyBullet[(startPos+3)<100?(startPos+3):(startPos+3)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8);
-                next_enemyBullet[(startPos+4)<100?(startPos+4):(startPos+4)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-3;
-                next_enemyBullet[(startPos+5)<100?(startPos+5):(startPos+5)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+3;
-            end
-            if(counter4==0) begin
-                for(i=0;i<3;i++)
-                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
-            end
-        end
+        endcase
     end
-    else if(state!=1) begin
+    else begin
         counter1<=0;
         counter2<=0;
         counter3<=0;
         counter4<=0;
-        startPos<=0;
+    end
+end
+always @(*) begin
+    if(state==1||state==2) begin
+        case(level)
+            1:begin
+                next_enemyBullet[0]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[1]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[2]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[3]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[4]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[5]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[6]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[7]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[8]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[9]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[10]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[11]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[12]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[13]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[14]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[15]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[16]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[17]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[18]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[19]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[20]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[21]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[22]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[23]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[24]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[25]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[26]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[27]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[28]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[29]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[30]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[31]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[32]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[33]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[34]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[35]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[36]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[37]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[38]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[39]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[40]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[41]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[42]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[43]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[44]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[45]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[46]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[47]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[48]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[49]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[50]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[51]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[52]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[53]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[54]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[55]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[56]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[57]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                for(i=58;i<100;i++)
+                    next_enemyBullet[i]=0;
+            end
+            2:begin
+                next_enemyBullet[0]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[1]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[2]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[3]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[4]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[5]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[6]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[7]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[8]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[9]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[10]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[11]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[12]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[13]=(counter1==32'd30000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[14]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[15]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[16]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[17]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[18]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[19]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[20]=(counter1==32'd45000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[21]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[22]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-6-(1<<8):0;
+                next_enemyBullet[23]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-12-(1<<8):0;
+                next_enemyBullet[24]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-18-(1<<8):0;
+                next_enemyBullet[25]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+6-(1<<8):0;
+                next_enemyBullet[26]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+12-(1<<8):0;
+                next_enemyBullet[27]=(counter1==32'd60000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}+18-(1<<8):0;
+                next_enemyBullet[28]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[29]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[30]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[31]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[32]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[33]=(counter2==32'd25000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[34]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[35]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[36]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[37]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[38]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[39]=(counter2==32'd50000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[40]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[41]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[42]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[43]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[44]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[45]=(counter2==32'd75000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[46]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[47]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[48]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[49]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[50]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[51]=(counter2==32'd100000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[52]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-3-(1<<8):0;
+                next_enemyBullet[53]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-9-(1<<8):0;
+                next_enemyBullet[54]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}-15-(1<<8):0;
+                next_enemyBullet[55]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
+                next_enemyBullet[56]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
+                next_enemyBullet[57]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
+                next_enemyBullet[58]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-11:0;
+                next_enemyBullet[59]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-13:0;
+                next_enemyBullet[60]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+15:0;
+                next_enemyBullet[61]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+17:0;
+                next_enemyBullet[62]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12):0;
+                next_enemyBullet[63]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12):0;
+                next_enemyBullet[64]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12):0;
+                next_enemyBullet[65]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12):0;
+                next_enemyBullet[66]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-11:0;
+                next_enemyBullet[67]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-13:0;
+                next_enemyBullet[68]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+15:0;
+                next_enemyBullet[69]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+17:0;
+                next_enemyBullet[70]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12):0;
+                next_enemyBullet[71]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12):0;
+                next_enemyBullet[72]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12):0;
+                next_enemyBullet[73]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12):0;
+                next_enemyBullet[74]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-11:0;
+                next_enemyBullet[75]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-13:0;
+                next_enemyBullet[76]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+15:0;
+                next_enemyBullet[77]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+17:0;
+                next_enemyBullet[78]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12):0;
+                next_enemyBullet[79]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12):0;
+                next_enemyBullet[80]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12):0;
+                next_enemyBullet[81]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12):0;
+                for(i=82;i<100;i++)
+                    next_enemyBullet[i]<=0;
+            end
+            3:begin
+                next_wall[0]=(counter1==32'd250000000)?{9'b100110010,enemyPosition[1]}-1:0;
+                next_wall[1]=(counter2==32'd400000000)?{9'b011001011,enemyPosition[1]}-1:0;
+                for(i=2;i<5;i++)
+                    next_wall[i]=0;
+                next_enemyBullet[0]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-11:0;
+                next_enemyBullet[1]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-13:0;
+                next_enemyBullet[2]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+15:0;
+                next_enemyBullet[3]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+17:0;
+                next_enemyBullet[4]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12):0;
+                next_enemyBullet[5]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12):0;
+                next_enemyBullet[6]=(counter3==32'd20000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12):0;
+                next_enemyBullet[7]=(counter3==32'd20000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12):0;
+                next_enemyBullet[8]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-11:0;
+                next_enemyBullet[9]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-13:0;
+                next_enemyBullet[10]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+15:0;
+                next_enemyBullet[11]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+17:0;
+                next_enemyBullet[12]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12):0;
+                next_enemyBullet[13]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12):0;
+                next_enemyBullet[14]=(counter3==32'd40000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12):0;
+                next_enemyBullet[15]=(counter3==32'd40000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12):0;
+                next_enemyBullet[16]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-11:0;
+                next_enemyBullet[17]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-13:0;
+                next_enemyBullet[18]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+15:0;
+                next_enemyBullet[19]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+17:0;
+                next_enemyBullet[20]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12):0;
+                next_enemyBullet[21]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12):0;
+                next_enemyBullet[22]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12):0;
+                next_enemyBullet[23]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12):0;
+                next_enemyBullet[24]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
+                next_enemyBullet[25]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-3:0;
+                next_enemyBullet[26]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+3:0;
+                next_enemyBullet[27]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-5:0;
+                next_enemyBullet[28]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+5:0;
+                for(i=29;i<100;i++)
+                    next_enemyBullet[i]=0;
+            end
+        endcase
+    end
+    else begin
+        for(i=0;i<5;i++)
+            next_wall[i]=0;
         for(i=0;i<100;i++)
-            next_enemyBullet[i]<=0;
+            next_enemyBullet[i]=0;
     end
 end
 endmodule
