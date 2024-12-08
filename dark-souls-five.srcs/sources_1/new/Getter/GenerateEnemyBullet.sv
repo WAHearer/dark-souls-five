@@ -6,13 +6,15 @@ module GenerateEnemyBullet (
     input [7:0] enemyPosition[0:1],
     input [20:0] enemyHp,
 
-    output reg [27:0] next_enemyBullet[0:99]
+    output reg [27:0] next_enemyBullet[0:99],
+    output reg [16:0] next_wall[0:4]
 );
-integer i,counter1,counter2,counter3,startPos;
+integer i,counter1,counter2,counter3,counter4,startPos;
 initial begin
     counter1<=0;
     counter2<=0;
     counter3<=0;
+    counter4<=0;
     startPos<=0;
     for(i=0;i<100;i++)
         next_enemyBullet[i]<=0;
@@ -75,50 +77,52 @@ always @(posedge clk) begin
             end
         end
         if(level==3) begin
-            if(counter1<32'd400000000)
+            if(counter1<32'd250000000)
                 counter1<=counter1+1;
             else begin
                 counter1<=0;
-                for(i=0;i<100;i++) begin
-                    next_enemyBullet[i]<={12'b100000110010,enemyPosition[1],8'd0}+50+i;
-                end
+                next_wall[0]<={9'b100110010,enemyPosition[1]}-1;
             end
             if(counter1==0) begin
-                for(i=0;i<100;i++)
-                    next_enemyBullet[i]<=0;
+                next_wall[0]<=0;
             end
-            if(counter2<32'd15000003)
+            if(counter2<32'd400000000)
                 counter2<=counter2+1;
             else begin
                 counter2<=0;
-                if(counter1>32'd60000000) begin
-                    startPos<=(startPos+8)<100?(startPos+8):(startPos+8)-100;
-                    next_enemyBullet[(startPos+8)<100?(startPos+8):(startPos+8)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-11;
-                    next_enemyBullet[(startPos+9)<100?(startPos+9):(startPos+9)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-13;
-                    next_enemyBullet[(startPos+10)<100?(startPos+10):(startPos+10)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+15;
-                    next_enemyBullet[(startPos+11)<100?(startPos+11):(startPos+11)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+17;
-                    next_enemyBullet[(startPos+12)<100?(startPos+12):(startPos+12)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12);
-                    next_enemyBullet[(startPos+13)<100?(startPos+13):(startPos+13)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12);
-                    next_enemyBullet[(startPos+14)<100?(startPos+14):(startPos+14)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12);
-                    next_enemyBullet[(startPos+15)<100?(startPos+15):(startPos+15)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12);
-                end
+                next_wall[1]<={9'b011001011,enemyPosition[1]}-1;
             end
-            if(counter2==0&&counter1>32'd60000000) begin
-                for(i=0;i<8;i++)
-                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
+            if(counter2==0) begin
+                next_wall[1]<=0;
             end
-            if(counter3<32'd30000007)
+            if(counter3<32'd15000003)
                 counter3<=counter3+1;
             else begin
                 counter3<=0;
-                if(counter1>32'd60000000) begin
-                    startPos<=(startPos+3)<100?(startPos+3):(startPos+3)-100;
-                    next_enemyBullet[(startPos+3)<100?(startPos+3):(startPos+3)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8);
-                    next_enemyBullet[(startPos+4)<100?(startPos+4):(startPos+4)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-3;
-                    next_enemyBullet[(startPos+5)<100?(startPos+5):(startPos+5)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+3;
-                end
+                startPos<=(startPos+8)<100?(startPos+8):(startPos+8)-100;
+                next_enemyBullet[(startPos+8)<100?(startPos+8):(startPos+8)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-11;
+                next_enemyBullet[(startPos+9)<100?(startPos+9):(startPos+9)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-13;
+                next_enemyBullet[(startPos+10)<100?(startPos+10):(startPos+10)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+15;
+                next_enemyBullet[(startPos+11)<100?(startPos+11):(startPos+11)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+17;
+                next_enemyBullet[(startPos+12)<100?(startPos+12):(startPos+12)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}-10-(1<<12);
+                next_enemyBullet[(startPos+13)<100?(startPos+13):(startPos+13)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12);
+                next_enemyBullet[(startPos+14)<100?(startPos+14):(startPos+14)-100]<={12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12);
+                next_enemyBullet[(startPos+15)<100?(startPos+15):(startPos+15)-100]<={12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12);
             end
-            if(counter3==0&&counter1>32'd60000000) begin
+            if(counter3==0) begin
+                for(i=0;i<8;i++)
+                    next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
+            end
+            if(counter4<32'd30000007)
+                counter4<=counter4+1;
+            else begin
+                counter4<=0;
+                startPos<=(startPos+3)<100?(startPos+3):(startPos+3)-100;
+                next_enemyBullet[(startPos+3)<100?(startPos+3):(startPos+3)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8);
+                next_enemyBullet[(startPos+4)<100?(startPos+4):(startPos+4)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-3;
+                next_enemyBullet[(startPos+5)<100?(startPos+5):(startPos+5)-100]<={12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+3;
+            end
+            if(counter4==0) begin
                 for(i=0;i<3;i++)
                     next_enemyBullet[(startPos+i)<100?(startPos+i):(startPos+i)-100]<=0;
             end
@@ -128,6 +132,7 @@ always @(posedge clk) begin
         counter1<=0;
         counter2<=0;
         counter3<=0;
+        counter4<=0;
         startPos<=0;
         for(i=0;i<100;i++)
             next_enemyBullet[i]<=0;

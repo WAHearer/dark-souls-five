@@ -9,6 +9,7 @@ module Game (
     input [7:0] enemyPosition[0:1],
     input [27:0] playerBullet[0:39],
     input [27:0] enemyBullet[0:99],
+    input [16:0] wall[0:4],
     
     output [3:0] next_state,
     output [9:0] next_textId,
@@ -18,7 +19,8 @@ module Game (
     output reg [7:0] next_playerPosition[0:1],
     output reg [7:0] next_enemyPosition[0:1],
     output reg [27:0] next_playerBullet[0:39],
-    output reg [27:0] next_enemyBullet[0:99]
+    output reg [27:0] next_enemyBullet[0:99],
+    output reg [16:0] next_wall[0:4]
 );
 
 wire [20:0] next_playerHp_inGame;
@@ -29,8 +31,9 @@ wire [27:0] next_playerBullet_moved[0:39];
 wire [27:0] next_playerBullet_generated[0:39];
 wire [27:0] next_enemyBullet_moved[0:99];
 wire [27:0] next_enemyBullet_generated[0:99];
-
-integer i,j;
+wire [16:0] next_wall_moved[0:4];
+wire [16:0] next_wall_generated[0:4];
+integer i,j,k;
 
 GetState getState(
     .enter(enter),
@@ -85,7 +88,8 @@ GenerateEnemyBullet generateEnemyBullet(
     .enemyPosition(enemyPosition),
     .enemyHp(enemyHp),
 
-    .next_enemyBullet(next_enemyBullet_generated)
+    .next_enemyBullet(next_enemyBullet_generated),
+    .next_wall(next_wall_generated)
 );
 
 GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰撞信息（从而生命值的变化情况）以及弹幕位置信息
@@ -97,11 +101,13 @@ GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰
     .enemyPosition(enemyPosition),
     .playerBullet(playerBullet),
     .enemyBullet(enemyBullet),
+    .wall(wall),
     
     .next_playerHp(next_playerHp_inGame),
     .next_enemyHp(next_enemyHp_inGame),
     .next_playerBullet(next_playerBullet_moved),
-    .next_enemyBullet(next_enemyBullet_moved)
+    .next_enemyBullet(next_enemyBullet_moved),
+    .next_wall(next_wall_moved)
 );
 
 always @(*) begin
@@ -128,6 +134,14 @@ always @(*) begin
             else
                 next_enemyBullet[j]=0;
         end
+        for(k=0;k<5;k++) begin
+            if(next_wall_generated[k]!=0)
+                next_wall[k]=next_wall_generated[k];
+            else if(next_wall_moved[k][7:0]<8'd150)
+                next_wall[k]=next_wall_moved[k];
+            else
+                next_wall[k]=0;
+        end
     end
     else begin
         next_playerHp=21'd100;
@@ -147,6 +161,8 @@ always @(*) begin
             next_playerBullet[i]=0;
         for(j=0;j<100;j++)
             next_enemyBullet[j]=0;
+        for(k=0;k<5;k++)
+            next_wall[k]=0;
     end
 end
 endmodule

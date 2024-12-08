@@ -7,14 +7,16 @@ module GetBulletPosition (
     input [7:0] enemyPosition[0:1],
     input [27:0] playerBullet[0:39],
     input [27:0] enemyBullet[0:99],
+    input [16:0] wall[0:4],
 
     output reg [20:0] next_playerHp,
     output reg [20:0] next_enemyHp,
     output reg [27:0] next_playerBullet[0:39],
-    output reg [27:0] next_enemyBullet[0:99]
+    output reg [27:0] next_enemyBullet[0:99],
+    output reg [16:0] next_wall[0:4]
 );
 reg [21:0] base1[0:3],base2[0:3];
-integer i,j,counter1[0:3],counter2[0:3];
+integer i,j,k,counter1[0:3],counter2[0:3];
 initial begin
     base1[0]<=22'd2000000;
     base1[1]<=22'd1000000;
@@ -36,6 +38,8 @@ initial begin
         next_playerBullet[i]<=0;
     for(j=0;j<100;j++)
         next_enemyBullet[j]<=0;
+    for(k=0;k<5;k++)
+        next_wall[k]<=0;
 end
 always @(posedge clk) begin
     if(state==2) begin
@@ -223,6 +227,22 @@ always @(*) begin
                 endcase
             end
         end
+        for(k=0;k<5;k++) begin
+            if(wall[k][7:0]==playerPosition[1]) begin
+                if(playerHp<=wall[k][14:8])
+                    next_playerHp=0;
+                else
+                    next_playerHp=playerHp-wall[k][14:8];
+                next_wall[k]=0;
+            end
+            else begin
+                if(counter1[wall[k][16:15]]==base1[wall[k][16:15]]) begin
+                    next_wall[k]=wall[k]-1;
+                end
+                else
+                    next_wall[k]=wall[k];
+            end
+        end
     end
     else if(state!=1) begin
         next_playerHp=playerHp;
@@ -231,6 +251,8 @@ always @(*) begin
             next_playerBullet[i]=0;
         for(j=0;j<100;j++)
             next_enemyBullet[j]=0;
+        for(k=0;k<5;k++)
+            next_wall[k]=0;
     end
 end
 endmodule
