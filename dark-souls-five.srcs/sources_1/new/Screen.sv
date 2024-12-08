@@ -19,6 +19,7 @@ module Screen #(
     input [7:0] enemyPosition[0:1],  // 敌人位置
     input [27:0] playerBullet[0:39], // 玩家子弹
     input [27:0] enemyBullet[0:99],  // 敌人子弹
+    input [16:0] wall[0:4],          // 敌人子弹墙壁
     
     output wire [3:0] vga_r,      // VGA红色分量
     output wire [3:0] vga_g,      // VGA绿色分量
@@ -66,6 +67,7 @@ typedef enum {
     RENDER_PLAYER,
     RENDER_PLAYER_BULLET,
     RENDER_ENEMY_BULLET,
+    RENDER_ENEMY_BULLETWALL,
     RENDER_ENEMY_HEALTH,
     RENDER_PLAYER_HEALTH,
     DONE
@@ -85,6 +87,7 @@ initial begin
 end
 reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
+reg [3:0] wallCounter;
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
@@ -191,20 +194,43 @@ always @(posedge clk) begin
 
         RENDER_ENEMY_BULLET: begin
             if (bulletCounter == 99) begin
-                render_state <= RENDER_ENEMY_HEALTH;
+                render_state <= RENDER_ENEMY_BULLETWALL;
                 render_x <= 0;
-                render_y <= 10;
+                render_y <= wall[0][7:0];
+                wallCounter <= 0;
                 if (buffer_select) begin
                     vram_we_a <= 1;
-                    vram_din_a <= COLOR_ENEMY;
+                    vram_din_a <= COLOR_ENEMY_BULLET;
                 end else begin
                     vram_we_b <= 1;
-                    vram_din_b <= COLOR_ENEMY;
+                    vram_din_b <= COLOR_ENEMY_BULLET;
                 end
             end else begin
                 bulletCounter <= bulletCounter + 1;
                 render_x <= enemyBullet[bulletCounter + 1][7:0];
                 render_y <= enemyBullet[bulletCounter + 1][15:8];
+            end
+        end
+
+        RENDER_ENEMY_BULLETWALL: begin
+            if (render_x == 199) begin
+                render_x <= 0;
+                if (wallCounter == 4) begin
+                    render_state <= RENDER_ENEMY_HEALTH;
+                    if (buffer_select) begin
+                        vram_we_a <= 1;
+                        vram_din_a <= COLOR_ENEMY;
+                    end else begin
+                        vram_we_b <= 1;
+                        vram_din_b <= COLOR_ENEMY;
+                    end
+                    render_y <= 10;
+                end else begin
+                    wallCounter <= wallCounter + 1;
+                    render_y <= wall[wallCounter][7:0];
+                end
+            end else begin
+                render_x <= render_x + 1;
             end
         end
 
