@@ -18,10 +18,10 @@ clk_wiz_0 clk_wiz_0(
 
 KeyBoard keyBoard(
     .clk(clkk),
-    .ps2_clk(PS2_CLK),
-    .ps2_data(PS2_DATA),
-    .key_valid(key_valid),
-    .key_status(key_status)
+    .rst_n(rstn),
+    .ps2_c(PS2_CLK),
+    .ps2_d(PS2_DATA),
+    .key_state(key_status)
 );
 Controller controller(
     .clk(clkk),
