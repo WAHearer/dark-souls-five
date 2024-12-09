@@ -18,6 +18,8 @@ module GetBulletPosition (
 reg [21:0] base[0:3];
 integer i,counter[0:3];
 initial begin
+    next_playerHp<=100;
+    next_enemyHp<=1000;
     base[0]<=22'd2000000;
     base[1]<=22'd1000000;
     base[2]<=22'd500000;
