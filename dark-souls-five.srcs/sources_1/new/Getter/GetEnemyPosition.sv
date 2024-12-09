@@ -17,7 +17,7 @@ initial begin
 end
 always @(posedge clk) begin
     if(state==2) begin
-        if(level==1||level==2||level==3) begin
+        if(level==1||level==2||level==3||level==4) begin
             if(counter1<32'd200000000)
                 counter1<=counter1+1;
             else begin

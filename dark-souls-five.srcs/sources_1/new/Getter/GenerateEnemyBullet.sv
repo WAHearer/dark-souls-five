@@ -6,16 +6,19 @@ module GenerateEnemyBullet (
     input [7:0] enemyPosition[0:1],
     input [20:0] enemyHp,
 
-    output reg [27:0] next_enemyBullet[0:99],
+    output reg [27:0] next_enemyBullet[0:159],
     output reg [16:0] next_wall[0:4]
 );
+reg [7:0] prevX,prevY;
 integer i,counter1,counter2,counter3,counter4;
 initial begin
     counter1<=0;
     counter2<=0;
     counter3<=0;
     counter4<=0;
-    for(i=0;i<100;i++)
+    prevX<=0;
+    prevY<=0;
+    for(i=0;i<160;i++)
         next_enemyBullet[i]<=0;
 end
 always @(posedge clk) begin
@@ -63,6 +66,21 @@ always @(posedge clk) begin
                 else
                     counter4<=0;
             end
+            4:begin
+                if(counter1<32'd300000000) begin
+                    counter1++;
+                    if(counter1==32'd275000000) begin
+                        prevX<=playerPosition[0];
+                        prevY<=playerPosition[1];
+                    end
+                end
+                else
+                    counter1<=0;
+                if(counter2<32'd100000000)
+                    counter2++;
+                else
+                    counter2<=0;
+            end
         endcase
     end
     else begin
@@ -70,6 +88,8 @@ always @(posedge clk) begin
         counter2<=0;
         counter3<=0;
         counter4<=0;
+        prevX<=0;
+        prevY<=0;
     end
 end
 always @(*) begin
@@ -134,7 +154,7 @@ always @(*) begin
                 next_enemyBullet[55]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+3-(1<<8):0;
                 next_enemyBullet[56]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+9-(1<<8):0;
                 next_enemyBullet[57]=(counter2==32'd125000000)?{12'b010000011001,enemyPosition[1],enemyPosition[0]}+15-(1<<8):0;
-                for(i=58;i<100;i++)
+                for(i=58;i<160;i++)
                     next_enemyBullet[i]=0;
             end
             2:begin
@@ -220,7 +240,7 @@ always @(*) begin
                 next_enemyBullet[79]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}-12-(1<<12):0;
                 next_enemyBullet[80]=(counter3==32'd60000000)?{12'b101000010100,enemyPosition[1],enemyPosition[0]}+14-(1<<12):0;
                 next_enemyBullet[81]=(counter3==32'd60000000)?{12'b101010010100,enemyPosition[1],enemyPosition[0]}+16-(1<<12):0;
-                for(i=82;i<100;i++)
+                for(i=82;i<160;i++)
                     next_enemyBullet[i]<=0;
             end
             3:begin
@@ -257,15 +277,90 @@ always @(*) begin
                 next_enemyBullet[26]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+3:0;
                 next_enemyBullet[27]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)-5:0;
                 next_enemyBullet[28]=(counter4==32'd30000000)?{12'b110000001111,enemyPosition[1],enemyPosition[0]}-(1<<8)+5:0;
-                for(i=29;i<100;i++)
+                for(i=29;i<160;i++)
                     next_enemyBullet[i]=0;
+            end
+            4:begin
+                for(i=0;i<23;i++)
+                    next_enemyBullet[i]=(counter1==32'd300000000)?{12'b010000100001,prevY,prevX}+i-11+(12<<8):0;
+                for(i=23;i<46;i++)
+                    next_enemyBullet[i]=(counter1==32'd300000000)?{12'b010110100001,prevY,prevX}+i-34-(12<<8):0;
+                for(i=46;i<69;i++)
+                    next_enemyBullet[i]=(counter1==32'd300000000)?{12'b010100100001,prevY,prevX}-12+((i-57)<<8):0;
+                for(i=69;i<92;i++)
+                    next_enemyBullet[i]=(counter1==32'd300000000)?{12'b010010100001,prevY,prevX}+12+((i-80)<<8):0;
+                next_enemyBullet[92]=(counter2==32'd20000000)?{12'b100100010100,playerPosition[1],8'b0}:0;
+                next_enemyBullet[93]=(counter2==32'd20000000)?{12'b100100010100,playerPosition[1],8'b0}+(2<<8):0;
+                next_enemyBullet[94]=(counter2==32'd20000000)?{12'b100100010100,playerPosition[1],8'b0}-(2<<8):0;
+                next_enemyBullet[95]=(counter2==32'd20000000)?{12'b100100010100,playerPosition[1],8'b0}+(4<<8):0;
+                next_enemyBullet[96]=(counter2==32'd20000000)?{12'b100100010100,playerPosition[1],8'b0}-(4<<8):0;
+                next_enemyBullet[97]=(counter2==32'd20000000)?{12'b100100010100,playerPosition[1],8'b0}+(6<<8):0;
+                next_enemyBullet[98]=(counter2==32'd20000000)?{12'b100100010100,playerPosition[1],8'b0}-(6<<8):0;
+                next_enemyBullet[99]=(counter2==32'd40000000)?{12'b100100010100,playerPosition[1],8'b0}:0;
+                next_enemyBullet[100]=(counter2==32'd40000000)?{12'b100100010100,playerPosition[1],8'b0}+(2<<8):0;
+                next_enemyBullet[101]=(counter2==32'd40000000)?{12'b100100010100,playerPosition[1],8'b0}-(2<<8):0;
+                next_enemyBullet[102]=(counter2==32'd40000000)?{12'b100100010100,playerPosition[1],8'b0}+(4<<8):0;
+                next_enemyBullet[103]=(counter2==32'd40000000)?{12'b100100010100,playerPosition[1],8'b0}-(4<<8):0;
+                next_enemyBullet[104]=(counter2==32'd40000000)?{12'b100100010100,playerPosition[1],8'b0}+(6<<8):0;
+                next_enemyBullet[105]=(counter2==32'd40000000)?{12'b100100010100,playerPosition[1],8'b0}-(6<<8):0;
+                next_enemyBullet[106]=(counter2==32'd60000000)?{12'b100100010100,playerPosition[1],8'b0}:0;
+                next_enemyBullet[107]=(counter2==32'd60000000)?{12'b100100010100,playerPosition[1],8'b0}+(2<<8):0;
+                next_enemyBullet[108]=(counter2==32'd60000000)?{12'b100100010100,playerPosition[1],8'b0}-(2<<8):0;
+                next_enemyBullet[109]=(counter2==32'd60000000)?{12'b100100010100,playerPosition[1],8'b0}+(4<<8):0;
+                next_enemyBullet[110]=(counter2==32'd60000000)?{12'b100100010100,playerPosition[1],8'b0}-(4<<8):0;
+                next_enemyBullet[111]=(counter2==32'd60000000)?{12'b100100010100,playerPosition[1],8'b0}+(6<<8):0;
+                next_enemyBullet[112]=(counter2==32'd60000000)?{12'b100100010100,playerPosition[1],8'b0}-(6<<8):0;
+                next_enemyBullet[113]=(counter2==32'd80000000)?{12'b100100010100,playerPosition[1],8'b0}:0;
+                next_enemyBullet[114]=(counter2==32'd80000000)?{12'b100100010100,playerPosition[1],8'b0}+(2<<8):0;
+                next_enemyBullet[115]=(counter2==32'd80000000)?{12'b100100010100,playerPosition[1],8'b0}-(2<<8):0;
+                next_enemyBullet[116]=(counter2==32'd80000000)?{12'b100100010100,playerPosition[1],8'b0}+(4<<8):0;
+                next_enemyBullet[117]=(counter2==32'd80000000)?{12'b100100010100,playerPosition[1],8'b0}-(4<<8):0;
+                next_enemyBullet[118]=(counter2==32'd80000000)?{12'b100100010100,playerPosition[1],8'b0}+(6<<8):0;
+                next_enemyBullet[119]=(counter2==32'd80000000)?{12'b100100010100,playerPosition[1],8'b0}-(6<<8):0;
+                next_enemyBullet[120]=(counter2==32'd100000000)?{12'b100100010100,playerPosition[1],8'b0}:0;
+                next_enemyBullet[121]=(counter2==32'd100000000)?{12'b100100010100,playerPosition[1],8'b0}+(2<<8):0;
+                next_enemyBullet[122]=(counter2==32'd100000000)?{12'b100100010100,playerPosition[1],8'b0}-(2<<8):0;
+                next_enemyBullet[123]=(counter2==32'd100000000)?{12'b100100010100,playerPosition[1],8'b0}+(4<<8):0;
+                next_enemyBullet[124]=(counter2==32'd100000000)?{12'b100100010100,playerPosition[1],8'b0}-(4<<8):0;
+                next_enemyBullet[125]=(counter2==32'd100000000)?{12'b100100010100,playerPosition[1],8'b0}+(6<<8):0;
+                next_enemyBullet[126]=(counter2==32'd100000000)?{12'b100100010100,playerPosition[1],8'b0}-(6<<8):0;
+                next_enemyBullet[127]=(counter2==32'd10000000)?{12'b100010010100,playerPosition[1],8'd199}+(1<<8):0;
+                next_enemyBullet[128]=(counter2==32'd10000000)?{12'b100010010100,playerPosition[1],8'd199}-(1<<8):0;
+                next_enemyBullet[129]=(counter2==32'd10000000)?{12'b100010010100,playerPosition[1],8'd199}+(3<<8):0;
+                next_enemyBullet[130]=(counter2==32'd10000000)?{12'b100010010100,playerPosition[1],8'd199}-(3<<8):0;
+                next_enemyBullet[131]=(counter2==32'd10000000)?{12'b100010010100,playerPosition[1],8'd199}+(5<<8):0;
+                next_enemyBullet[132]=(counter2==32'd10000000)?{12'b100010010100,playerPosition[1],8'd199}-(5<<8):0;
+                next_enemyBullet[133]=(counter2==32'd30000000)?{12'b100010010100,playerPosition[1],8'd199}+(1<<8):0;
+                next_enemyBullet[134]=(counter2==32'd30000000)?{12'b100010010100,playerPosition[1],8'd199}-(1<<8):0;
+                next_enemyBullet[135]=(counter2==32'd30000000)?{12'b100010010100,playerPosition[1],8'd199}+(3<<8):0;
+                next_enemyBullet[136]=(counter2==32'd30000000)?{12'b100010010100,playerPosition[1],8'd199}-(3<<8):0;
+                next_enemyBullet[137]=(counter2==32'd30000000)?{12'b100010010100,playerPosition[1],8'd199}+(5<<8):0;
+                next_enemyBullet[138]=(counter2==32'd30000000)?{12'b100010010100,playerPosition[1],8'd199}-(5<<8):0;
+                next_enemyBullet[139]=(counter2==32'd50000000)?{12'b100010010100,playerPosition[1],8'd199}+(1<<8):0;
+                next_enemyBullet[140]=(counter2==32'd50000000)?{12'b100010010100,playerPosition[1],8'd199}-(1<<8):0;
+                next_enemyBullet[141]=(counter2==32'd50000000)?{12'b100010010100,playerPosition[1],8'd199}+(3<<8):0;
+                next_enemyBullet[142]=(counter2==32'd50000000)?{12'b100010010100,playerPosition[1],8'd199}-(3<<8):0;
+                next_enemyBullet[143]=(counter2==32'd50000000)?{12'b100010010100,playerPosition[1],8'd199}+(5<<8):0;
+                next_enemyBullet[144]=(counter2==32'd50000000)?{12'b100010010100,playerPosition[1],8'd199}-(5<<8):0;
+                next_enemyBullet[145]=(counter2==32'd70000000)?{12'b100010010100,playerPosition[1],8'd199}+(1<<8):0;
+                next_enemyBullet[146]=(counter2==32'd70000000)?{12'b100010010100,playerPosition[1],8'd199}-(1<<8):0;
+                next_enemyBullet[147]=(counter2==32'd70000000)?{12'b100010010100,playerPosition[1],8'd199}+(3<<8):0;
+                next_enemyBullet[148]=(counter2==32'd70000000)?{12'b100010010100,playerPosition[1],8'd199}-(3<<8):0;
+                next_enemyBullet[149]=(counter2==32'd70000000)?{12'b100010010100,playerPosition[1],8'd199}+(5<<8):0;
+                next_enemyBullet[150]=(counter2==32'd70000000)?{12'b100010010100,playerPosition[1],8'd199}-(5<<8):0;
+                next_enemyBullet[151]=(counter2==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}+(1<<8):0;
+                next_enemyBullet[152]=(counter2==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}-(1<<8):0;
+                next_enemyBullet[153]=(counter2==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}+(3<<8):0;
+                next_enemyBullet[154]=(counter2==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}-(3<<8):0;
+                next_enemyBullet[155]=(counter2==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}+(5<<8):0;
+                next_enemyBullet[156]=(counter2==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}-(5<<8):0;
             end
         endcase
     end
     else begin
         for(i=0;i<5;i++)
             next_wall[i]=0;
-        for(i=0;i<100;i++)
+        for(i=0;i<160;i++)
             next_enemyBullet[i]=0;
     end
 end

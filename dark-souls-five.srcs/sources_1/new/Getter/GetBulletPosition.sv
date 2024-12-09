@@ -6,13 +6,13 @@ module GetBulletPosition (
     input [7:0] playerPosition[0:1],
     input [7:0] enemyPosition[0:1],
     input [27:0] playerBullet[0:39],
-    input [27:0] enemyBullet[0:99],
+    input [27:0] enemyBullet[0:159],
     input [16:0] wall[0:4],
 
     output reg [20:0] next_playerHp,
     output reg [20:0] next_enemyHp,
     output reg [27:0] next_playerBullet[0:39],
-    output reg [27:0] next_enemyBullet[0:99],
+    output reg [27:0] next_enemyBullet[0:159],
     output reg [16:0] next_wall[0:4]
 );
 reg [27:0]next_playerBullet_moved[0:39];
@@ -20,7 +20,7 @@ reg [21:0] base[0:3];
 integer i,counter[0:3];
 initial begin
     next_playerHp<=21'd100;
-    next_enemyHp<=21'd1000;
+    next_enemyHp<=21'd2000;
     base[0]<=22'd2000000;
     base[1]<=22'd1000000;
     base[2]<=22'd500000;
@@ -31,7 +31,7 @@ initial begin
     counter[3]<=0;
     for(i=0;i<40;i++)
         next_playerBullet[i]<=0;
-    for(i=0;i<100;i++)
+    for(i=0;i<160;i++)
         next_enemyBullet[i]<=0;
     for(i=0;i<5;i++)
         next_wall[i]<=0;
@@ -62,7 +62,7 @@ always @(posedge clk) begin
                     next_enemyHp<=enemyHp-playerBullet[i][22:16];
             end
         end
-        for(i=0;i<100;i++) begin
+        for(i=0;i<160;i++) begin
             if(enemyBullet[i][7:0]==playerPosition[0]&&enemyBullet[i][15:8]==playerPosition[1]) begin
                 if(playerHp<=enemyBullet[i][22:16])
                     next_playerHp<=0;
@@ -110,7 +110,7 @@ always @(*) begin
                     next_playerBullet[i]=playerBullet[i];
             end
         end
-        for(i=0;i<100;i++) begin
+        for(i=0;i<160;i++) begin
             if(enemyBullet[i][7:0]==playerPosition[0]&&enemyBullet[i][15:8]==playerPosition[1])
                 next_enemyBullet[i]=0;
             else begin
@@ -145,7 +145,7 @@ always @(*) begin
     else begin
         for(i=0;i<40;i++)
             next_playerBullet[i]=0;
-        for(i=0;i<100;i++)
+        for(i=0;i<160;i++)
             next_enemyBullet[i]=0;
         for(i=0;i<5;i++)
             next_wall[i]=0;

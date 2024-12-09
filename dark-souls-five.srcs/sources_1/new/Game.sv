@@ -8,7 +8,7 @@ module Game (
     input [7:0] playerPosition[0:1],
     input [7:0] enemyPosition[0:1],
     input [27:0] playerBullet[0:39],
-    input [27:0] enemyBullet[0:99],
+    input [27:0] enemyBullet[0:159],
     input [16:0] wall[0:4],
     
     output [3:0] next_state,
@@ -19,7 +19,7 @@ module Game (
     output reg [7:0] next_playerPosition[0:1],
     output reg [7:0] next_enemyPosition[0:1],
     output reg [27:0] next_playerBullet[0:39],
-    output reg [27:0] next_enemyBullet[0:99],
+    output reg [27:0] next_enemyBullet[0:159],
     output reg [16:0] next_wall[0:4]
 );
 
@@ -29,8 +29,8 @@ wire [7:0] next_playerPosition_inGame[0:1];
 wire [7:0] next_enemyPosition_inGame[0:1];
 wire [27:0] next_playerBullet_moved[0:39];
 wire [27:0] next_playerBullet_generated[0:39];
-wire [27:0] next_enemyBullet_moved[0:99];
-wire [27:0] next_enemyBullet_generated[0:99];
+wire [27:0] next_enemyBullet_moved[0:159];
+wire [27:0] next_enemyBullet_generated[0:159];
 wire [16:0] next_wall_moved[0:4];
 wire [16:0] next_wall_generated[0:4];
 integer i,j,k;
@@ -127,7 +127,7 @@ always @(*) begin
             else
                 next_playerBullet[i]=0;
         end
-        for(j=0;j<100;j++) begin
+        for(j=0;j<160;j++) begin
             if(next_enemyBullet_generated[j]!=0)
                 next_enemyBullet[j]=next_enemyBullet_generated[j];
             else if(next_enemyBullet_moved[j][7:0]<8'd200&&next_enemyBullet_moved[j][15:8]<8'd150)
@@ -148,11 +148,11 @@ always @(*) begin
         next_playerHp=21'd100;
         case(level)
             1:next_enemyHp=21'd500;
-            2:next_enemyHp=21'd750;
+            2:next_enemyHp=21'd1000;
             3:next_enemyHp=21'd1000;
-            4:next_enemyHp=21'd1500;
-            5:next_enemyHp=21'd5000;
-            default:next_enemyHp=21'd10000;
+            4:next_enemyHp=21'd2000;
+            5:next_enemyHp=21'd4000;
+            default:next_enemyHp=21'd4000;
         endcase
         next_playerPosition[0]=8'd100;
         next_playerPosition[1]=8'd30;
@@ -160,7 +160,7 @@ always @(*) begin
         next_enemyPosition[1]=8'd120;
         for(i=0;i<40;i++)
             next_playerBullet[i]=0;
-        for(j=0;j<100;j++)
+        for(j=0;j<160;j++)
             next_enemyBullet[j]=0;
         for(k=0;k<5;k++)
             next_wall[k]=0;

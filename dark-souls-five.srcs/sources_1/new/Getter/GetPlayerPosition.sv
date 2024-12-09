@@ -28,7 +28,7 @@ always @(posedge clk) begin
         end
         else if(space) begin
             rollAvailable<=0;
-            if(up) begin
+            if(up||(up==0&&down==0&&left==0&&right==0)) begin
                 if(playerPosition[1]<8'd125)
                     next_playerPosition[1]<=playerPosition[1]+8'd25;
                 else

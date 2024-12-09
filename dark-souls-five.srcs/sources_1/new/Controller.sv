@@ -11,7 +11,7 @@ reg [20:0] enemyHp;
 reg [7:0] playerPosition[0:1];//0为x坐标，1为y坐标
 reg [7:0] enemyPosition[0:1];//同上
 reg [27:0] playerBullet[0:39];//7:0为x坐标，15:8为y坐标，22:16为伤害，25:23为方向，27:26为速度
-reg [27:0] enemyBullet[0:99];//同上
+reg [27:0] enemyBullet[0:159];//同上
 reg [16:0] wall[0:4];//7:0为y坐标，14:8为伤害，16:15为速度
 
 reg [3:0] next_state;
@@ -22,7 +22,7 @@ reg [20:0] next_enemyHp;
 reg [7:0] next_playerPosition[0:1];
 reg [7:0] next_enemyPosition[0:1];
 reg [27:0] next_playerBullet[0:39];
-reg [27:0] next_enemyBullet[0:99];
+reg [27:0] next_enemyBullet[0:159];
 reg [16:0] next_wall[0:4];
 
 integer i,j,k;
@@ -86,9 +86,9 @@ Game game(//计算下一时刻状态，内部需要：根据按键输入更新�
 );
 
 initial begin
-    state<=0;
+    state<=2;
     textId<=0;
-    level<=0;
+    level<=4;
     playerHp<=32'd100;
     enemyHp<=32'd500;
     playerPosition[0]<=8'd100;
@@ -97,7 +97,7 @@ initial begin
     enemyPosition[1]<=8'd120;
     for(i=0;i<40;i++)
         playerBullet[i]<=0;
-    for(j=0;j<100;j++) 
+    for(j=0;j<160;j++) 
         enemyBullet[j]<=0;
     for(k=0;k<5;k++)
         wall[k]<=0;
@@ -115,7 +115,7 @@ always @(posedge clk_50) begin//更新状态
     enemyPosition[1]<=next_enemyPosition[1];
     for(i=0;i<40;i++)
         playerBullet[i]<=next_playerBullet[i];
-    for(j=0;j<100;j++)
+    for(j=0;j<160;j++)
         enemyBullet[j]<=next_enemyBullet[j];
     for(k=0;k<5;k++)
         wall[k]<=next_wall[k];
