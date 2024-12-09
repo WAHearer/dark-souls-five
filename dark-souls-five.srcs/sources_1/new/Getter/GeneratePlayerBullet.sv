@@ -40,7 +40,7 @@ always @(*) begin
         next_playerBullet[12]=(counter==32'd100000000)?{12'b100110010100,playerPosition[1],playerPosition[0]}+(1<<8):0;
         next_playerBullet[13]=(counter==32'd100000000)?{12'b100110001010,playerPosition[1],playerPosition[0]}-3+(1<<8):0;
         next_playerBullet[14]=(counter==32'd100000000)?{12'b100110001010,playerPosition[1],playerPosition[0]}+3+(1<<8):0;
-        next_playerBullet[15]=(counter==32'd10000000)?{12'b100110010100,playerPosition[1],playerPosition[0]}+(1<<8):0;
+        next_playerBullet[15]=(counter==32'd120000000)?{12'b100110010100,playerPosition[1],playerPosition[0]}+(1<<8):0;
         next_playerBullet[16]=(counter==32'd120000000)?{12'b100110001010,playerPosition[1],playerPosition[0]}-3+(1<<8):0;
         next_playerBullet[17]=(counter==32'd120000000)?{12'b100110001010,playerPosition[1],playerPosition[0]}+3+(1<<8):0;
         next_playerBullet[18]=(counter==32'd140000000)?{12'b100110010100,playerPosition[1],playerPosition[0]}+(1<<8):0;

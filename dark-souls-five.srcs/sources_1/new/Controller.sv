@@ -86,9 +86,9 @@ Game game(//计算下一时刻状态，内部需要：根据按键输入更新�
 );
 
 initial begin
-    state<=2;
+    state<=0;
     textId<=0;
-    level<=3;
+    level<=0;
     playerHp<=32'd100;
     enemyHp<=32'd500;
     playerPosition[0]<=8'd100;

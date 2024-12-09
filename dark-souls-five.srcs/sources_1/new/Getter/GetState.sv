@@ -1,5 +1,5 @@
 module GetState (
-    input enter,pause,
+    input clk,enter,pause,
     input [3:0] state,
     input [9:0] textId,
     input [5:0] level,
@@ -11,11 +11,11 @@ module GetState (
     output reg [5:0] next_level
 );
 initial begin
-    next_state<=2;
-    next_level<=3;
+    next_state<=0;
+    next_level<=0;
     next_textId<=0;
 end
-always @(posedge enter or posedge pause) begin
+always @(posedge clk) begin
     case(state)
         0:begin
             if(enter) begin

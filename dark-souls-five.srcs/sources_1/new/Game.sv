@@ -36,6 +36,7 @@ wire [16:0] next_wall_generated[0:4];
 integer i,j,k;
 
 GetState getState(
+    .clk(clk),
     .enter(enter),
     .pause(pause),
     .state(state),
