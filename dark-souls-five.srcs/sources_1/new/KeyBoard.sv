@@ -1,4 +1,4 @@
-module keyboard(input clk,
+module KeyBoard(input clk,
                 input rst_n,
                 input ps2_c,
                 input ps2_d,
