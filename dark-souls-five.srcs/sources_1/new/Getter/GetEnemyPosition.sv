@@ -33,12 +33,6 @@ always @(posedge clk) begin
             else
                 next_enemyPosition[0]<=enemyPosition[0]+1;
         end
-        if(level==5) begin
-            if(enemyHp>1000&&enemyHp<=2500)
-                next_enemyPosition[1]<=8'd100;
-            else if(enemyHp<=1000)
-                next_enemyPosition[1]<=8'd80;
-        end
     end
     else if(state!=1) begin
         counter1<=0;
