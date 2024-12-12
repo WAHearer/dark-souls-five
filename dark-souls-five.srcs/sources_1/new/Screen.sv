@@ -35,6 +35,14 @@ localparam level4_hp = 2000 / 150;
 localparam level5_hp = 4000 / 150;
 
 reg disp_hp;
+reg buffer_select;
+reg render_ready, vga_ready;
+initial begin
+    disp_hp <= 150;
+    buffer_select = 0;
+    render_ready = 0;
+    vga_ready = 0;
+end
 always @(*) begin
     case (level)
         1:disp_hp <= enemyHp / level1_hp;
@@ -43,14 +51,6 @@ always @(*) begin
         4:disp_hp <= enemyHp / level4_hp;
         5:disp_hp <= enemyHp / level5_hp;
     endcase
-end
-
-reg buffer_select;
-reg render_ready, vga_ready;
-initial begin
-    buffer_select = 0;
-    render_ready = 0;
-    vga_ready = 0;
 end
 // VRAM接口
 reg  [11:0] vram_din_a, vram_din_b;
@@ -80,6 +80,7 @@ blk_mem_gen_0 vram_B (
 // 渲染逻辑
 typedef enum {
     IDLE,
+
     RENDER_BG,
     RENDER_ENEMY,
     RENDER_PLAYER,
@@ -88,6 +89,12 @@ typedef enum {
     RENDER_ENEMY_BULLETWALL,
     RENDER_ENEMY_HEALTH,
     RENDER_PLAYER_HEALTH,
+
+    RENDER_PAUSE,
+    RENDER_FAIL,
+    RENDER_PASS,
+    RENDER_START,
+
     DONE
 } render_state_t;
 
@@ -254,7 +261,7 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY_HEALTH: begin
-            if (render_x == 25 + disp_hp || render_x == 199) begin
+            if (render_x == (25 + disp_hp)|| render_x == 199) begin
                 render_x <= 25;
                 if (render_y == 12) begin
                     render_state <= RENDER_PLAYER_HEALTH;
