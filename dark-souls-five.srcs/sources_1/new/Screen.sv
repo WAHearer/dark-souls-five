@@ -27,6 +27,24 @@ module Screen #(
     output reg vga_hs,           // 行同步
     output reg vga_vs            // 场同步
 );
+
+localparam level1_hp =  500 / 150;
+localparam level2_hp = 1000 / 150;
+localparam level3_hp = 1000 / 150;
+localparam level4_hp = 2000 / 150;
+localparam level5_hp = 4000 / 150;
+
+reg disp_hp;
+always @(*) begin
+    case (level)
+        1:disp_hp <= enemyHp / level1_hp;
+        2:disp_hp <= enemyHp / level2_hp;
+        3:disp_hp <= enemyHp / level3_hp;
+        4:disp_hp <= enemyHp / level4_hp;
+        5:disp_hp <= enemyHp / level5_hp;
+    endcase
+end
+
 reg buffer_select;
 reg render_ready, vga_ready;
 initial begin
@@ -224,6 +242,7 @@ always @(posedge clk) begin
                         vram_we_b <= 1;
                         vram_din_b <= COLOR_ENEMY;
                     end
+                    render_x <= 25;
                     render_y <= 10;
                 end else begin
                     wallCounter <= wallCounter + 1;
@@ -235,8 +254,8 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY_HEALTH: begin
-            if (render_x == enemyHp || render_x == 199) begin
-                render_x <= 0;
+            if (render_x == 25 + disp_hp || render_x == 199) begin
+                render_x <= 25;
                 if (render_y == 12) begin
                     render_state <= RENDER_PLAYER_HEALTH;
                     render_x <= 0;
