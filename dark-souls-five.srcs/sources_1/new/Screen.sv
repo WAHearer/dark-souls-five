@@ -28,13 +28,13 @@ module Screen #(
     output reg vga_vs            // 场同步
 );
 
-localparam level1_hp =  500 / 150;
-localparam level2_hp = 1000 / 150;
-localparam level3_hp = 1000 / 150;
-localparam level4_hp = 2000 / 150;
-localparam level5_hp = 4000 / 150;
+localparam level1_hp =  500;
+localparam level2_hp = 1000;
+localparam level3_hp = 1000;
+localparam level4_hp = 2000;
+localparam level5_hp = 4000;
 
-reg disp_hp;
+reg [7:0] disp_hp;
 reg buffer_select;
 reg render_ready, vga_ready;
 initial begin
@@ -45,11 +45,11 @@ initial begin
 end
 always @(posedge clk) begin
     case (level)
-        1:disp_hp <= enemyHp / level1_hp;
-        2:disp_hp <= enemyHp / level2_hp;
-        3:disp_hp <= enemyHp / level3_hp;
-        4:disp_hp <= enemyHp / level4_hp;
-        5:disp_hp <= enemyHp / level5_hp;
+        1:disp_hp <= 150 * enemyHp / level1_hp;
+        2:disp_hp <= 150 * enemyHp / level2_hp;
+        3:disp_hp <= 150 * enemyHp / level3_hp;
+        4:disp_hp <= 150 * enemyHp / level4_hp;
+        5:disp_hp <= 150 * enemyHp / level5_hp;
     endcase
 end
 // VRAM接口
