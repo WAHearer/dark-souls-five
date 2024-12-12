@@ -90,7 +90,7 @@ initial begin
     textId<=0;
     level<=0;
     playerHp<=32'd100;
-    enemyHp<=32'd500;
+    enemyHp<=32'd600;
     playerPosition[0]<=8'd100;
     playerPosition[1]<=8'd30;
     enemyPosition[0]<=8'd150;

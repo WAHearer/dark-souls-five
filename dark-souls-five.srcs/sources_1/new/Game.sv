@@ -148,12 +148,12 @@ always @(*) begin
     else begin
         next_playerHp=21'd100;
         case(level)
-            1:next_enemyHp=21'd500;
-            2:next_enemyHp=21'd1000;
-            3:next_enemyHp=21'd1000;
-            4:next_enemyHp=21'd2000;
-            5:next_enemyHp=21'd4000;
-            default:next_enemyHp=21'd4000;
+            1:next_enemyHp=21'd600;
+            2:next_enemyHp=21'd1200;
+            3:next_enemyHp=21'd2400;
+            4:next_enemyHp=21'd2400;
+            5:next_enemyHp=21'd3600;
+            default:next_enemyHp=21'd3600;
         endcase
         next_playerPosition[0]=8'd100;
         next_playerPosition[1]=8'd30;
