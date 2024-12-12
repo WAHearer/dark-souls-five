@@ -43,7 +43,7 @@ initial begin
     render_ready = 0;
     vga_ready = 0;
 end
-always @(*) begin
+always @(posedge clk) begin
     case (level)
         1:disp_hp <= enemyHp / level1_hp;
         2:disp_hp <= enemyHp / level2_hp;
@@ -252,7 +252,7 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY_HEALTH: begin
-            if (render_x == (25 + disp_hp)|| render_x == 199) begin
+            if (render_x == (25 + disp_hp) || render_x == 199) begin
                 render_x <= 25;
                 if (render_y == 12) begin
                     render_state <= RENDER_PLAYER_HEALTH;
