@@ -442,6 +442,8 @@ always @(*) begin
                         next_wall[2]={9'b100011001,enemyPosition[1]}-4;
                         next_wall[3]={9'b100011001,enemyPosition[1]}-6;
                         next_wall[4]={9'b100011001,enemyPosition[1]}-8;
+                        for(i=0;i<160;i++)
+                            next_enemyBullet[i]=0;
                     end
                     else begin
                         next_wall[0]=(counter1==32'd125000000)?{9'b100110010,enemyPosition[1]}-1:0;
@@ -468,6 +470,8 @@ always @(*) begin
                         next_wall[2]={9'b100011001,enemyPosition[1]}-4;
                         next_wall[3]={9'b100011001,enemyPosition[1]}-6;
                         next_wall[4]={9'b100011001,enemyPosition[1]}-8;
+                        for(i=0;i<160;i++)
+                            next_enemyBullet[i]=0;
                     end
                     else begin
                         next_enemyBullet[0]=(counter1==32'd15000000)?{12'b100000001010,enemyPosition[1],enemyPosition[0]}-(1<<8):0;
