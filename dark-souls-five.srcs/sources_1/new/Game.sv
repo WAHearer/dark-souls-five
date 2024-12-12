@@ -152,8 +152,8 @@ always @(*) begin
             2:next_enemyHp=21'd1200;
             3:next_enemyHp=21'd2400;
             4:next_enemyHp=21'd2400;
-            5:next_enemyHp=21'd3600;
-            default:next_enemyHp=21'd3600;
+            5:next_enemyHp=21'd4800;
+            default:next_enemyHp=21'd4800;
         endcase
         next_playerPosition[0]=8'd100;
         next_playerPosition[1]=8'd30;

@@ -85,7 +85,7 @@ always @(posedge clk) begin
                     counter2<=0;
             end
             5:begin
-                if(enemyHp>2400) begin
+                if(enemyHp>3200) begin
                     if(counter1<32'd250000000)
                         counter1++;
                     else
@@ -103,7 +103,7 @@ always @(posedge clk) begin
                     else
                         counter4<=0;
                 end
-                else if(enemyHp>1200) begin
+                else if(enemyHp>1600) begin
                     flag1<=1;
                     if(counter1<32'd250000000)
                         counter1++;
@@ -424,7 +424,7 @@ always @(*) begin
                 next_enemyBullet[156]=(counter2==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}-(5<<8):0;
             end
             5:begin
-                if(enemyHp>2400) begin
+                if(enemyHp>3200) begin
                     next_wall[0]=(counter1==32'd250000000)?{9'b100110010,enemyPosition[1]}-1:0;
                     next_wall[1]=(counter2==32'd400000000)?{9'b011001011,enemyPosition[1]}-1:0;
                     next_wall[2]=(counter3==32'd500000000)?{9'b001001011,enemyPosition[1]}-1:0;
@@ -435,7 +435,7 @@ always @(*) begin
                     for(i=75;i<160;i++)
                         next_enemyBullet[i]=0;
                 end
-                else if(enemyHp>1200) begin
+                else if(enemyHp>1600) begin
                     if(flag1==0) begin
                         next_wall[0]={9'b100011001,enemyPosition[1]};
                         next_wall[1]={9'b100011001,enemyPosition[1]}-2;
