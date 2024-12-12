@@ -77,6 +77,7 @@ GetEnemyPosition getEnemyPosition(
     .state(state),
     .level(level),
     .enemyPosition(enemyPosition),
+    .enemyHp(enemyHp),
     
     .next_enemyPosition(next_enemyPosition_inGame)
 );
