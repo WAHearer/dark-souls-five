@@ -237,10 +237,10 @@ always @(posedge clk) begin
         RENDER_ENEMY_HEALTH: begin
             if (render_x == enemyHp || render_x == 199) begin
                 render_x <= 0;
-                if (render_y == 15) begin
+                if (render_y == 12) begin
                     render_state <= RENDER_PLAYER_HEALTH;
                     render_x <= 0;
-                    render_y <= 135;
+                    render_y <= 137;
                     if (buffer_select) begin
                         vram_we_a <= 1;
                         vram_din_a <= COLOR_PLAYER;
