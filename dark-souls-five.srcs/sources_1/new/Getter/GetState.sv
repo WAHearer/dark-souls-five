@@ -13,8 +13,8 @@ module GetState (
 reg AbleToPress;
 integer counter;
 initial begin
-    next_state<=2;
-    next_level<=5;
+    next_state<=0;
+    next_level<=0;
     next_textId<=0;
     counter<=0;
     AbleToPress<=1;
