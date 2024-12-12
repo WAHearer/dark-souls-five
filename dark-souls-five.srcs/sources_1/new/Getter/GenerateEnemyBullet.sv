@@ -587,6 +587,8 @@ always @(*) begin
                         next_wall[0]=(counter1==32'd250000000)?{9'b100110010,enemyPosition[1]}-1:0;
                         next_wall[1]=(counter2==32'd400000000)?{9'b011001011,enemyPosition[1]}-1:0;
                         next_wall[2]=(counter3==32'd500000000)?{9'b001001011,enemyPosition[1]}-1:0;
+                        next_wall[3]=0;
+                        next_wall[4]=0;
                         for(i=0;i<75;i++)
                             next_enemyBullet[i]=(counter4==(i+1)*1000000)?{12'b100000001010,8'd149,playerPosition[0]}:0;
                         for(i=75;i<160;i++)
