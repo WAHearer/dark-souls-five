@@ -157,8 +157,8 @@ always @(posedge clk) begin
                 render_x <= enemyPosition[0] - 7'h7;
                 if (render_y == enemyPosition[1] + 7'h7) begin
                     render_state <= RENDER_PLAYER;
-                    render_x <= playerPosition[0] - 7'h7;
-                    render_y <= playerPosition[1] - 7'h7;
+                    render_x <= playerPosition[0];
+                    render_y <= playerPosition[1];
                     if (buffer_select) begin
                         vram_we_a <= 1;
                         vram_din_a <= COLOR_PLAYER;
@@ -175,25 +175,15 @@ always @(posedge clk) begin
         end
 
         RENDER_PLAYER: begin
-            if (render_x == playerPosition[0] + 7'h7) begin
-                render_x <= playerPosition[0] - 7'h7;
-                if (render_y == playerPosition[1] + 7'h7) begin
-                    render_state <= RENDER_PLAYER_BULLET;
-                    render_x <= playerBullet[0][7:0];
-                    render_y <= playerBullet[0][15:8];
-                    if (buffer_select) begin
-                        vram_we_a <= 1;
-                        vram_din_a <= COLOR_PLAYER_BULLET;
-                    end else begin
-                        vram_we_b <= 1;
-                        vram_din_b <= COLOR_PLAYER_BULLET;
-                    end
-                    bulletCounter <= 0;
-                end else begin
-                    render_y <= render_y + 1;
-                end
+            render_state <= RENDER_PLAYER_BULLET;
+            render_x <= playerBullet[0][7:0];
+            render_y <= playerBullet[0][15:8];
+            if (buffer_select) begin
+                vram_we_a <= 1;
+                vram_din_a <= COLOR_PLAYER_BULLET;
             end else begin
-                render_x <= render_x + 1;
+                vram_we_b <= 1;
+                vram_din_b <= COLOR_PLAYER_BULLET;
             end
         end
 
@@ -230,6 +220,7 @@ always @(posedge clk) begin
                     vram_we_b <= 1;
                     vram_din_b <= COLOR_ENEMY_BULLET;
                 end
+                bulletCounter <= 0;
             end else begin
                 bulletCounter <= bulletCounter + 1;
                 render_x <= enemyBullet[bulletCounter + 1][7:0];
