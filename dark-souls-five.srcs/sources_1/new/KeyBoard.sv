@@ -31,42 +31,12 @@ module KeyBoard(input clk,
         end
     end
 
-    // always @(negedge ps2_c or negedge rst_n) begin
-    //     if (~rst_n) begin
-    //         buffer <= 22'b0;
-    //         counter <= 4'b0;
-    //         key_event <= 10'b0;
-    //     end else begin
-    //         buffer <= {ps2_d, buffer[21:1]};
-    //         if (counter == 10) begin
-    //             if (buffer[20:13] != 8'b11110000&&buffer[20:13] != 8'b11100000) begin
-    //                 if (buffer[9:2] == 8'b11110000) begin
-    //                     key_event[8] <= 1;
-    //                 end else if (buffer[9:2] == 8'b11100000) begin
-    //                     key_event[9] <= 1;
-    //                 end else begin
-    //                     key_event[8] <= 0;
-    //                     key_event[9] <= 0;
-    //                 end
-    //                 key_event[7:0] <= buffer[20:13];
-    //                 key_event[10] <= 1;
-    //             end else begin
-    //                 key_event[10] <= 0;
-    //             end
-    //             counter <= 0;
-    //         end else begin
-    //             counter <= counter + 1;
-    //             key_event[10] <= 0;
-    //         end
-    //     end
-    // end
-
 always @(negedge ps2_c_f or negedge rst_n) begin
         if (~rst_n) begin
             buffer <= 10'b0;
             counter <= 4'b0;
             key_event <= 11'b0;
-            key_state <= 256'b0;  // 复位时清空按键状态
+            key_state <= 256'b0;
         end else begin
             key_event[7:0] <= buffer[9:2];
             buffer <= {ps2_d_f, buffer[10:2]};

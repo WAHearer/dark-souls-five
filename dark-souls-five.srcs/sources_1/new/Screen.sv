@@ -46,7 +46,7 @@ always @(posedge clk) begin
         5:disp_hp <= enemyHp >> 5;
     endcase
 end
-// VRAM接口
+
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;

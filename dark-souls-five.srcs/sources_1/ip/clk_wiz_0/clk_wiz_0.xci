@@ -65,8 +65,8 @@
         "CLK_OUT5_USE_FINE_PS_GUI": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "CLK_OUT6_USE_FINE_PS_GUI": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "CLK_OUT7_USE_FINE_PS_GUI": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
-        "PRIMARY_PORT": [ { "value": "clk_in100M", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
-        "CLK_OUT1_PORT": [ { "value": "clk_50M", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
+        "PRIMARY_PORT": [ { "value": "clk_in1", "resolve_type": "user", "usage": "all" } ],
+        "CLK_OUT1_PORT": [ { "value": "clk_out1", "resolve_type": "user", "usage": "all" } ],
         "CLK_OUT2_PORT": [ { "value": "clk_out2", "resolve_type": "user", "usage": "all" } ],
         "CLK_OUT3_PORT": [ { "value": "clk_out3", "resolve_type": "user", "usage": "all" } ],
         "CLK_OUT4_PORT": [ { "value": "clk_out4", "resolve_type": "user", "usage": "all" } ],
@@ -84,7 +84,7 @@
         "PSEN_PORT": [ { "value": "psen", "resolve_type": "user", "usage": "all" } ],
         "PSINCDEC_PORT": [ { "value": "psincdec", "resolve_type": "user", "usage": "all" } ],
         "PSDONE_PORT": [ { "value": "psdone", "resolve_type": "user", "usage": "all" } ],
-        "CLKOUT1_REQUESTED_OUT_FREQ": [ { "value": "50", "value_src": "user", "resolve_type": "user", "format": "float", "usage": "all" } ],
+        "CLKOUT1_REQUESTED_OUT_FREQ": [ { "value": "50.000", "value_src": "user", "resolve_type": "user", "format": "float", "usage": "all" } ],
         "CLKOUT1_REQUESTED_PHASE": [ { "value": "0.000", "resolve_type": "user", "format": "float", "usage": "all" } ],
         "CLKOUT1_REQUESTED_DUTY_CYCLE": [ { "value": "50.000", "resolve_type": "user", "format": "float", "usage": "all" } ],
         "CLKOUT2_REQUESTED_OUT_FREQ": [ { "value": "100.000", "resolve_type": "user", "format": "float", "usage": "all" } ],
@@ -132,9 +132,9 @@
         "CLKFB_OUT_N_PORT": [ { "value": "clkfb_out_n", "resolve_type": "user", "usage": "all" } ],
         "PLATFORM": [ { "value": "UNKNOWN", "resolve_type": "user", "usage": "all" } ],
         "SUMMARY_STRINGS": [ { "value": "empty", "resolve_type": "user", "usage": "all" } ],
-        "USE_LOCKED": [ { "value": "true", "resolve_type": "user", "format": "bool", "usage": "all" } ],
+        "USE_LOCKED": [ { "value": "false", "value_src": "user", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "CALC_DONE": [ { "value": "empty", "resolve_type": "user", "usage": "all" } ],
-        "USE_RESET": [ { "value": "true", "resolve_type": "user", "format": "bool", "usage": "all" } ],
+        "USE_RESET": [ { "value": "false", "value_src": "user", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "USE_POWER_DOWN": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "USE_STATUS": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "USE_FREEZE": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
@@ -317,9 +317,9 @@
         "C_PHASESHIFT_MODE": [ { "value": "WAVEFORM", "resolve_type": "generated", "usage": "all" } ],
         "C_SECONDARY_SOURCE": [ { "value": "Single_ended_clock_capable_pin", "resolve_type": "generated", "usage": "all" } ],
         "C_CLKFB_IN_SIGNALING": [ { "value": "SINGLE", "resolve_type": "generated", "usage": "all" } ],
-        "C_USE_RESET": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "C_USE_RESET": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_RESET_LOW": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
-        "C_USE_LOCKED": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "C_USE_LOCKED": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_USE_INCLK_STOPPED": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_USE_CLKFB_STOPPED": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_USE_POWER_DOWN": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
@@ -338,14 +338,14 @@
         "C_INCLK_SUM_ROW2": [ { "value": "no_secondary_input_clock ", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW0A": [ { "value": " Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW0B": [ { "value": "  Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)", "resolve_type": "generated", "usage": "all" } ],
-        "C_OUTCLK_SUM_ROW1": [ { "value": "_clk_50M__50.00000______0.000______50.0______151.636_____98.575", "resolve_type": "generated", "usage": "all" } ],
+        "C_OUTCLK_SUM_ROW1": [ { "value": "clk_out1__50.00000______0.000______50.0______151.636_____98.575", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW2": [ { "value": "no_CLK_OUT2_output", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW3": [ { "value": "no_CLK_OUT3_output", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW4": [ { "value": "no_CLK_OUT4_output", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW5": [ { "value": "no_CLK_OUT5_output", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW6": [ { "value": "no_CLK_OUT6_output", "resolve_type": "generated", "usage": "all" } ],
         "C_OUTCLK_SUM_ROW7": [ { "value": "no_CLK_OUT7_output", "resolve_type": "generated", "usage": "all" } ],
-        "C_CLKOUT1_REQUESTED_OUT_FREQ": [ { "value": "50", "resolve_type": "generated", "format": "float", "usage": "all" } ],
+        "C_CLKOUT1_REQUESTED_OUT_FREQ": [ { "value": "50.000", "resolve_type": "generated", "format": "float", "usage": "all" } ],
         "C_CLKOUT2_REQUESTED_OUT_FREQ": [ { "value": "100.000", "resolve_type": "generated", "format": "float", "usage": "all" } ],
         "C_CLKOUT3_REQUESTED_OUT_FREQ": [ { "value": "100.000", "resolve_type": "generated", "format": "float", "usage": "all" } ],
         "C_CLKOUT4_REQUESTED_OUT_FREQ": [ { "value": "100.000", "resolve_type": "generated", "format": "float", "usage": "all" } ],
@@ -468,9 +468,9 @@
         "C_CLOCK_MGR_TYPE": [ { "value": "NA", "resolve_type": "generated", "usage": "all" } ],
         "C_OVERRIDE_MMCM": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_OVERRIDE_PLL": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
-        "C_PRIMARY_PORT": [ { "value": "clk_in100M", "resolve_type": "generated", "usage": "all" } ],
+        "C_PRIMARY_PORT": [ { "value": "clk_in1", "resolve_type": "generated", "usage": "all" } ],
         "C_SECONDARY_PORT": [ { "value": "clk_in2", "resolve_type": "generated", "usage": "all" } ],
-        "C_CLK_OUT1_PORT": [ { "value": "clk_50M", "resolve_type": "generated", "usage": "all" } ],
+        "C_CLK_OUT1_PORT": [ { "value": "clk_out1", "resolve_type": "generated", "usage": "all" } ],
         "C_CLK_OUT2_PORT": [ { "value": "clk_out2", "resolve_type": "generated", "usage": "all" } ],
         "C_CLK_OUT3_PORT": [ { "value": "clk_out3", "resolve_type": "generated", "usage": "all" } ],
         "C_CLK_OUT4_PORT": [ { "value": "clk_out4", "resolve_type": "generated", "usage": "all" } ],
@@ -608,25 +608,10 @@
     },
     "boundary": {
       "ports": {
-        "reset": [ { "direction": "in", "driver_value": "0" } ],
-        "clk_in100M": [ { "direction": "in" } ],
-        "clk_50M": [ { "direction": "out" } ],
-        "locked": [ { "direction": "out" } ]
+        "clk_in1": [ { "direction": "in" } ],
+        "clk_out1": [ { "direction": "out" } ]
       },
       "interfaces": {
-        "reset": {
-          "vlnv": "xilinx.com:signal:reset:1.0",
-          "abstraction_type": "xilinx.com:signal:reset_rtl:1.0",
-          "mode": "slave",
-          "parameters": {
-            "POLARITY": [ { "value": "ACTIVE_HIGH", "value_src": "constant", "usage": "all" } ],
-            "BOARD.ASSOCIATED_PARAM": [ { "value": "RESET_BOARD_INTERFACE", "value_src": "constant", "usage": "all" } ],
-            "INSERT_VIP": [ { "value": "0", "resolve_type": "user", "format": "long", "usage": "simulation.rtl", "is_ips_inferred": true, "is_static_object": false } ]
-          },
-          "port_maps": {
-            "RST": [ { "physical_name": "reset" } ]
-          }
-        },
         "clock_CLK_IN1": {
           "vlnv": "xilinx.com:signal:clock:1.0",
           "abstraction_type": "xilinx.com:signal:clock_rtl:1.0",
@@ -643,7 +628,7 @@
             "BOARD.ASSOCIATED_PARAM": [ { "value": "CLK_IN1_BOARD_INTERFACE", "usage": "all", "is_static_object": false } ]
           },
           "port_maps": {
-            "CLK_IN1": [ { "physical_name": "clk_in100M" } ]
+            "CLK_IN1": [ { "physical_name": "clk_in1" } ]
           }
         },
         "clock_CLK_OUT1": {
@@ -661,7 +646,7 @@
             "INSERT_VIP": [ { "value": "0", "resolve_type": "user", "format": "long", "usage": "simulation.rtl", "is_ips_inferred": true, "is_static_object": false } ]
           },
           "port_maps": {
-            "CLK_OUT1": [ { "physical_name": "clk_50M" } ]
+            "CLK_OUT1": [ { "physical_name": "clk_out1" } ]
           }
         }
       }
