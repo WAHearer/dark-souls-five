@@ -31,6 +31,21 @@ module Screen #(
 reg [7:0] disp_hp;
 reg buffer_select;
 reg render_ready, vga_ready;
+reg  [11:0] vram_din_a, vram_din_b;
+wire [11:0] vram_dout_a, vram_dout_b;
+wire [15:0] vrom_dout;
+reg [3:0] imgID;
+reg [7:0] img_y, img_x;
+wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
+reg vram_we_a, vram_we_b;
+reg [11:0] hcount, vcount;
+initial begin
+    hcount = 0;
+    vcount = 0;
+end
+reg [7:0] render_x, render_y;
+reg [7:0] bulletCounter;
+reg [3:0] wallCounter;
 initial begin
     disp_hp <= 150;
     buffer_select = 0;
@@ -46,11 +61,6 @@ always @(posedge clk) begin
         5:disp_hp <= enemyHp >> 5;
     endcase
 end
-
-reg  [11:0] vram_din_a, vram_din_b;
-wire [11:0] vram_dout_a, vram_dout_b;
-wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
-reg vram_we_a, vram_we_b;
 blk_mem_gen_0 vram_A (
     .clka(clk),
     .wea(vram_we_a),
@@ -69,6 +79,12 @@ blk_mem_gen_0 vram_B (
     .clkb(clk),
     .addrb({y, x}),
     .doutb(vram_dout_b)
+);
+
+blk_mem_gen_1 vrom (
+    .clka(clk),
+    .addra({imgID, img_y, img_x}),
+    .douta(vrom_dout)
 );
 
 // 渲染逻辑
@@ -99,14 +115,7 @@ localparam COLOR_PLAYER_BULLET = 12'h0FF;
 localparam COLOR_ENEMY_BULLET = 12'hF0F;
 
 render_state_t render_state;
-reg [11:0] hcount, vcount;
-initial begin
-    hcount = 0;
-    vcount = 0;
-end
-reg [7:0] render_x, render_y;
-reg [7:0] bulletCounter;
-reg [3:0] wallCounter;
+
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
