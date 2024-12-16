@@ -100,10 +100,21 @@ typedef enum {
     RENDER_ENEMY_HEALTH,
     RENDER_PLAYER_HEALTH,
 
-    RENDER_PAUSE,
-    RENDER_FAIL,
-    RENDER_PASS,
     RENDER_START,
+    RENDER_PAUSE,
+    RENDER_NEXT,
+    RENDER_PASS,
+    RENDER_FAIL,
+    RENDER_TEXT0,
+    RENDER_TEXT1,
+    RENDER_TEXT2,
+    RENDER_TEXT3,
+    RENDER_TEXT4,
+    RENDER_TEXT5,
+    RENDER_TEXT6,
+    RENDER_TEXT7,
+    RENDER_TEXT8,
+    RENDER_TEXT9,
 
     DONE
 } render_state_t;
@@ -119,18 +130,94 @@ render_state_t render_state;
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
-            render_state <= RENDER_BG;
-            render_ready <= 0;
-            render_x <= 0;
-            render_y <= 0;
-            if (buffer_select) begin
-                vram_we_a <= 1;
-                vram_din_a <= COLOR_BG;
-            end else begin
-                vram_we_b <= 1;
-                vram_din_b <= COLOR_BG;
-            end
-
+            case (state)
+                0: begin
+                    render_state <= RENDER_START;
+                    render_x <= 0;
+                    render_y <= 0;
+                    img_y <= 0;
+                    img_x <= 0;
+                    if (buffer_select) begin
+                        vram_we_a <= 1;
+                        vram_din_a <= vrom_dout[11:0];
+                    end else begin
+                        vram_we_b <= 0;
+                        vram_din_b <= vrom_dout[11:0];
+                    end
+                end
+                1: begin
+                    render_state <= RENDER_PAUSE;
+                    // todo
+                end
+                2: begin
+                    render_state <= RENDER_BG;
+                    render_x <= 0;
+                    render_y <= 0;
+                    if (buffer_select) begin
+                        vram_we_a <= 1;
+                        vram_din_a <= COLOR_BG;
+                    end else begin
+                        vram_we_b <= 1;
+                        vram_din_b <= COLOR_BG;
+                    end
+                end
+                3: begin
+                    render_state <= RENDER_NEXT;
+                    // todo
+                end
+                4: begin
+                    render_state <= RENDER_PASS;
+                    // todo
+                end
+                5: begin
+                    render_state <= RENDER_FAIL;
+                    // todo
+                end
+                6: begin
+                    case (textId)
+                        0: begin
+                            render_state <= RENDER_TEXT0;
+                            // todo
+                        end
+                        1: begin
+                            render_state <= RENDER_TEXT1;
+                            // todo
+                        end
+                        2: begin
+                            render_state <= RENDER_TEXT2;
+                            // todo
+                        end
+                        3: begin
+                            render_state <= RENDER_TEXT3;
+                            // todo
+                        end
+                        4: begin
+                            render_state <= RENDER_TEXT4;
+                            // todo
+                        end
+                        5: begin
+                            render_state <= RENDER_TEXT5;
+                            // todo
+                        end
+                        6: begin
+                            render_state <= RENDER_TEXT6;
+                            // todo
+                        end
+                        7: begin
+                            render_state <= RENDER_TEXT7;
+                            // todo
+                        end
+                        8: begin
+                            render_state <= RENDER_TEXT8;
+                            // todo
+                        end
+                        9: begin
+                            render_state <= RENDER_TEXT9;
+                            // todo
+                        end
+                    endcase
+                end
+            endcase
         end
 
         RENDER_BG: begin
