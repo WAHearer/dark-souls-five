@@ -42,16 +42,15 @@ reg [11:0] hcount, vcount;
 initial begin
     hcount = 0;
     vcount = 0;
-end
-reg [7:0] render_x, render_y;
-reg [7:0] bulletCounter;
-reg [3:0] wallCounter;
-initial begin
     disp_hp <= 150;
     buffer_select = 0;
     render_ready = 0;
     vga_ready = 0;
+    img_y = 0;
 end
+reg [7:0] render_x, render_y;
+reg [7:0] bulletCounter;
+reg [3:0] wallCounter;
 always @(posedge clk) begin
     case (level)
         1:disp_hp <= enemyHp >> 2;
