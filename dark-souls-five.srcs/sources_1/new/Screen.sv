@@ -33,7 +33,7 @@ reg buffer_select;
 reg render_ready, vga_ready;
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
-wire [15:0] vrom_dout_a, vrom_dout_b;
+wire vrom_dout_a;
 reg [3:0] imgID;
 reg [7:0] img_y, img_x;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
@@ -84,10 +84,7 @@ blk_mem_gen_0 vram_B (
 blk_mem_gen_1 vrom (
     .clka(clk),
     .addra({imgID, render_y, render_x}),
-    .douta(vrom_dout_a),
-    .clkb(clk),
-    .addrb({15, img_y, img_x}),
-    .doutb(vrom_dout_b)
+    .douta(vrom_dout_a)
 );
 
 // 渲染逻辑
@@ -114,6 +111,8 @@ localparam COLOR_PLAYER = 12'h0F0;
 localparam COLOR_ENEMY = 12'hF00;
 localparam COLOR_PLAYER_BULLET = 12'h0FF;
 localparam COLOR_ENEMY_BULLET = 12'hF0F;
+localparam COLOR_NORMAL_TEXT = 12'hFF7;
+localparam COLOR_FATAL_TEXT = 12'hF00;
 
 render_state_t render_state;
 
@@ -128,35 +127,48 @@ always @(posedge clk) begin
                 imgID <= 2;
                 if (buffer_select) begin
                     vram_we_a <= 1;
-                    vram_din_a <= vrom_dout_a[11:0];
+                    vram_din_a <= COLOR_BG;
                 end else begin
                     vram_we_b <= 1;
-                    vram_din_b <= vrom_dout_a[11:0];
+                    vram_din_b <= COLOR_BG;
                 end
             end else if (state == 6) begin
                 render_state <= RENDER_TEXT;
                 imgID <= textId + 6;
                 if (buffer_select) begin
                     vram_we_a <= 1;
-                    vram_din_a <= vrom_dout_a[11:0];
+                    vram_din_a <= COLOR_BG;
                 end else begin
                     vram_we_b <= 1;
-                    vram_din_b <= vrom_dout_a[11:0];
+                    vram_din_b <= COLOR_BG;
                 end
             end else begin
                 render_state <= RENDER_COVER;
                 imgID <= state;
                 if (buffer_select) begin
                     vram_we_a <= 0;
-                    vram_din_a <= vrom_dout_a[11:0];
+                    vram_din_a <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
                 end else begin
                     vram_we_b <= 0;
-                    vram_din_b <= vrom_dout_a[11:0];
+                    vram_din_b <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
                 end
             end
         end
 
         RENDER_TEXT: begin
+            if (vrom_dout_a) begin
+                if (buffer_select) begin
+                    vram_din_a <= COLOR_NORMAL_TEXT;
+                end else begin
+                    vram_din_b <= COLOR_NORMAL_TEXT;
+                end
+            end else begin
+                if (buffer_select) begin
+                    vram_din_a <= COLOR_BG;
+                end else begin
+                    vram_din_b <= COLOR_BG;
+                end
+            end
             if (render_x == 199) begin
                 render_x <= 0;
                 if (render_y == 149) begin
