@@ -33,7 +33,7 @@ reg buffer_select;
 reg render_ready, vga_ready;
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
-wire [15:0] vrom_dout;
+wire [15:0] vrom_dout_a, vrom_dout_b;
 reg [3:0] imgID;
 reg [7:0] img_y, img_x;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
@@ -83,8 +83,11 @@ blk_mem_gen_0 vram_B (
 
 blk_mem_gen_1 vrom (
     .clka(clk),
-    .addra({imgID, img_y, img_x}),
-    .douta(vrom_dout)
+    .addra({imgID, render_y, render_x}),
+    .douta(vrom_dout_a),
+    .clkb(clk),
+    .addrb({15, img_y, img_x}),
+    .doutb(vrom_dout_b)
 );
 
 // 渲染逻辑
@@ -100,21 +103,8 @@ typedef enum {
     RENDER_ENEMY_HEALTH,
     RENDER_PLAYER_HEALTH,
 
-    RENDER_START,
-    RENDER_PAUSE,
-    RENDER_NEXT,
-    RENDER_PASS,
-    RENDER_FAIL,
-    RENDER_TEXT0,
-    RENDER_TEXT1,
-    RENDER_TEXT2,
-    RENDER_TEXT3,
-    RENDER_TEXT4,
-    RENDER_TEXT5,
-    RENDER_TEXT6,
-    RENDER_TEXT7,
-    RENDER_TEXT8,
-    RENDER_TEXT9,
+    RENDER_COVER,
+    RENDER_TEXT,
 
     DONE
 } render_state_t;
@@ -130,94 +120,79 @@ render_state_t render_state;
 always @(posedge clk) begin
     case (render_state)
         IDLE: begin
-            case (state)
-                0: begin
-                    render_state <= RENDER_START;
-                    render_x <= 0;
-                    render_y <= 0;
-                    img_y <= 0;
-                    img_x <= 0;
-                    if (buffer_select) begin
-                        vram_we_a <= 1;
-                        vram_din_a <= vrom_dout[11:0];
-                    end else begin
-                        vram_we_b <= 0;
-                        vram_din_b <= vrom_dout[11:0];
-                    end
+            render_ready <= 0;
+            render_x <= 0;
+            render_y <= 0;
+            if (state == 2) begin
+                render_state <= RENDER_BG;
+                imgID <= 2;
+                if (buffer_select) begin
+                    vram_we_a <= 1;
+                    vram_din_a <= vrom_dout_a[11:0];
+                end else begin
+                    vram_we_b <= 1;
+                    vram_din_b <= vrom_dout_a[11:0];
                 end
-                1: begin
-                    render_state <= RENDER_PAUSE;
-                    // todo
+            end else if (state == 6) begin
+                render_state <= RENDER_TEXT;
+                imgID <= textId + 6;
+                if (buffer_select) begin
+                    vram_we_a <= 1;
+                    vram_din_a <= vrom_dout_a[11:0];
+                end else begin
+                    vram_we_b <= 1;
+                    vram_din_b <= vrom_dout_a[11:0];
                 end
-                2: begin
-                    render_state <= RENDER_BG;
-                    render_x <= 0;
-                    render_y <= 0;
-                    if (buffer_select) begin
-                        vram_we_a <= 1;
-                        vram_din_a <= COLOR_BG;
-                    end else begin
-                        vram_we_b <= 1;
-                        vram_din_b <= COLOR_BG;
-                    end
+            end else begin
+                render_state <= RENDER_COVER;
+                imgID <= state;
+                if (buffer_select) begin
+                    vram_we_a <= 0;
+                    vram_din_a <= vrom_dout_a[11:0];
+                end else begin
+                    vram_we_b <= 0;
+                    vram_din_b <= vrom_dout_a[11:0];
                 end
-                3: begin
-                    render_state <= RENDER_NEXT;
-                    // todo
+            end
+        end
+
+        RENDER_TEXT: begin
+            if (render_x == 199) begin
+                render_x <= 0;
+                if (render_y == 149) begin
+                    render_state <= DONE;
+                end else begin
+                    render_y <= render_y + 1;
                 end
-                4: begin
-                    render_state <= RENDER_PASS;
-                    // todo
+            end else begin
+                render_x <= render_x + 1;
+            end
+        end
+
+        RENDER_COVER: begin
+            if (vrom_dout_a == 0) begin
+                if (buffer_select) begin
+                    vram_din_a <= 0;
+                end else begin
+                    vram_din_b <= 0;
                 end
-                5: begin
-                    render_state <= RENDER_FAIL;
-                    // todo
+            end else begin
+                if (buffer_select) begin
+                    vram_din_a <= 1;
+                end else begin
+                    vram_din_b <= 1;
                 end
-                6: begin
-                    case (textId)
-                        0: begin
-                            render_state <= RENDER_TEXT0;
-                            // todo
-                        end
-                        1: begin
-                            render_state <= RENDER_TEXT1;
-                            // todo
-                        end
-                        2: begin
-                            render_state <= RENDER_TEXT2;
-                            // todo
-                        end
-                        3: begin
-                            render_state <= RENDER_TEXT3;
-                            // todo
-                        end
-                        4: begin
-                            render_state <= RENDER_TEXT4;
-                            // todo
-                        end
-                        5: begin
-                            render_state <= RENDER_TEXT5;
-                            // todo
-                        end
-                        6: begin
-                            render_state <= RENDER_TEXT6;
-                            // todo
-                        end
-                        7: begin
-                            render_state <= RENDER_TEXT7;
-                            // todo
-                        end
-                        8: begin
-                            render_state <= RENDER_TEXT8;
-                            // todo
-                        end
-                        9: begin
-                            render_state <= RENDER_TEXT9;
-                            // todo
-                        end
-                    endcase
+            end
+            if (render_x == 199) begin
+                render_x <= 0;
+                if (render_y == 149) begin
+                    render_state <= DONE;
+                end else begin
+                    render_y <= render_y + 1;
                 end
-            endcase
+            end else begin
+                render_x <= render_x + 1;
+            end
         end
 
         RENDER_BG: begin
