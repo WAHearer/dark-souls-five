@@ -82,7 +82,7 @@ blk_mem_gen_0 vram_B (
 
 blk_mem_gen_1 vrom (
     .clka(clk),
-    .addra({imgID, render_y, render_x}),
+    .addra(imgID * 200 * 150 + render_y * 200 + render_x),
     .douta(vrom_dout_a)
 );
 
@@ -183,15 +183,15 @@ always @(posedge clk) begin
         RENDER_COVER: begin
             if (vrom_dout_a == 0) begin
                 if (buffer_select) begin
-                    vram_din_a <= 0;
+                    vram_we_a <= 0;
                 end else begin
-                    vram_din_b <= 0;
+                    vram_we_b <= 0;
                 end
             end else begin
                 if (buffer_select) begin
-                    vram_din_a <= 1;
+                    vram_we_a <= 1;
                 end else begin
-                    vram_din_b <= 1;
+                    vram_we_b <= 1;
                 end
             end
             if (render_x == 199) begin
@@ -371,8 +371,9 @@ always @(posedge clk) begin
             render_ready <= 1;
             render_state <= (vga_ready) ? IDLE : DONE;
         end
+        default: begin end
     endcase
- end
+end
 
 always @(posedge clk_50) begin
     if(hcount == HSW + BP + HEN + HFP - 1) begin
