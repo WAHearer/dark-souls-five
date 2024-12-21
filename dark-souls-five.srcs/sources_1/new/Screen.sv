@@ -319,6 +319,8 @@ always @(posedge clk) begin
                 if (render_y == 140) begin
                     if (state != 1 && state != 2) begin
                         render_state <= RENDER_COVER;
+                        render_x <= 0;
+                        render_y <= 0;
                         imgID <= state;
                         if (buffer_select) begin
                             vram_we_a <= 0;
