@@ -170,32 +170,6 @@ always @(posedge clk) begin
             end
         end
 
-        RENDER_COVER: begin
-            if (vrom_dout_a == 0) begin
-                if (buffer_select) begin
-                    vram_we_a <= 0;
-                end else begin
-                    vram_we_b <= 0;
-                end
-            end else begin
-                if (buffer_select) begin
-                    vram_we_a <= 1;
-                end else begin
-                    vram_we_b <= 1;
-                end
-            end
-            if (render_x == 199) begin
-                render_x <= 0;
-                if (render_y == 149) begin
-                    render_state <= DONE;
-                end else begin
-                    render_y <= render_y + 1;
-                end
-            end else begin
-                render_x <= render_x + 1;
-            end
-        end
-
         RENDER_BG: begin
             if (render_x == 199) begin
                 render_x <= 0;
@@ -353,7 +327,35 @@ always @(posedge clk) begin
                             vram_we_b <= 0;
                             vram_din_b <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
                         end
+                    end else begin
+                        render_state <= DONE;
                     end
+                end else begin
+                    render_y <= render_y + 1;
+                end
+            end else begin
+                render_x <= render_x + 1;
+            end
+        end
+
+        RENDER_COVER: begin
+            if (vrom_dout_a == 0) begin
+                if (buffer_select) begin
+                    vram_we_a <= 0;
+                end else begin
+                    vram_we_b <= 0;
+                end
+            end else begin
+                if (buffer_select) begin
+                    vram_we_a <= 1;
+                end else begin
+                    vram_we_b <= 1;
+                end
+            end
+            if (render_x == 199) begin
+                render_x <= 0;
+                if (render_y == 149) begin
+                    render_state <= DONE;
                 end else begin
                     render_y <= render_y + 1;
                 end
@@ -371,7 +373,6 @@ always @(posedge clk) begin
             render_ready <= 1;
             render_state <= (vga_ready) ? IDLE : DONE;
         end
-        default: begin end
     endcase
 end
 
