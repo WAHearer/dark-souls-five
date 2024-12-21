@@ -102,7 +102,6 @@ typedef enum {
     RENDER_COVER,
     RENDER_TEXT,
 
-    COVER_DONE,
     DONE
 } render_state_t;
 
@@ -122,17 +121,7 @@ always @(posedge clk) begin
             render_ready <= 0;
             render_x <= 0;
             render_y <= 0;
-            if (state == 2) begin
-                render_state <= RENDER_BG;
-                imgID <= 2;
-                if (buffer_select) begin
-                    vram_we_a <= 1;
-                    vram_din_a <= COLOR_BG;
-                end else begin
-                    vram_we_b <= 1;
-                    vram_din_b <= COLOR_BG;
-                end
-            end else if (state == 6) begin
+            if (state == 6) begin
                 render_state <= RENDER_TEXT;
                 imgID <= textId + 6;
                 if (buffer_select) begin
@@ -143,16 +132,16 @@ always @(posedge clk) begin
                     vram_din_b <= COLOR_BG;
                 end
             end else begin
-                render_state <= RENDER_COVER;
-                imgID <= state;
+                render_state <= RENDER_BG;
                 if (buffer_select) begin
-                    vram_we_a <= 0;
-                    vram_din_a <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
+                    vram_we_a <= 1;
+                    vram_din_a <= COLOR_BG;
                 end else begin
-                    vram_we_b <= 0;
-                    vram_din_b <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
+                    vram_we_b <= 1;
+                    vram_din_b <= COLOR_BG;
                 end
             end
+
         end
 
         RENDER_TEXT: begin
@@ -172,7 +161,7 @@ always @(posedge clk) begin
             if (render_x == 199) begin
                 render_x <= 0;
                 if (render_y == 149) begin
-                    render_state <= COVER_DONE;
+                    render_state <= DONE;
                 end else begin
                     render_y <= render_y + 1;
                 end
@@ -198,7 +187,7 @@ always @(posedge clk) begin
             if (render_x == 199) begin
                 render_x <= 0;
                 if (render_y == 149) begin
-                    render_state <= COVER_DONE;
+                    render_state <= DONE;
                 end else begin
                     render_y <= render_y + 1;
                 end
@@ -354,23 +343,23 @@ always @(posedge clk) begin
             if (render_x == playerHp) begin
                 render_x <= 0;
                 if (render_y == 140) begin
-                    render_state <= DONE;
+                    if (state != 1 && state != 2) begin
+                        render_state <= RENDER_COVER;
+                        imgID <= state;
+                        if (buffer_select) begin
+                            vram_we_a <= 0;
+                            vram_din_a <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
+                        end else begin
+                            vram_we_b <= 0;
+                            vram_din_b <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
+                        end
+                    end
                 end else begin
                     render_y <= render_y + 1;
                 end
             end else begin
                 render_x <= render_x + 1;
             end
-        end
-
-        COVER_DONE: begin
-            if (buffer_select) begin
-                vram_we_a <= 0;
-            end else begin
-                vram_we_b <= 0;
-            end
-            render_ready <= 1;
-            render_state <= (vga_ready && (state == 1 || state == 2)) ? IDLE : COVER_DONE;
         end
 
         DONE: begin
