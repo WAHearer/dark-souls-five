@@ -102,6 +102,7 @@ typedef enum {
     RENDER_COVER,
     RENDER_TEXT,
 
+    COVER_DONE,
     DONE
 } render_state_t;
 
@@ -171,7 +172,7 @@ always @(posedge clk) begin
             if (render_x == 199) begin
                 render_x <= 0;
                 if (render_y == 149) begin
-                    render_state <= DONE;
+                    render_state <= COVER_DONE;
                 end else begin
                     render_y <= render_y + 1;
                 end
@@ -197,7 +198,7 @@ always @(posedge clk) begin
             if (render_x == 199) begin
                 render_x <= 0;
                 if (render_y == 149) begin
-                    render_state <= DONE;
+                    render_state <= COVER_DONE;
                 end else begin
                     render_y <= render_y + 1;
                 end
@@ -360,6 +361,16 @@ always @(posedge clk) begin
             end else begin
                 render_x <= render_x + 1;
             end
+        end
+
+        COVER_DONE: begin
+            if (buffer_select) begin
+                vram_we_a <= 0;
+            end else begin
+                vram_we_b <= 0;
+            end
+            render_ready <= 1;
+            render_state <= (vga_ready && (state == 1 || state == 2)) ? IDLE : COVER_DONE;
         end
 
         DONE: begin
