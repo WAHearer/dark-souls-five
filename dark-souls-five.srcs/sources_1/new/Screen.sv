@@ -33,7 +33,9 @@ reg buffer_select;
 reg render_ready, vga_ready;
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
-wire vrom_dout_a;
+wire rom_text_out;
+reg [7:0] rom_figure_in_y, rom_figure_in_x;
+wire [11:0] rom_figure_out;
 reg [3:0] imgID;
 reg [7:0] img_y, img_x;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
@@ -63,7 +65,7 @@ end
 blk_mem_gen_0 vram_A (
     .clka(clk),
     .wea(vram_we_a),
-    .addra({149 - render_y, render_x}),
+    .addra({150 - render_y, render_x}),
     .dina(vram_din_a),
     .clkb(clk),
     .addrb({y, x}),
@@ -73,17 +75,23 @@ blk_mem_gen_0 vram_A (
 blk_mem_gen_0 vram_B (
     .clka(clk),
     .wea(vram_we_b),
-    .addra({149 - render_y, render_x}),
+    .addra({150 - render_y, render_x}),
     .dina(vram_din_b),
     .clkb(clk),
     .addrb({y, x}),
     .doutb(vram_dout_b)
 );
 
-blk_mem_gen_1 vrom (
+blk_mem_gen_1 rom_text (
     .clka(clk),
     .addra(imgID * 200 * 150 + render_y * 200 + render_x),
-    .douta(vrom_dout_a)
+    .douta(rom_text_out)
+);
+
+blk_mem_gen_2 rom_figure (
+    .clka(clk),
+    .addra({rom_figure_in_y, rom_figure_in_x}),
+    .douta(rom_figure_out)
 );
 
 // 渲染逻辑
@@ -145,7 +153,7 @@ always @(posedge clk) begin
         end
 
         RENDER_TEXT: begin
-            if (vrom_dout_a) begin
+            if (rom_text_out) begin
                 if (buffer_select) begin
                     vram_din_a <= COLOR_NORMAL_TEXT;
                 end else begin
@@ -341,7 +349,7 @@ always @(posedge clk) begin
         end
 
         RENDER_COVER: begin
-            if (vrom_dout_a == 0) begin
+            if (rom_text_out == 0) begin
                 if (buffer_select) begin
                     vram_we_a <= 0;
                 end else begin
