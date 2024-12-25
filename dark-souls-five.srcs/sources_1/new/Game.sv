@@ -10,6 +10,9 @@ module Game (
     input [27:0] playerBullet[0:39],
     input [27:0] enemyBullet[0:159],
     input [16:0] wall[0:4],
+    input [1:0] attackLevel,
+    input [1:0] healthLevel,
+    input [1:0] dexLevel,
     
     output [3:0] next_state,
     output [9:0] next_textId,
@@ -20,7 +23,10 @@ module Game (
     output reg [7:0] next_enemyPosition[0:1],
     output reg [27:0] next_playerBullet[0:39],
     output reg [27:0] next_enemyBullet[0:159],
-    output reg [16:0] next_wall[0:4]
+    output reg [16:0] next_wall[0:4],
+    output reg [1:0] next_attackLevel,
+    output reg [1:0] next_healthLevel,
+    output reg [1:0] next_dexLevel
 );
 
 wire [20:0] next_playerHp_inGame;
@@ -44,10 +50,16 @@ GetState getState(
     .level(level),
     .playerHp(playerHp),
     .enemyHp(enemyHp),
+    .left(left),
+    .down(down),
+    .right(right),
     
     .next_state(next_state),
     .next_textId(next_textId),
-    .next_level(next_level)
+    .next_level(next_level),
+    .next_attackLevel(next_attackLevel),
+    .next_healthLevel(next_healthLevel),
+    .next_dexLevel(next_dexLevel)
 );
 
 GetPlayerPosition getPlayerPosition(
@@ -59,6 +71,7 @@ GetPlayerPosition getPlayerPosition(
     .right(right),
     .space(space),
     .playerPosition(playerPosition),
+    .dexLevel(dexLevel),
     
     .next_playerPosition(next_playerPosition_inGame)
 );
@@ -68,6 +81,8 @@ GeneratePlayerBullet generatePlayerBullet(
     .state(state),
     .level(level),
     .playerPosition(playerPosition),
+    .enemyPosition(enemyPosition),
+    .attackLevel(attackLevel),
 
     .next_playerBullet(next_playerBullet_generated)
 );
@@ -104,6 +119,7 @@ GetBulletPosition getBulletPosition(//这个模块计算下一时刻的弹幕碰
     .playerBullet(playerBullet),
     .enemyBullet(enemyBullet),
     .wall(wall),
+    .healthLevel(healthLevel),
     
     .next_playerHp(next_playerHp_inGame),
     .next_enemyHp(next_enemyHp_inGame),
@@ -146,7 +162,10 @@ always @(*) begin
         end
     end
     else begin
-        next_playerHp=21'd100;
+        if(healthLevel==0||healthLevel==1)
+            next_playerHp=21'd100;
+        else
+            next_playerHp=21'd150;
         case(level)
             1:next_enemyHp=21'd600;
             2:next_enemyHp=21'd1200;
