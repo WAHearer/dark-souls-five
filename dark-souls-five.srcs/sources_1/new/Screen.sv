@@ -41,6 +41,8 @@ reg [7:0] img_y, img_x;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
 reg vram_we_a, vram_we_b;
 reg [11:0] hcount, vcount;
+wire figID;
+assign figID = level - 1;
 initial begin
     hcount = 0;
     vcount = 0;
@@ -49,6 +51,7 @@ initial begin
     render_ready = 0;
     vga_ready = 0;
     img_y = 0;
+    img_x = 0;
 end
 reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
@@ -90,7 +93,7 @@ blk_mem_gen_1 rom_text (
 
 blk_mem_gen_2 rom_figure (
     .clka(clk),
-    .addra({rom_figure_in_y, rom_figure_in_x}),
+    .addra({figID * 1681 + rom_figure_in_y * 41 + rom_figure_in_x}),
     .douta(rom_figure_out)
 );
 
@@ -132,24 +135,45 @@ always @(posedge clk) begin
             if (state == 6) begin
                 render_state <= RENDER_TEXT;
                 imgID <= textId + 6;
-                if (buffer_select) begin
-                    vram_we_a <= 1;
-                    vram_din_a <= COLOR_BG;
-                end else begin
-                    vram_we_b <= 1;
-                    vram_din_b <= COLOR_BG;
-                end
+            end else if (state != 1 && state != 2) begin
+                render_state <= RENDER_COVER;
+                imgID <= state;
             end else begin
                 render_state <= RENDER_BG;
+            end
+            if (buffer_select) begin
+                vram_we_a <= 1;
+                vram_din_a <= COLOR_BG;
+            end else begin
+                vram_we_b <= 1;
+                vram_din_b <= COLOR_BG;
+            end
+        end
+
+        RENDER_COVER: begin
+            if (rom_text_out) begin
                 if (buffer_select) begin
-                    vram_we_a <= 1;
+                    vram_din_a <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
+                end else begin
+                    vram_din_b <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
+                end
+            end else begin
+                if (buffer_select) begin
                     vram_din_a <= COLOR_BG;
                 end else begin
-                    vram_we_b <= 1;
                     vram_din_b <= COLOR_BG;
                 end
             end
-
+            if (render_x == 199) begin
+                render_x <= 0;
+                if (render_y == 149) begin
+                    render_state <= DONE;
+                end else begin
+                    render_y <= render_y + 1;
+                end
+            end else begin
+                render_x <= render_x + 1;
+            end
         end
 
         RENDER_TEXT: begin
@@ -183,14 +207,16 @@ always @(posedge clk) begin
                 render_x <= 0;
                 if (render_y == 149) begin
                     render_state <= RENDER_ENEMY;
-                    render_x <= enemyPosition[0] - 7'h7;
-                    render_y <= enemyPosition[1] - 7'h7;
+                    render_x <= enemyPosition[0] - 20;
+                    render_y <= enemyPosition[1] - 20;
+                    rom_figure_in_x <= 0;
+                    rom_figure_in_y <= 0;
                     if (buffer_select) begin
                         vram_we_a <= 1;
-                        vram_din_a <= COLOR_ENEMY;
+                        vram_din_a <= rom_figure_out;
                     end else begin
                         vram_we_b <= 1;
-                        vram_din_b <= COLOR_ENEMY;
+                        vram_din_b <= rom_figure_out;
                     end
                 end else begin
                     render_y <= render_y + 1;
@@ -201,9 +227,10 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY: begin
-            if (render_x == enemyPosition[0] + 7'h7) begin
-                render_x <= enemyPosition[0] - 7'h7;
-                if (render_y == enemyPosition[1] + 7'h7) begin
+            if (render_x == enemyPosition[0] + 20) begin
+                render_x <= enemyPosition[0] - 20;
+                rom_figure_in_x <= 0;
+                if (render_y == enemyPosition[1] + 20) begin
                     render_state <= RENDER_PLAYER;
                     render_x <= playerPosition[0];
                     render_y <= playerPosition[1];
@@ -216,9 +243,11 @@ always @(posedge clk) begin
                     end
                 end else begin
                     render_y <= render_y + 1;
+                    rom_figure_in_y <= rom_figure_in_y + 1;
                 end
             end else begin
                 render_x <= render_x + 1;
+                rom_figure_in_x <= rom_figure_in_x + 1;
             end
         end
 
@@ -325,46 +354,6 @@ always @(posedge clk) begin
             if (render_x == playerHp) begin
                 render_x <= 0;
                 if (render_y == 140) begin
-                    if (state != 1 && state != 2) begin
-                        render_state <= RENDER_COVER;
-                        render_x <= 0;
-                        render_y <= 0;
-                        imgID <= state;
-                        if (buffer_select) begin
-                            vram_we_a <= 0;
-                            vram_din_a <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
-                        end else begin
-                            vram_we_b <= 0;
-                            vram_din_b <= (state == 5) ? COLOR_FATAL_TEXT : COLOR_NORMAL_TEXT;
-                        end
-                    end else begin
-                        render_state <= DONE;
-                    end
-                end else begin
-                    render_y <= render_y + 1;
-                end
-            end else begin
-                render_x <= render_x + 1;
-            end
-        end
-
-        RENDER_COVER: begin
-            if (rom_text_out == 0) begin
-                if (buffer_select) begin
-                    vram_we_a <= 0;
-                end else begin
-                    vram_we_b <= 0;
-                end
-            end else begin
-                if (buffer_select) begin
-                    vram_we_a <= 1;
-                end else begin
-                    vram_we_b <= 1;
-                end
-            end
-            if (render_x == 199) begin
-                render_x <= 0;
-                if (render_y == 149) begin
                     render_state <= DONE;
                 end else begin
                     render_y <= render_y + 1;
