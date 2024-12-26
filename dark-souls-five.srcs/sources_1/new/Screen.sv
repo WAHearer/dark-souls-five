@@ -41,7 +41,7 @@ reg [7:0] img_y, img_x;
 wire [11:0] display_data = buffer_select ? vram_dout_b : vram_dout_a;
 reg vram_we_a, vram_we_b;
 reg [11:0] hcount, vcount;
-reg figID;
+reg [5:0] figID;
 initial begin
     hcount = 0;
     vcount = 0;
@@ -119,6 +119,7 @@ typedef enum {
 
     RENDER_COVER,
     RENDER_TEXT,
+    RENDER_CHOICE,
 
     DONE
 } render_state_t;
@@ -142,6 +143,9 @@ always @(posedge clk) begin
             if (state == 6) begin
                 render_state <= RENDER_TEXT;
                 imgID <= textId + 6;
+            end else if (state == 7) begin
+                render_state <= RENDER_CHOICE;
+                imgID <= 1;
             end else if (state != 1 && state != 2) begin
                 render_state <= RENDER_COVER;
                 imgID <= state;
@@ -154,6 +158,32 @@ always @(posedge clk) begin
             end else begin
                 vram_we_b <= 1;
                 vram_din_b <= COLOR_BG;
+            end
+        end
+
+        RENDER_CHOICE: begin
+            if (rom_text_out) begin
+                if (buffer_select) begin
+                    vram_din_a <= COLOR_NORMAL_TEXT;
+                end else begin
+                    vram_din_b <= COLOR_NORMAL_TEXT;
+                end
+            end else begin
+                if (buffer_select) begin
+                    vram_din_a <= COLOR_BG;
+                end else begin
+                    vram_din_b <= COLOR_BG;
+                end
+            end
+            if (render_x == 199) begin
+                render_x <= 0;
+                if (render_y == 149) begin
+                    render_state <= DONE;
+                end else begin
+                    render_y <= render_y + 1;
+                end
+            end else begin
+                render_x <= render_x + 1;
             end
         end
 
@@ -251,17 +281,24 @@ always @(posedge clk) begin
                 end else begin
                     render_y <= render_y + 1;
                     rom_figure_in_y <= rom_figure_in_y + 1;
+                    if (buffer_select) begin
+                        vram_we_a <= 1;
+                        vram_din_a <= rom_figure_out;
+                    end else begin
+                        vram_we_b <= 1;
+                        vram_din_b <= rom_figure_out;
+                    end
                 end
             end else begin
                 render_x <= render_x + 1;
                 rom_figure_in_x <= rom_figure_in_x + 1;
-            end
-            if (buffer_select) begin
-                vram_we_a <= 1;
-                vram_din_a <= rom_figure_out;
-            end else begin
-                vram_we_b <= 1;
-                vram_din_b <= rom_figure_out;
+                if (buffer_select) begin
+                    vram_we_a <= 1;
+                    vram_din_a <= rom_figure_out;
+                end else begin
+                    vram_we_b <= 1;
+                    vram_din_b <= rom_figure_out;
+                end
             end
         end
 
