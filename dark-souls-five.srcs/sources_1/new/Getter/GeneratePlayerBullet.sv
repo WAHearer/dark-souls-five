@@ -125,7 +125,7 @@ always @(*) begin
             next_playerBullet[21]=(counter==32'd160000000)?{12'b100110011001,playerPosition[1],playerPosition[0]}+(1<<8):0;
             next_playerBullet[22]=(counter==32'd160000000)?{12'b100110011001,playerPosition[1],playerPosition[0]}-3:0;
             next_playerBullet[23]=(counter==32'd160000000)?{12'b100110011001,playerPosition[1],playerPosition[0]}+3-(1<<8):0;
-            next_playerBullet[24]=(counter2==32'd5000000)?{12'b100110000011,enemyPosition[1],enemyPosition[0]}:0;
+            next_playerBullet[24]=(counter2==32'd5000000)?{12'b100110000110,enemyPosition[1],enemyPosition[0]}:0;
             for(i=25;i<40;i++)
                 next_playerBullet[i]=0;
         end
