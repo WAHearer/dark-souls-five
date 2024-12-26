@@ -93,7 +93,7 @@ blk_mem_gen_1 rom_text (
 
 blk_mem_gen_2 rom_figure (
     .clka(clk),
-    .addra({figID * 1681 + rom_figure_in_y * 41 + rom_figure_in_x}),
+    .addra(figID * 1681 + rom_figure_in_y * 41 + rom_figure_in_x),
     .douta(rom_figure_out)
 );
 
@@ -227,10 +227,10 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY: begin
-            if (render_x == enemyPosition[0] + 20) begin
+            if (render_x == enemyPosition[0] + 20 || render_x == 199) begin
                 render_x <= enemyPosition[0] - 20;
                 rom_figure_in_x <= 0;
-                if (render_y == enemyPosition[1] + 20) begin
+                if (render_y == enemyPosition[1] + 20 || render_y == 149) begin
                     render_state <= RENDER_PLAYER;
                     render_x <= playerPosition[0];
                     render_y <= playerPosition[1];
