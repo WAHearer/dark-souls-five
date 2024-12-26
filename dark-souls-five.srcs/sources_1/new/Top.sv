@@ -1,6 +1,5 @@
 module Top(
     input logic clkk,
-    input logic rstn,
     input logic PS2_CLK,
     input logic PS2_DATA,
 
@@ -18,7 +17,6 @@ clk_wiz_0 clk_wiz_0(
 
 KeyBoard keyBoard(
     .clk(clkk),
-    .rst_n(rstn),
     .ps2_c(PS2_CLK),
     .ps2_d(PS2_DATA),
     .key_state(key_status)
