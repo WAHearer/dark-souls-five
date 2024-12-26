@@ -50,7 +50,7 @@ always @(posedge clk) begin
             if(playerHp==0)
                 next_state<=5;
             else if(enemyHp==0)begin
-                if(level==6)
+                if(level==5)
                     next_state<=4;
                 else
                     next_state<=3;
