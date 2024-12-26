@@ -256,6 +256,13 @@ always @(posedge clk) begin
                 render_x <= render_x + 1;
                 rom_figure_in_x <= rom_figure_in_x + 1;
             end
+            if (buffer_select) begin
+                vram_we_a <= 1;
+                vram_din_a <= rom_figure_out;
+            end else begin
+                vram_we_b <= 1;
+                vram_din_b <= rom_figure_out;
+            end
         end
 
         RENDER_PLAYER: begin
