@@ -68,6 +68,11 @@ always @(posedge clk) begin
             if(pause&&ableToPress) begin
                 ableToPress<=0;
                 next_state<=0;
+                next_level<=0;
+                next_textId<=0;
+                next_attackLevel<=0;
+                next_healthLevel<=0;
+                next_dexLevel<=0;
             end
         end
         5:begin

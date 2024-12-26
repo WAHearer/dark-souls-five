@@ -623,6 +623,8 @@ always @(*) begin
                         next_enemyBullet[146]=(counter4==32'd90000000)?{12'b100010010100,playerPosition[1],8'd199}-(5<<8):0;
                         for(i=147;i<160;i++)
                             next_enemyBullet[i]=0;
+                        for(i=0;i<5;i++)
+                            next_wall[i]=0;
                     end
                 end
             end
