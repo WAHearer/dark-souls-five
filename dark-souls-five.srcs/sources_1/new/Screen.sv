@@ -34,7 +34,10 @@ reg render_ready, vga_ready;
 reg  [11:0] vram_din_a, vram_din_b;
 wire [11:0] vram_dout_a, vram_dout_b;
 wire rom_text_out;
-reg [7:0] rom_figure_in_y, rom_figure_in_x;
+reg [11:0] rom_figure_offset_x, rom_figure_offset_y;
+wire [7:0] rom_figure_in_y, rom_figure_in_x;
+assign rom_figure_in_x = render_x - rom_figure_offset_x;
+assign rom_figure_in_y = render_y - rom_figure_offset_y;
 wire [11:0] rom_figure_out;
 reg [3:0] imgID;
 reg [7:0] img_y, img_x;
@@ -209,8 +212,8 @@ always @(posedge clk) begin
                     render_state <= RENDER_ENEMY;
                     render_x <= enemyPosition[0] - 20;
                     render_y <= enemyPosition[1] - 20;
-                    rom_figure_in_x <= 0;
-                    rom_figure_in_y <= 0;
+                    rom_figure_offset_x <= enemyPosition[0] - 20;
+                    rom_figure_offset_y <= enemyPosition[1] - 20;
                     if (buffer_select) begin
                         vram_we_a <= 1;
                         vram_din_a <= rom_figure_out;
@@ -227,10 +230,9 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY: begin
-            if (rom_figure_in_x == 41 || render_x == 199) begin
+            if (render_x <= enemyPosition[0] + 20 || render_x == 199) begin
                 render_x <= enemyPosition[0] - 20;
-                rom_figure_in_x <= 0;
-                if (rom_figure_in_y == 41 || render_y == 149) begin
+                if (render_y <= enemyPosition[1] + 20 || render_y == 149) begin
                     render_state <= RENDER_PLAYER;
                     render_x <= playerPosition[0];
                     render_y <= playerPosition[1];
@@ -243,11 +245,9 @@ always @(posedge clk) begin
                     end
                 end else begin
                     render_y <= render_y + 1;
-                    rom_figure_in_y <= rom_figure_in_y + 1;
                 end
             end else begin
                 render_x <= render_x + 1;
-                rom_figure_in_x <= rom_figure_in_x + 1;
             end
         end
 
