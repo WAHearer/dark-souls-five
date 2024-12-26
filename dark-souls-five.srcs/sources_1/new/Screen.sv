@@ -56,7 +56,7 @@ end
 reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
 reg [3:0] wallCounter;
-always @(posedge clk_50) begin
+always @(posedge clk) begin
     case (level)
         1:disp_hp <= enemyHp >> 2;
         2:disp_hp <= enemyHp >> 3;
@@ -126,7 +126,7 @@ localparam COLOR_FATAL_TEXT = 12'hF00;
 
 render_state_t render_state;
 
-always @(posedge clk_50) begin
+always @(posedge clk) begin
     case (render_state)
         IDLE: begin
             render_ready <= 0;
