@@ -2,10 +2,11 @@ module GetPlayerPosition (
     input up,down,left,right,space,clk,
     input [3:0] state,
     input [7:0] playerPosition[0:1],
+    input [1:0] dexLevel,
 
     output reg [7:0] next_playerPosition[0:1]
 );
-integer upCounter,downCounter,leftCounter,rightCounter,rollCounter;
+integer upCounter,downCounter,leftCounter,rightCounter,rollCounter,rollCd;
 reg rollAvailable;
 initial begin
     upCounter<=0;
@@ -13,13 +14,24 @@ initial begin
     leftCounter<=0;
     rightCounter<=0;
     rollCounter<=0;
+    rollCd<=32'd20000000;
     next_playerPosition[0]=8'd100;
     next_playerPosition[1]=8'd30;
+end
+always @(*) begin
+    if(dexLevel==0)
+        rollCd=32'd20000000;
+    else if(dexLevel==1)
+        rollCd=32'd15000000;
+    else if(dexLevel==2)
+        rollCd=32'd10000000;
+    else
+        rollCd=32'd5000000;
 end
 always @(posedge clk) begin
     if(state==2) begin
         if(!rollAvailable) begin
-            if(rollCounter<32'd25000000)
+            if(rollCounter<rollCd)
                 rollCounter<=rollCounter+1;
             else begin
                 rollCounter<=0;

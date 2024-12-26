@@ -8,6 +8,7 @@ module GetBulletPosition (
     input [27:0] playerBullet[0:39],
     input [27:0] enemyBullet[0:159],
     input [16:0] wall[0:4],
+    input [1:0] healthLevel,
 
     output reg [20:0] next_playerHp,
     output reg [20:0] next_enemyHp,
@@ -17,7 +18,7 @@ module GetBulletPosition (
 );
 reg [27:0]next_playerBullet_moved[0:39];
 reg [21:0] base[0:3];
-integer i,counter[0:3];
+integer i,counter[0:3],recoverCounter;
 initial begin
     next_playerHp<=21'd100;
     next_enemyHp<=21'd600;
@@ -29,6 +30,7 @@ initial begin
     counter[1]<=0;
     counter[2]<=0;
     counter[3]<=0;
+    recoverCounter<=0;
     for(i=0;i<40;i++)
         next_playerBullet[i]<=0;
     for(i=0;i<160;i++)
@@ -54,28 +56,42 @@ always @(posedge clk) begin
             counter[3]++;
         else
             counter[3]<=0;
-        for(i=0;i<40;i++) begin
-             if((playerBullet[i][7:0]<=enemyPosition[0]+10&&playerBullet[i][7:0]+10>=enemyPosition[0])&&(playerBullet[i][15:8]<=enemyPosition[1]+10&&playerBullet[i][15:8]+10>=enemyPosition[1])) begin
-                if(enemyHp<=playerBullet[i][22:16])
-                    next_enemyHp<=0;
-                else
-                    next_enemyHp<=enemyHp-playerBullet[i][22:16];
-            end
+        if(recoverCounter<32'd50000000)
+            recoverCounter++;
+        else
+            recoverCounter<=0;
+        if(recoverCounter==32'd50000000) begin
+            case(healthLevel)
+                1:next_playerHp<=(playerHp+4<21'd100)?playerHp+4:21'd100;
+                2:next_playerHp<=(playerHp+4<21'd150)?playerHp+4:21'd150;
+                3:next_playerHp<=(playerHp+8<21'd150)?playerHp+8:21'd150;
+                default:next_playerHp<=playerHp;
+            endcase
         end
-        for(i=0;i<160;i++) begin
-            if(enemyBullet[i][7:0]==playerPosition[0]&&enemyBullet[i][15:8]==playerPosition[1]) begin
-                if(playerHp<=enemyBullet[i][22:16])
-                    next_playerHp<=0;
-                else
-                    next_playerHp<=playerHp-enemyBullet[i][22:16];
+        else begin
+            for(i=0;i<40;i++) begin
+                if((playerBullet[i][7:0]<=enemyPosition[0]+10&&playerBullet[i][7:0]+10>=enemyPosition[0])&&(playerBullet[i][15:8]<=enemyPosition[1]+10&&playerBullet[i][15:8]+10>=enemyPosition[1])) begin
+                    if(enemyHp<=playerBullet[i][22:16])
+                        next_enemyHp<=0;
+                    else
+                        next_enemyHp<=enemyHp-playerBullet[i][22:16];
+                end
             end
-        end
-        for(i=0;i<5;i++) begin
-            if(wall[i][7:0]==playerPosition[1]) begin
-                if(playerHp<=wall[i][14:8])
-                    next_playerHp<=0;
-                else
-                    next_playerHp<=playerHp-wall[i][14:8];
+            for(i=0;i<160;i++) begin
+                if(enemyBullet[i][7:0]==playerPosition[0]&&enemyBullet[i][15:8]==playerPosition[1]) begin
+                    if(playerHp<=enemyBullet[i][22:16])
+                        next_playerHp<=0;
+                    else
+                        next_playerHp<=playerHp-enemyBullet[i][22:16];
+                end
+            end
+            for(i=0;i<5;i++) begin
+                if(wall[i][7:0]==playerPosition[1]) begin
+                    if(playerHp<=wall[i][14:8])
+                        next_playerHp<=0;
+                    else
+                        next_playerHp<=playerHp-wall[i][14:8];
+                end
             end
         end
     end

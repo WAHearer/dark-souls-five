@@ -1,5 +1,5 @@
 module GetState (
-    input clk,enter,pause,
+    input clk,enter,pause,left,down,right,
     input [3:0] state,
     input [9:0] textId,
     input [5:0] level,
@@ -8,31 +8,37 @@ module GetState (
 
     output reg [3:0] next_state,
     output reg [9:0] next_textId,
-    output reg [5:0] next_level
+    output reg [5:0] next_level,
+    output reg [1:0] next_attackLevel,
+    output reg [1:0] next_healthLevel,
+    output reg [1:0] next_dexLevel
 );
-reg AbleToPress;
+reg ableToPress;
 integer counter;
 initial begin
     next_state<=0;
     next_level<=0;
     next_textId<=0;
+    next_attackLevel<=0;
+    next_healthLevel<=0;
+    next_dexLevel<=0;
     counter<=0;
-    AbleToPress<=1;
+    ableToPress<=1;
 end
 always @(posedge clk) begin
-    if(AbleToPress==0) begin
+    if(ableToPress==0) begin
         if(counter<32'd20000000)
             counter++;
         else begin
             counter<=0;
-            AbleToPress<=1;
+            ableToPress<=1;
         end
     end
     case(state)
         0:begin
-            if(enter&&AbleToPress) begin
-                AbleToPress<=0;
-                next_state<=6;
+            if(enter&&ableToPress) begin
+                ableToPress<=0;
+                next_state<=7;
                 next_textId<=0;
             end
         end
@@ -53,30 +59,30 @@ always @(posedge clk) begin
                 next_state<=1;
         end
         3:begin
-            if(enter&&AbleToPress) begin
-                AbleToPress<=0;
-                next_state<=6;
+            if(enter&&ableToPress) begin
+                ableToPress<=0;
+                next_state<=7;
             end
         end
         4:begin
-            if(pause&&AbleToPress) begin
-                AbleToPress<=0;
+            if(pause&&ableToPress) begin
+                ableToPress<=0;
                 next_state<=0;
             end
         end
         5:begin
-            if(enter&&AbleToPress) begin
-                AbleToPress<=0;
+            if(enter&&ableToPress) begin
+                ableToPress<=0;
                 next_state<=2;
             end
-            if(pause&&AbleToPress) begin
-                AbleToPress<=0;
+            if(pause&&ableToPress) begin
+                ableToPress<=0;
                 next_state<=0;
             end
         end
         6:begin
-            if(enter&&AbleToPress) begin
-                AbleToPress<=0;
+            if(enter&&ableToPress) begin
+                ableToPress<=0;
                 case(textId)
                     0:begin
                         next_textId<=1;
@@ -118,6 +124,23 @@ always @(posedge clk) begin
                         next_state<=2;
                     end
                 endcase
+            end
+        end
+        7:begin
+            if(ableToPress&&left&&next_attackLevel<3) begin
+                ableToPress<=0;
+                next_attackLevel++;
+                next_state<=6;
+            end
+            else if(ableToPress&&down&&next_healthLevel<3) begin
+                ableToPress<=0;
+                next_healthLevel++;
+                next_state<=6;
+            end
+            else if(ableToPress&&right&&next_dexLevel<3) begin
+                ableToPress<=0;
+                next_dexLevel++;
+                next_state<=6;
             end
         end
     endcase

@@ -3,7 +3,7 @@ module Controller (
     output [3:0] vga_r,vga_g,vga_b,
     output vga_hs,vga_vs
 );
-reg [3:0] state;//0开始游戏前，1暂停，2游戏中，3完成一关但未开启下一关，4通关，5失败，6显示文本
+reg [3:0] state;//0开始游戏前，1暂停，2游戏中，3完成一关但未开启下一关，4通关，5失败，6显示文本，7选择奖励
 reg [9:0] textId;
 reg [5:0] level;
 reg [20:0] playerHp;
@@ -13,6 +13,9 @@ reg [7:0] enemyPosition[0:1];//同上
 reg [27:0] playerBullet[0:39];//7:0为x坐标，15:8为y坐标，22:16为伤害，25:23为方向，27:26为速度
 reg [27:0] enemyBullet[0:159];//同上
 reg [16:0] wall[0:4];//7:0为y坐标，14:8为伤害，16:15为速度
+reg [1:0] attackLevel;
+reg [1:0] healthLevel;
+reg [1:0] dexLevel;
 
 reg [3:0] next_state;
 reg [9:0] next_textId;
@@ -24,6 +27,9 @@ reg [7:0] next_enemyPosition[0:1];
 reg [27:0] next_playerBullet[0:39];
 reg [27:0] next_enemyBullet[0:159];
 reg [16:0] next_wall[0:4];
+reg [1:0] next_attackLevel;
+reg [1:0] next_healthLevel;
+reg [1:0] next_dexLevel;
 
 integer i,j,k;
 
@@ -72,6 +78,9 @@ Game game(//计算下一时刻状态，内部需要：根据按键输入更新�
     .playerBullet(playerBullet),
     .enemyBullet(enemyBullet),
     .wall(wall),
+    .attackLevel(attackLevel),
+    .healthLevel(healthLevel),
+    .dexLevel(dexLevel),
     
     .next_state(next_state),
     .next_textId(next_textId),
@@ -82,7 +91,10 @@ Game game(//计算下一时刻状态，内部需要：根据按键输入更新�
     .next_enemyPosition(next_enemyPosition),
     .next_playerBullet(next_playerBullet),
     .next_enemyBullet(next_enemyBullet),
-    .next_wall(next_wall)
+    .next_wall(next_wall),
+    .next_attackLevel(next_attackLevel),
+    .next_healthLevel(next_healthLevel),
+    .next_dexLevel(next_dexLevel)
 );
 
 initial begin
@@ -95,6 +107,9 @@ initial begin
     playerPosition[1]<=8'd30;
     enemyPosition[0]<=8'd150;
     enemyPosition[1]<=8'd120;
+    attackLevel<=0;
+    healthLevel<=0;
+    dexLevel<=0;
     for(i=0;i<40;i++)
         playerBullet[i]<=0;
     for(j=0;j<160;j++) 
@@ -113,6 +128,9 @@ always @(posedge clk_50) begin//更新状态
     playerPosition[1]<=next_playerPosition[1];
     enemyPosition[0]<=next_enemyPosition[0];
     enemyPosition[1]<=next_enemyPosition[1];
+    attackLevel<=next_attackLevel;
+    healthLevel<=next_healthLevel;
+    dexLevel<=next_dexLevel;
     for(i=0;i<40;i++)
         playerBullet[i]<=next_playerBullet[i];
     for(j=0;j<160;j++)
