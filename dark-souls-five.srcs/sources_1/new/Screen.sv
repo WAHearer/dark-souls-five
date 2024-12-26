@@ -227,10 +227,10 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY: begin
-            if (render_x == enemyPosition[0] + 20 || render_x == 199) begin
+            if (rom_figure_in_x == 41 || render_x == 199) begin
                 render_x <= enemyPosition[0] - 20;
                 rom_figure_in_x <= 0;
-                if (render_y == enemyPosition[1] + 20 || render_y == 149) begin
+                if (rom_figure_in_y == 41 || render_y == 149) begin
                     render_state <= RENDER_PLAYER;
                     render_x <= playerPosition[0];
                     render_y <= playerPosition[1];
@@ -387,7 +387,7 @@ always @(posedge clk_50) begin
                 vga_ready <= 0;
             end
         end else
-             vcount <= vcount + 1;
+            vcount <= vcount + 1;
     end
     else
         hcount <= hcount + 1;
