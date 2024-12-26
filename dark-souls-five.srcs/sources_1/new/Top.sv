@@ -31,6 +31,7 @@ Controller controller(
     .left(key_status[8'h1C]),
     .right(key_status[8'h23]),
     .space(key_status[8'h29]),
+    .p(key_status[8'h4D]),
 
     .vga_r(rgb[11:8]),
     .vga_g(rgb[7:4]),

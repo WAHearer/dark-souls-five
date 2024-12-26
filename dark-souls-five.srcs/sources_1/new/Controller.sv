@@ -1,5 +1,5 @@
 module Controller (
-    input clk,clk_50,enter,pause,up,down,left,right,space,
+    input clk,clk_50,enter,pause,up,down,left,right,space,p,
     output [3:0] vga_r,vga_g,vga_b,
     output vga_hs,vga_vs
 );
@@ -31,7 +31,9 @@ reg [1:0] next_attackLevel;
 reg [1:0] next_healthLevel;
 reg [1:0] next_dexLevel;
 
-integer i,j,k;
+reg cheatMode,ableToPress;
+
+integer i,j,k,counter;
 
 Screen screen(//screen模块生成画布信息，然后调用显示模块输出到vga
     .clk(clk),
@@ -116,13 +118,29 @@ initial begin
         enemyBullet[j]<=0;
     for(k=0;k<5;k++)
         wall[k]<=0;
+    cheatMode<=0;
+    ableToPress<=1;
+    counter<=0;
 end
 
 always @(posedge clk_50) begin//更新状态
+    if(ableToPress==0) begin
+        if(counter<32'd25000000)
+            counter++;
+        else begin
+            counter<=0;
+            ableToPress<=1;
+        end
+    end
+    else if(p==1) begin
+        ableToPress<=0;
+        cheatMode<=~cheatMode;
+    end
     state<=next_state;
     textId<=next_textId;
     level<=next_level;
-    playerHp<=next_playerHp;
+    if(cheatMode==0)
+        playerHp<=next_playerHp;
     enemyHp<=next_enemyHp;
     playerPosition[0]<=next_playerPosition[0];
     playerPosition[1]<=next_playerPosition[1];
