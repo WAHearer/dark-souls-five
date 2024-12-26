@@ -23,10 +23,8 @@ always @(*) begin
         rollCd=32'd20000000;
     else if(dexLevel==1)
         rollCd=32'd15000000;
-    else if(dexLevel==2)
-        rollCd=32'd10000000;
     else
-        rollCd=32'd5000000;
+        rollCd=32'd10000000;
 end
 always @(posedge clk) begin
     if(state==2) begin

@@ -29,6 +29,7 @@ module Game (
     output reg [1:0] next_dexLevel
 );
 
+
 wire [20:0] next_playerHp_inGame;
 wire [20:0] next_enemyHp_inGame;
 wire [7:0] next_playerPosition_inGame[0:1];
@@ -40,6 +41,15 @@ wire [27:0] next_enemyBullet_generated[0:159];
 wire [16:0] next_wall_moved[0:4];
 wire [16:0] next_wall_generated[0:4];
 integer i,j,k;
+
+reg clk_25;
+initial begin
+    clk_25<=0;
+end
+always @(posedge clk) begin
+    clk_25<=~clk_25;
+end
+wire enemyClk=(dexLevel==3)?clk_25:clk;
 
 GetState getState(
     .clk(clk),
@@ -88,7 +98,7 @@ GeneratePlayerBullet generatePlayerBullet(
 );
 
 GetEnemyPosition getEnemyPosition(
-    .clk(clk),
+    .clk(enemyClk),
     .state(state),
     .level(level),
     .enemyPosition(enemyPosition),
@@ -98,7 +108,7 @@ GetEnemyPosition getEnemyPosition(
 );
 
 GenerateEnemyBullet generateEnemyBullet(
-    .clk(clk),
+    .clk(enemyClk),
     .state(state),
     .level(level),
     .playerPosition(playerPosition),
