@@ -230,9 +230,9 @@ always @(posedge clk) begin
         end
 
         RENDER_ENEMY: begin
-            if (render_x <= enemyPosition[0] + 20 || render_x == 199) begin
+            if (render_x <= (enemyPosition[0] + 20) || render_x == 199) begin
                 render_x <= enemyPosition[0] - 20;
-                if (render_y <= enemyPosition[1] + 20 || render_y == 149) begin
+                if (render_y <= (enemyPosition[1] + 20) || render_y == 149) begin
                     render_state <= RENDER_PLAYER;
                     render_x <= playerPosition[0];
                     render_y <= playerPosition[1];
