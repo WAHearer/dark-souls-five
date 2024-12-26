@@ -56,7 +56,7 @@ end
 reg [7:0] render_x, render_y;
 reg [7:0] bulletCounter;
 reg [3:0] wallCounter;
-always @(posedge clk) begin
+always @(posedge clk_50) begin
     case (level)
         1:disp_hp <= enemyHp >> 2;
         2:disp_hp <= enemyHp >> 3;
@@ -93,7 +93,7 @@ blk_mem_gen_1 rom_text (
 
 blk_mem_gen_2 rom_figure (
     .clka(clk),
-    .addra(figID * 1681 + rom_figure_in_y * 41 + rom_figure_in_x),
+    .addra(figID * 41 * 41 + rom_figure_in_y * 41 + rom_figure_in_x),
     .douta(rom_figure_out)
 );
 
@@ -126,7 +126,7 @@ localparam COLOR_FATAL_TEXT = 12'hF00;
 
 render_state_t render_state;
 
-always @(posedge clk) begin
+always @(posedge clk_50) begin
     case (render_state)
         IDLE: begin
             render_ready <= 0;
