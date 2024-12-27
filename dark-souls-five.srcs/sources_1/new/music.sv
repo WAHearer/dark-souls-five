@@ -7,7 +7,7 @@ assign sd = 1;
 reg start;
 
 // 参数定义
-parameter SAMPLE_RATE = 4000;  // 采样率4000Hz
+parameter SAMPLE_RATE = 20_000;  
 parameter CLK_FREQ = 100_000_000;  // 时钟频率100MHz
 parameter DIVIDER = CLK_FREQ/SAMPLE_RATE;  // 分频系数
 
@@ -38,7 +38,7 @@ end
 // ROM地址控制
 always @(posedge clk) begin
     if (start) begin
-        if (addr >= 240000)  // ROM地址上限
+        if (addr >= 236799)  // ROM地址上限
             addr <= 0;
         else
             addr <= addr + 1;
@@ -48,7 +48,7 @@ end
 // PWM输出生成
 always @(posedge clk) begin
     pwm_cnt <= start ? 0 : pwm_cnt + 1;
-    pwm <= (pwm_cnt < (music_data << 7 )) ? 1'b1 : 1'b0;
+    pwm <= (pwm_cnt < (music_data * 39 )) ? 1'b1 : 1'b0;
 end
 
 endmodule
