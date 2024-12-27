@@ -1,8 +1,10 @@
 module Music(
     input clk,              // 100MHz 时钟输入
-    output reg start,      // 使能信号
+    output sd,
     output reg pwm        // PWM 输出
 );
+assign sd = 1;
+reg start;
 
 // 参数定义
 parameter SAMPLE_RATE = 4000;  // 采样率4000Hz
@@ -13,7 +15,7 @@ parameter DIVIDER = CLK_FREQ/SAMPLE_RATE;  // 分频系数
 reg [31:0] sample_cnt;     // 采样计数器
 reg [17:0] addr;          // ROM地址
 wire [7:0] music_data;    // ROM数据
-reg [7:0] pwm_cnt;       // PWM计数器
+reg [15:0] pwm_cnt;       // PWM计数器
 
 // ROM实例化
 blk_mem_gen_3 music(
@@ -25,8 +27,9 @@ blk_mem_gen_3 music(
 // 4000Hz采样时钟生成
 always @(posedge clk) begin
     if (sample_cnt >= DIVIDER-1) begin
-        sample_cnt <= 32'd0;
+        sample_cnt <= 0;
         start <= 1'b1;
+        pwm_cnt <= 0;
     end else begin
         sample_cnt <= sample_cnt + 1'b1;
         start <= 1'b0;
@@ -46,7 +49,7 @@ end
 // PWM输出生成
 always @(posedge clk) begin
     pwm_cnt <= pwm_cnt + 1'b1;
-    pwm <= (pwm_cnt < music_data) ? 1'b1 : 1'b0;
+    pwm <= (pwm_cnt < (music_data << 7 )) ? 1'b1 : 1'b0;
 end
 
 endmodule

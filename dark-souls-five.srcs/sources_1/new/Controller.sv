@@ -60,7 +60,7 @@ Music music(//播放音乐？可以依据：当前游戏状态、关卡数、bos
     .state(state),
     .level(level),
     .pwm(pwm),
-    .start(start)
+    .sd(start)
 );
 
 Game game(//计算下一时刻状态，内部需要：根据按键输入更新状态，计算子弹碰撞，计算血量
