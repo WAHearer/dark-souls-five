@@ -29,7 +29,6 @@ always @(posedge clk) begin
     if (sample_cnt >= DIVIDER-1) begin
         sample_cnt <= 0;
         start <= 1'b1;
-        pwm_cnt <= 0;
     end else begin
         sample_cnt <= sample_cnt + 1'b1;
         start <= 1'b0;
@@ -48,7 +47,7 @@ end
 
 // PWM输出生成
 always @(posedge clk) begin
-    pwm_cnt <= pwm_cnt + 1'b1;
+    pwm_cnt <= start ? 0 : pwm_cnt + 1;
     pwm <= (pwm_cnt < (music_data << 7 )) ? 1'b1 : 1'b0;
 end
 
