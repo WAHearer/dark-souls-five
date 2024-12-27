@@ -57,8 +57,7 @@ Screen screen(//screen模块生成画布信息，然后调用显示模块输出�
 );
 
 Music music(//播放音乐？可以依据：当前游戏状态、关卡数、boss血量
-    .state(state),
-    .level(level),
+    .clk(clk),
     .pwm(pwm),
     .sd(start)
 );
