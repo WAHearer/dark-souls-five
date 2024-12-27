@@ -1,7 +1,8 @@
 module Controller (
     input clk,clk_50,enter,pause,up,down,left,right,space,p,
     output [3:0] vga_r,vga_g,vga_b,
-    output vga_hs,vga_vs
+    output vga_hs,vga_vs,
+    output pwm,start
 );
 reg [3:0] state;//0开始游戏前，1暂停，2游戏中，3完成一关但未开启下一关，4通关，5失败，6显示文本，7选择奖励
 reg [9:0] textId;
@@ -54,12 +55,13 @@ Screen screen(//screen模块生成画布信息，然后调用显示模块输出�
     .vga_hs(vga_hs),
     .vga_vs(vga_vs)
 );
-/*
+
 Music music(//播放音乐？可以依据：当前游戏状态、关卡数、boss血量
     .state(state),
     .level(level),
-    .enemyHp(enemyHp)
-);*/
+    .pwm(pwm),
+    .start(start)
+);
 
 Game game(//计算下一时刻状态，内部需要：根据按键输入更新状态，计算子弹碰撞，计算血量
     .clk(clk_50),

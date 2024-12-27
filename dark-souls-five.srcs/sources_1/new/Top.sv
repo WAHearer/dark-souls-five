@@ -4,7 +4,8 @@ module Top(
     input logic PS2_DATA,
 
     output logic [11:0] rgb,
-    output logic hs,vs
+    output logic hs,vs,
+    output logic pwm, start
 );
 wire key_valid;
 wire [127:0] key_status;
@@ -37,6 +38,8 @@ Controller controller(
     .vga_g(rgb[7:4]),
     .vga_b(rgb[3:0]),
     .vga_hs(hs),
-    .vga_vs(vs)
+    .vga_vs(vs),
+    .pwm(pwm),
+    .start(start)
 );
 endmodule
